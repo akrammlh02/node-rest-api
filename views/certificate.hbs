@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate of Completion</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Georgia', serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .certificate-container {
+      background: white;
+      width: 100%;
+      max-width: 900px;
+      padding: 60px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border: 8px solid #7b09cd;
+      position: relative;
+    }
+    
+    .certificate-border {
+      border: 3px solid #f0e6ff;
+      padding: 40px;
+      position: relative;
+    }
+    
+    .certificate-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .certificate-logo {
+      font-size: 48px;
+      font-weight: bold;
+      color: #7b09cd;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(123, 9, 205, 0.2);
+    }
+    
+    .certificate-title {
+      font-size: 36px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+    
+    .certificate-subtitle {
+      font-size: 18px;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .certificate-body {
+      text-align: center;
+      margin: 40px 0;
+    }
+    
+    .certificate-text {
+      font-size: 20px;
+      line-height: 1.8;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    
+    .student-name {
+      font-size: 32px;
+      font-weight: bold;
+      color: #7b09cd;
+      margin: 20px 0;
+      text-decoration: underline;
+      text-decoration-color: #7b09cd;
+    }
+    
+    .course-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0;
+    }
+    
+    .certificate-footer {
+      margin-top: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    
+    .signature {
+      text-align: center;
+      width: 200px;
+    }
+    
+    .signature-line {
+      border-top: 2px solid #333;
+      margin-top: 60px;
+      margin-bottom: 10px;
+    }
+    
+    .signature-name {
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .signature-title {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .certificate-date {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 16px;
+      color: #666;
+    }
+    
+    .certificate-id {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 12px;
+      color: #999;
+    }
+    
+    .download-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #7b09cd, #0d00ff);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(123, 9, 205, 0.4);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(123, 9, 205, 0.6);
+    }
+    
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      
+      .download-btn {
+        display: none;
+      }
+      
+      .certificate-container {
+        box-shadow: none;
+        border: 8px solid #7b09cd;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="download-btn" onclick="window.print()">Download Certificate</button>
+  
+  <div class="certificate-container">
+    <div class="certificate-border">
+      <div class="certificate-header">
+        <div class="certificate-logo">DevAcademy</div>
+        <div class="certificate-title">CERTIFICATE OF COMPLETION</div>
+        <div class="certificate-subtitle">This is to certify that</div>
+      </div>
+      
+      <div class="certificate-body">
+        <div class="student-name">{{clientName}}</div>
+        <div class="certificate-text">
+          has successfully completed the course
+        </div>
+        <div class="course-name">{{courseTitle}}</div>
+        <div class="certificate-text">
+          in the category of <strong>{{courseCategory}}</strong>
+        </div>
+        <div class="certificate-text">
+          with dedication and commitment to learning.
+        </div>
+      </div>
+      
+      <div class="certificate-date">
+        Issued on {{issueDate}}
+      </div>
+      
+      <div class="certificate-footer">
+        <div class="signature">
+          <div class="signature-line"></div>
+          <div class="signature-name">Akram Melihi</div>
+          <div class="signature-title">Instructor & Founder</div>
+        </div>
+        <div class="signature">
+          <div class="signature-line"></div>
+          <div class="signature-name">DevAcademy</div>
+          <div class="signature-title">E-Learning Platform</div>
+        </div>
+      </div>
+      
+      <div class="certificate-id">
+        Certificate ID: #{{certificateId}}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+

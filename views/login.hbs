@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevAcademy - Login</title>
+  <link rel="stylesheet" href="login.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="icon" type="image/x-icon" href="/images/logo.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/course">Courses</a></li>
+        {{!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            English
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/login/ar">العربية</a></li>
+            <li><a class="dropdown-item" href="/login">English</a></li>
+          </ul>
+        </li> --}}
+        <li><a href="/login">Login</a></li>
+        <li><button type="button" class="btn signup"><a href="/signup"> Sign up</a></button></li>
+      </ul>
+      <div class="menu">
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"><span class="material-symbols-outlined">menu</span></button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+
+            <a href="/home">Home</a>
+            <a href="/course">Courses</a>
+            {{!-- <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                English
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/login/ar">العربية</a></li>
+                <li><a class="dropdown-item" href="/login">English</a></li>
+              </ul>
+            </li> --}}
+            <a href="/login">Login</a>
+            <div style="width: 50%;">
+              <button type="button" class="btn signup"><a href="/signup"> Sign up</a></button>
+
+            </div>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="first-section">
+
+    <div class="card">
+      <div class="head">
+        <h1>Login</h1>
+        <p>Welcome back</p>
+        <hr>
+      </div>
+      <form id="loginForm">
+
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+        </div>
+        <label for="inputPassword5" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" aria-describedby="passwordHelpBlock" required>
+        <div id="message" style="color: red;"></div>
+        <button type="submit" style="margin-top: 40px;" class="btn btn-primary">Login</button>
+        <div style="width: 100%; text-align: center;
+      margin-top: 20px;">
+          <p>Don't have an account? <a href="/signup"> Register now</a></p>
+        </div>
+      </form>
+    </div>
+  </section>
+  <section class="copyright">
+    <p>All rights reserved © 2025 DevAcademy</p>
+  </section>
+  <script>
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const messageDiv = document.getElementById('message');
+
+      messageDiv.textContent = '';
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+          credentials: 'include'
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          if (result.type === 'client') {
+            window.location.href = '/dashboard';
+          } else if (result.type === 'admin') {
+            window.location.href = '/admin';
+          }
+        } else {
+          messageDiv.textContent = result.message;
+        }
+      } catch (error) {
+        messageDiv.textContent = 'Something went wrong. Please try again.';
+      }
+
+    });
+
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>

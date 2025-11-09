@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevAcademy - الدورات</title>
+  <link rel="stylesheet" href="/course.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="icon" type="image/x-icon" href="/images/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
+      <ul class="nav-links">
+        <li><a href="/ar">الرئيسية</a></li>
+        <li><a href="/course/ar">الدورات</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            العربية
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/course">English</a></li>
+            <li><a class="dropdown-item" href="/course/ar">العربية</a></li>
+          </ul>
+        </li>
+        {{#if isLoggedIn}}
+        <li><a href="/dashboard/ar">لوحة التحكم</a></li>
+        <li><button type="button" class="btn btn-danger"><a href="/logout/ar">تسجيل الخروج</a></button></li>
+
+        {{else}}
+        <li><a href="/login/ar">تسجيل الدخول</a></li>
+        <li><button type="button" class="btn signup"><a href="/signup/ar">إنشاء حساب</a></button></li>
+        {{/if}}
+      </ul>
+      <div class="menu">
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"><span class="material-symbols-outlined">menu</span></button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">القائمة</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+
+            <a href="/ar">الرئيسية</a>
+            <a href="/course/ar">الدورات</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                العربية
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/course">English</a></li>
+                <li><a class="dropdown-item" href="/course/ar">العربية</a></li>
+              </ul>
+            </li>
+            {{#if isLoggedIn}}
+            <a href="/dashboard/ar">لوحة التحكم</a>
+            <div style="width: 50%;">
+              <button type="button" class="btn btn-danger"><a href="/logout/ar">تسجيل الخروج</a></button>
+
+            </div>
+            {{else}}
+            <a href="/login/ar">تسجيل الدخول</a>
+            <div style="width: 50%;">
+              <button type="button" class="btn signup"><a href="/signup/ar">إنشاء حساب</a></button>
+
+            </div>
+            {{/if}}
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="first-section">
+    <h1>الدورات</h1>
+    <p>اكتشف عالماً من المعرفة مع أفضل المدربين والدورات المتخصصة
+    </p>
+    <br>
+    <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="اكتب للبحث...">
+    <div class="category">
+      <button>الويب</button>
+      <button>الذكاء الاصطناعي</button>
+      <button>بايثون</button>
+      <button>التصميم</button>
+    </div>
+    <hr>
+
+  </section>
+
+
+  <section class="second-section">
+    <div class="courses" id="coursesContainer">
+      {{#if courses}}
+        {{#each courses}}
+        <div class="course" data-course-id="{{course_id}}">
+          <div class="image-box">
+            <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
+            <div class="price-badge">{{price}} دج</div>
+          </div>
+          <p style="padding-right: 10px;" class="category">{{#if level}}{{level}}{{else}}دورة{{/if}}</p>
+          <div style="width: 100%;display: flex; justify-content: center;">
+            <hr>
+          </div>
+          <h5 style="padding-right: 10px;">{{title}}</h5>
+          <p class="description">{{description}}</p>
+          <p class="powered" style="padding-right: 10px;">بواسطة أكرم مليحي</p>
+          <div style="width: 100%;display: flex; justify-content: center;">
+            <hr>
+          </div>
+          <div class="information">
+            <p><span class="material-symbols-outlined" style="padding-left: 10px;">alarm</span> {{duration_hours}} ساعة</p>
+            <p><span class="material-symbols-outlined" style="padding-left: 10px;">book_ribbon</span> {{lessons_count}} درس</p>
+          </div>
+          <div class="button-join">
+            <a href="/course/course-view?id={{course_id}}" class="view-courses">المزيد</a>
+          </div>
+        </div>
+        {{/each}}
+      {{else}}
+        <div class="no-courses">
+          <p>لا توجد دورات متاحة في الوقت الحالي.</p>
+        </div>
+      {{/if}}
+    </div>
+
+  </section>
+  <section class="copyright">
+    <p>جميع الحقوق محفوظة © 2025 DevAcademy</p>
+  </section>
+  
+  <script src="/course.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

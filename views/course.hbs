@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevAcademy - Courses</title>
+  <link rel="stylesheet" href="course.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="icon" type="image/x-icon" href="/images/logo.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/course">Courses</a></li>
+        {{!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            English
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/course/ar">العربية</a></li>
+            <li><a class="dropdown-item" href="/course">English</a></li>
+          </ul>
+        </li> --}}
+        {{#if isLoggedIn}}
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button></li>
+        {{else}}
+        <li><a href="/login">Login</a></li>
+        <li><button type="button" class="btn signup"><a href="/signup"> Sign up</a></button></li>
+        {{/if}}
+      </ul>
+      <div class="menu">
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+          aria-controls="offcanvasRight"><span class="material-symbols-outlined">menu</span></button>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+
+            <a href="/">Home</a>
+            <a href="/course">Courses</a>
+            {{!-- <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                English
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/course/ar">العربية</a></li>
+                <li><a class="dropdown-item" href="/course">English</a></li>
+              </ul>
+            </li> --}}
+            {{#if isLoggedIn}}
+            <a href="/dashboard">Dashboard</a>
+            <div style="width: 50%;">
+              <button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button>
+
+            </div>
+            {{else}}
+            <a href="/login">Login</a>
+            <div style="width: 50%;">
+              <button type="button" class="btn signup"><a href="/signup"> Sign up</a></button>
+
+            </div>
+            {{/if}}
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="first-section">
+    <h1>Courses</h1>
+    <p>Discover a world of knowledge with top instructors and specialized courses
+    </p>
+    <br>
+    <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+    <div class="category">
+      <button data-category="all">All</button>
+      <button data-category="web">Web</button>
+      <button data-category="ai">AI</button>
+      <button data-category="python">Python</button>
+      <button data-category="conception">Conception</button>
+    </div>
+    <hr>
+
+  </section>
+
+
+  <section class="second-section">
+    <div class="courses" id="coursesContainer">
+      {{#if courses}}
+        {{#each courses}}
+        <div class="course" data-course-id="{{course_id}}">
+          <div class="image-box">
+            <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
+            <div class="price-badge">{{price}} DA</div>
+          </div>
+          <p class="category">{{#if level}}{{level}}{{else}}COURSE{{/if}}</p>
+          <div style="width: 100%;display: flex; justify-content: center;">
+            <hr>
+          </div>
+          <h5>{{title}}</h5>
+          <p class="description">{{description}}</p>
+          <p class="powered">By Akram Melihi</p>
+          <div style="width: 100%;display: flex; justify-content: center;">
+            <hr>
+          </div>
+          <div class="information">
+            <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
+            <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
+          </div>
+          <div class="button-join">
+            <a href="/course/course-view?id={{course_id}}" class="view-courses">Learn More</a>
+          </div>
+        </div>
+        {{/each}}
+      {{else}}
+        <div class="no-courses">
+          <p>No courses available at the moment.</p>
+        </div>
+      {{/if}}
+    </div>
+
+  </section>
+  <section class="copyright">
+    <p>All rights reserved © 2025 DevAcademy</p>
+  </section>
+  
+  <script src="/course.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
