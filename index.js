@@ -42,7 +42,7 @@ app.use('/course', require('./routes/course'));
 app.use('/admin', require('./routes/admin'));
 
 
-// API endpoint to check if session is valid
+// API endpoint to check if session is vali
 app.get('/api/check-session', (req, res) => {
   if (req.session.user) {
     res.status(200).json({ valid: true, user: req.session.user });
@@ -91,7 +91,7 @@ app.listen(PORT, () => {
 });
 
 
-
+module.exports = app;
 
 
 

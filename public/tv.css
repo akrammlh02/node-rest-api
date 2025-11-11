@@ -259,12 +259,15 @@ body {
 
 /* ============= Video Section ============ */
 .video-section {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 25px;
+  padding: 35px;
+  box-shadow: 0 20px 60px rgba(123, 9, 205, 0.15),
+              0 0 0 1px rgba(123, 9, 205, 0.1);
   animation: slideInLeft 0.6s ease;
+  border: 1px solid rgba(123, 9, 205, 0.15);
 }
 
 @keyframes slideInLeft {
@@ -363,10 +366,15 @@ body {
 /* ============= Video Player ============ */
 .video-player-container {
   margin-bottom: 25px;
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 50px rgba(123, 9, 205, 0.25),
+              0 0 60px rgba(152, 16, 250, 0.15),
+              0 0 0 1px rgba(123, 9, 205, 0.2);
   animation: scaleIn 0.6s ease;
+  border: 1px solid rgba(123, 9, 205, 0.2);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
 }
 
 @keyframes scaleIn {
@@ -484,17 +492,20 @@ body {
 
 /* ============= Course Index Sidebar ============ */
 .course-index-sidebar {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(123, 9, 205, 0.15),
+              0 0 0 1px rgba(123, 9, 205, 0.1);
   height: fit-content;
   position: sticky;
   top: 100px;
   animation: slideInRight 0.6s ease;
   max-height: calc(100vh - 120px);
   overflow-y: auto;
+  border: 1px solid rgba(123, 9, 205, 0.15);
 }
 
 @keyframes slideInRight {
