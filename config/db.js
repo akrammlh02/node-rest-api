@@ -15,8 +15,12 @@ const conn = mysql.createConnection({
 })
 
 conn.connect((err) => {
-  if (err) throw err;
-  console.log('Connected to DevAcademy DB.');
+  if (err) {
+    console.error('❌ DB connection failed:', err);
+    //process.exit(1); // Stop app if DB fails
+  } else {
+    console.log('✅ Connected to Railway DB');
+  }
 })
 
 module.exports = conn;
