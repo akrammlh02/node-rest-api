@@ -40,6 +40,7 @@ app.use('/signup', require('./routes/signup'));
 app.use('/dashboard', require('./routes/dashboard'));
 app.use('/course', require('./routes/course'));
 app.use('/admin', require('./routes/admin'));
+app.use('/quiz', require('./routes/quiz'));
 
 
 // API endpoint to check if session is vali

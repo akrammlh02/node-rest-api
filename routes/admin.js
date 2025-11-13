@@ -852,4 +852,56 @@ router.delete('/api/certificates/:id', (req, res) => {
   });
 });
 
+// ======== Quizzes Management APIs ========
+// Get distinct languages
+router.get('/api/quizzes/languages', (req, res) => {
+  const sql = 'SELECT DISTINCT language FROM quizzes ORDER BY language ASC';
+  conn.query(sql, (err, rows) => {
+    if (err) return res.status(500).json({ success: false, message: 'Server error' });
+    res.json({ success: true, languages: rows.map(r => r.language) });
+  });
+});
+
+// List questions, optionally filtered by language
+router.get('/api/quizzes', (req, res) => {
+  const { language } = req.query;
+  let sql = 'SELECT id, language, question, option_a, option_b, option_c, option_d, correct_option, created_at FROM quizzes';
+  const params = [];
+  if (language) {
+    sql += ' WHERE language = ?';
+    params.push(language);
+  }
+  sql += ' ORDER BY id DESC';
+  conn.query(sql, params, (err, rows) => {
+    if (err) return res.status(500).json({ success: false, message: 'Server error' });
+    res.json({ success: true, quizzes: rows });
+  });
+});
+
+// Create a quiz question
+router.post('/api/quizzes', (req, res) => {
+  const { language, question, option_a, option_b, option_c, option_d, correct_option } = req.body;
+  if (!language || !question || !option_a || !option_b || !option_c || !option_d || !correct_option) {
+    return res.json({ success: false, message: 'All fields are required' });
+  }
+  if (!['A','B','C','D'].includes(correct_option)) {
+    return res.json({ success: false, message: 'correct_option must be one of A,B,C,D' });
+  }
+  const sql = `INSERT INTO quizzes (language, question, option_a, option_b, option_c, option_d, correct_option) VALUES (?,?,?,?,?,?,?)`;
+  conn.query(sql, [language.trim(), question.trim(), option_a.trim(), option_b.trim(), option_c.trim(), option_d.trim(), correct_option], (err) => {
+    if (err) return res.status(500).json({ success: false, message: 'Server error' });
+    res.json({ success: true, message: 'Question created' });
+  });
+});
+
+// Delete a quiz question
+router.delete('/api/quizzes/:id', (req, res) => {
+  const id = req.params.id;
+  conn.query('DELETE FROM quizzes WHERE id = ?', [id], (err, result) => {
+    if (err) return res.status(500).json({ success: false, message: 'Server error' });
+    if (result.affectedRows === 0) return res.json({ success: false, message: 'Question not found' });
+    res.json({ success: true, message: 'Question deleted' });
+  });
+});
+
 module.exports = router;
