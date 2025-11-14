@@ -65,12 +65,16 @@ body::before {
 
 header {
   border-bottom: 3px solid #7b09cd;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-  background-color: white;
-  box-shadow: 0 5px 20px rgba(123, 9, 205, 0.15);
-  animation: headerGlow 4s ease-in-out infinite;
-  z-index: 9999;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    background-color: white;
+    box-shadow: 0 5px 20px rgba(123, 9, 205, 0.15);
+    animation: headerGlow 4s ease-in-out infinite;
+    z-index: 9999;
+    position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
 @keyframes headerGlow {
@@ -96,7 +100,6 @@ nav {
 nav img {
   margin-bottom: 10px;
 }
-
 nav ul {
   display: flex;
   align-items: center;
@@ -111,13 +114,37 @@ nav ul li {
 nav ul li a {
   text-decoration: none;
   color: black;
-  transition: 0.2s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  padding: 12px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+nav ul li button a {
+  color: white;
+}
+nav ul li a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7b09cd, #0d00ff);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
 }
 
 nav ul li a:hover {
   color: #7b09cd;
-  text-shadow: 0 0 10px rgba(123, 9, 205, 0.4);
+  background: rgba(123, 9, 205, 0.1);
   transform: translateY(-2px);
+
+}
+
+nav ul li a:hover::before {
+  width: 80%;
 }
 
 .signup {
@@ -129,8 +156,12 @@ nav ul li a:hover {
 
 .signup:hover {
   background-color: #7b09cd !important;
+
   box-shadow: 0 0 20px rgba(123, 9, 205, 0.6), 0 0 30px rgba(152, 16, 250, 0.4);
   transform: translateY(-2px);
+}
+.signup:hover a{
+  color: white !important;
 }
 
 .menu {

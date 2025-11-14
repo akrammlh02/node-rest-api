@@ -55,13 +55,13 @@
           </div>
           <div class="offcanvas-body">
 
-            <a onclick="showContent('dashboard', event)"><span class="material-symbols-outlined">dashboard</span>
+            <a onclick="showContent('dashboard', event)" style="cursor: pointer !important;"><span class="material-symbols-outlined">dashboard</span>
               Dashboard</a>
-            <a onclick="showContent('myCourse', event)"><span class="material-symbols-outlined">book_ribbon</span> My
+            <a onclick="showContent('myCourse', event)" style="cursor: pointer !important;"><span class="material-symbols-outlined">book_ribbon</span> My
               Course</a>
-            <a onclick="showContent('myCertificate', event)"><span class="material-symbols-outlined">school</span> My
+            <a onclick="showContent('myCertificate', event)" style="cursor: pointer !important;"><span class="material-symbols-outlined">school</span> My
               Certificate</a>
-            <a onclick="showContent('profile', event)"><span class="material-symbols-outlined">contacts_product</span>
+            <a onclick="showContent('profile', event)" style="cursor: pointer !important;"><span class="material-symbols-outlined">contacts_product</span>
               Profile</a>
             {{!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"><span
@@ -93,21 +93,21 @@
     <aside class="sidebar">
       <h2>Menu</h2>
       <ul>
-        <li><a href="#" onclick="showContent('dashboard', event)"><span
+        <li><a onclick="showContent('dashboard', event)"><span
               class="material-symbols-outlined">dashboard</span>
             Dashboard</a></li>
-        <li><a href="#" onclick="showContent('myCourse', event)"><span
+        <li><a onclick="showContent('myCourse', event)"><span
               class="material-symbols-outlined">book_ribbon</span> My
             Course</a></li>
-        <li><a href="#" onclick="showContent('myCertificate', event)"><span
+        <li><a onclick="showContent('myCertificate', event)"><span
               class="material-symbols-outlined">school</span> My Certificate</a></li>
-        <li><a href="#" onclick="showContent('profile', event)"><span
+        <li><a onclick="showContent('profile', event)"><span
               class="material-symbols-outlined">contacts_product</span> Profile</a></li>
         <li><a href="/quiz"><span class="material-symbols-outlined">quiz</span> Programming Quiz</a></li>
         <hr>
         <li><a href="/"><span class="material-symbols-outlined">home</span> Home</a></li>
         <li><a href="/course"><span class="material-symbols-outlined">book</span> Courses</a></li>
-        <li><a href="/logout" style="color: red; font-weight: 600;"><span
+        <li><a href="/logout" style="color: red !important; font-weight: 700 !important;"><span
               class="material-symbols-outlined">logout</span>
             Logout</a></li>
       </ul>
@@ -429,9 +429,9 @@
       }
 
       // Handle active class
-      const links = document.querySelectorAll('.sidebar ul li a');
-      links.forEach(link => link.classList.remove('active'));
-      if (event) event.target.classList.add('active');
+      //const links = document.querySelectorAll('.sidebar ul li a');
+      //links.forEach(link => link.classList.remove('active'));
+      //if (event) event.target.classList.add('active');
 
       // Load data when switching to myCourse
       if (section === 'myCourse') {
