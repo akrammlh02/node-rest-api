@@ -5,24 +5,45 @@
 }
 
 
-.whatsapp-float {
+.instagram-float {
   position: fixed;
-  width: 60px;
-  height: 60px;
-  bottom: 20px;
+  width: 65px;
+  height: 65px;
+  bottom: 100px;
   right: 20px;
-  background-color: #25D366;
-  color: #fff;
+  background-color: #DD2A7B;
   border-radius: 50%;
-  text-align: center;
-  font-size: 30px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 0 20px rgba(221, 42, 123, 0.8), 0 0 40px rgba(221, 42, 123, 0.4);
+  z-index: 100;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: pulseGlowInstagram 2s infinite;
 }
+
+@keyframes pulseGlowInstagram {
+  0% {
+    box-shadow:
+      0 0 15px rgba(221, 42, 123, 0.6), 0 0 30px rgba(221, 42, 123, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(221, 42, 123, 1), 0 0 60px rgba(221, 42, 123, 0.8);
+    ;
+  }
+
+  100% {
+    box-shadow: 0 0 15px rgba(221, 42, 123, 0.6), 0 0 30px rgba(221, 42, 123, 0.3);
+    ;
+  }
+}
+
+.instagram-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(221, 42, 123, 0.8), 0 0 40px rgba(221, 42, 123, 0.4);
+}
+
 
 .whatsapp-float {
   position: fixed;
@@ -66,20 +87,20 @@
 }
 
 
-  header {
-    border-bottom: 3px solid #7b09cd;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-    background-color: white;
-    box-shadow: 0 5px 20px rgba(123, 9, 205, 0.15);
-    animation: headerGlow 4s ease-in-out infinite;
-    z-index: 9999;
-    position: sticky;
+header {
+  border-bottom: 3px solid #7b09cd;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background-color: white;
+  box-shadow: 0 5px 20px rgba(123, 9, 205, 0.15);
+  animation: headerGlow 4s ease-in-out infinite;
+  z-index: 9999;
+  position: sticky;
   top: 0;
   z-index: 1000;
   transition: all 0.3s ease;
-  }
- 
+}
+
 
 @keyframes headerGlow {
 
@@ -167,7 +188,8 @@ nav ul li a:hover::before {
   box-shadow: 0 0 20px rgba(123, 9, 205, 0.6), 0 0 30px rgba(152, 16, 250, 0.4);
   transform: translateY(-2px);
 }
-.signup:hover a{
+
+.signup:hover a {
   color: white !important;
 }
 
@@ -176,7 +198,7 @@ nav ul li a:hover::before {
 }
 
 .menu-button {
-  
+
   background: linear-gradient(135deg, #7b09cd, #0d00ff) !important;
   border: none !important;
   padding: 10px 20px !important;
@@ -185,18 +207,20 @@ nav ul li a:hover::before {
   border-radius: 15px !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
   box-shadow: 0 8px 32px rgba(123, 9, 205, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
-.menu-button span{
+
+.menu-button span {
   color: white !important;
   font-size: 24px !important;
   padding: 0;
   margin: 0;
 }
-.menu-button::before{
+
+.menu-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -206,14 +230,16 @@ nav ul li a:hover::before {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.5s;
 }
+
 .menu-button:hover::before {
   left: 100%;
 }
+
 .menu-button:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(123, 9, 205, 0.5), 
-              0 0 60px rgba(152, 16, 250, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 12px 40px rgba(123, 9, 205, 0.5),
+    0 0 60px rgba(152, 16, 250, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
   background: linear-gradient(135deg, #0d00ff, #7b09cd) !important;
 }
 
@@ -499,6 +525,250 @@ nav ul li a:hover::before {
     transform: translateX(-50px);
   }
 }
+
+
+/* From Uiverse.io by adeladel522 */
+.home-btn {
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  padding-block: 0.5rem;
+  padding-inline: 1.25rem;
+  background-color: rgb(0 107 179);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ffff;
+  gap: 10px;
+  height: 70px;
+  width: 250px;
+  font-weight: bold;
+  border: 3px solid #ffffff4d;
+  outline: none;
+  overflow: hidden;
+  font-size: 18px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease-in-out;
+}
+
+.home-btn:hover {
+  transform: scale(1.05);
+  border-color: #fff9;
+}
+
+.home-btn:hover .icon {
+  transform: translate(4px);
+}
+
+.home-btn:hover::before {
+  animation: shine 1.5s ease-out infinite;
+}
+
+.home-btn::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(120deg,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 70%);
+  top: 0;
+  left: -100px;
+  opacity: 0.6;
+}
+
+@keyframes shine {
+  0% {
+    left: -100px;
+  }
+
+  60% {
+    left: 100%;
+  }
+
+  to {
+    left: 100%;
+  }
+}
+
+/* ====== Social media links ====== */
+/* From Uiverse.io by vinodjangid07 */
+.whatsapp {
+  width: 60px;
+  height: 60px;
+  position: fixed !important;
+  bottom: 10px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 999;
+}
+
+.svgContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  backdrop-filter: blur(0px);
+  letter-spacing: 0.8px;
+  border-radius: 10px;
+  transition: all 0.3s;
+  border: 1px solid rgba(156, 156, 156, 0.466);
+}
+
+.BG {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #075e54;
+  z-index: -1;
+  border-radius: 10px;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.whatsapp:hover .BG {
+  transform: rotate(35deg);
+  transform-origin: bottom;
+}
+
+.whatsapp:hover .svgContainer {
+  background-color: rgba(156, 156, 156, 0.466);
+  backdrop-filter: blur(4px);
+}
+
+/* From Uiverse.io by vinodjangid07 */
+.telegram {
+  width: 45px;
+  height: 45px;
+  position: fixed !important;
+  bottom: 10px;
+  right: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 9999;
+}
+
+.telegram .svgContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  backdrop-filter: blur(0px);
+  letter-spacing: 0.8px;
+  border-radius: 10px;
+  transition: all 0.3s;
+  border: 1px solid rgba(156, 156, 156, 0.466);
+}
+
+.telegram .BG {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #24a1de;
+  z-index: -1;
+  border-radius: 10px;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.telegram:hover .BG {
+  transform: rotate(35deg);
+  transform-origin: bottom;
+}
+
+.telegram:hover .svgContainer {
+  border: 1px solid rgba(226, 226, 226, 0.466);
+  background-color: rgba(204, 204, 204, 0.466);
+  backdrop-filter: blur(4px);
+}
+
+/* From Uiverse.io by vinodjangid07 */
+.instagram {
+  width: 45px;
+  height: 45px;
+  position: fixed !important;
+  bottom: 10px;
+  right: 145px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 9999;
+}
+
+.svgContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  backdrop-filter: blur(0px);
+  letter-spacing: 0.8px;
+  border-radius: 10px;
+  transition: all 0.3s;
+  border: 1px solid rgba(156, 156, 156, 0.466);
+}
+
+.instagram .BG {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #ea4c89;
+  z-index: -1;
+  border-radius: 10px;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.instagram:hover .BG {
+  transform: rotate(35deg);
+  transform-origin: bottom;
+}
+
+.instagram:hover .svgContainer {
+  border: 1px solid #ffb4cf;
+  background-color: rgba(216, 216, 216, 0.466);
+  backdrop-filter: blur(4px);
+}
+
 
 
 
