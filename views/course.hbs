@@ -47,8 +47,9 @@
       </ul>
       <div class="menu">
 
-        <button class="btn btn-primary menu-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight"><span class="material-symbols-outlined">menu</span></button>
+        <button class="btn btn-primary menu-button" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><span
+            class="material-symbols-outlined">menu</span></button>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div class="offcanvas-header">
@@ -78,7 +79,8 @@
             {{else}}
             <a href="/login">Login</a>
             <div style="width: 50%;">
-              <button type="button" class="btn signup" ><a style="color: white !important;"href="/signup"> Sign up</a></button>
+              <button type="button" class="btn signup"><a style="color: white !important;" href="/signup"> Sign
+                  up</a></button>
 
             </div>
             {{/if}}
@@ -111,8 +113,9 @@
   <section class="second-section">
     <div class="courses" id="coursesContainer">
       {{#if courses}}
-        {{#each courses}}
-        <div class="course" data-course-id="{{course_id}}">
+      {{#each courses}}
+      <div class="course" data-course-id="{{course_id}}">
+        <a href="/course/course-view?id={{course_id}}" class="course-card-link">
           <div class="image-box">
             <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
             <div class="price-badge">{{price}} DA</div>
@@ -131,15 +134,16 @@
             <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
             <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
           </div>
-          <div class="button-join">
-            <a href="/course/course-view?id={{course_id}}" class="view-courses">Learn More</a>
-          </div>
+        </a>
+        <div class="button-join">
+          <a href="/course/course-view?id={{course_id}}" class="view-courses course-button">Learn More</a>
         </div>
-        {{/each}}
+      </div>
+      {{/each}}
       {{else}}
-        <div class="no-courses">
-          <p>No courses available at the moment.</p>
-        </div>
+      <div class="no-courses">
+        <p>No courses available at the moment.</p>
+      </div>
       {{/if}}
     </div>
 
@@ -147,7 +151,7 @@
   <section class="copyright">
     <p>All rights reserved © 2025 DevAcademy</p>
   </section>
-  
+
   <script src="/course.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

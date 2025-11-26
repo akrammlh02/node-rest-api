@@ -16,13 +16,13 @@ router.get('', (req, res) => {
     ORDER BY c.course_id DESC
     LIMIT 3
   `;
-  
+
   conn.query(sql, (err, courses) => {
     if (err) {
       console.error('Error fetching courses:', err);
       courses = [];
     }
-    
+
     res.render('index.hbs', {
       isLoggedIn: !!req.session.user,
       courses: courses || []
@@ -44,13 +44,13 @@ router.get('/ar', (req, res) => {
     ORDER BY c.course_id DESC
     LIMIT 3
   `;
-  
+
   conn.query(sql, (err, courses) => {
     if (err) {
       console.error('Error fetching courses:', err);
       courses = [];
     }
-    
+
     res.render('index_ar.hbs', {
       isLoggedIn: !!req.session.user,
       courses: courses || []

@@ -37,7 +37,7 @@ async function loadCourse() {
     }
 
     currentCourseId = courseId;
-    
+
     // Load completed lessons for this course
     let completedLessons = [];
     if (course.hasAccess) {
@@ -51,7 +51,7 @@ async function loadCourse() {
         console.error('Error loading progress:', error);
       }
     }
-    
+
     // Mark lessons as completed
     if (course.chapters) {
       course.chapters.forEach(chapter => {
@@ -62,10 +62,10 @@ async function loadCourse() {
         }
       });
     }
-    
+
     // Display chapters and lessons
     renderChapters(course.chapters || [], course.hasAccess || false);
-    
+
     // Update enroll button based on access
     if (course.hasAccess) {
       const enrollBtn = document.querySelector('.btn-enroll');
@@ -129,11 +129,11 @@ function renderChapters(chapters, hasAccess) {
         </div>
         <div class="lessons-container" id="lessons-${chapterIndex}" style="display: none;">
           ${sortedLessons.length === 0
-      ? '<p class="no-lessons">No lessons in this chapter yet.</p>'
-      : sortedLessons.map((lesson, lessonIndex) => {
+        ? '<p class="no-lessons">No lessons in this chapter yet.</p>'
+        : sortedLessons.map((lesson, lessonIndex) => {
           const globalIndex = allLessons.findIndex(l => l.lesson_id === lesson.lesson_id);
           const isCompleted = lesson.completed || false;
-          
+
           if (hasAccess) {
             return `
               <div class="lesson-item ${isCompleted ? 'completed' : ''}" data-lesson-id="${lesson.lesson_id}" data-lesson-index="${globalIndex}">
@@ -173,7 +173,7 @@ function renderChapters(chapters, hasAccess) {
             `;
           }
         }).join('')
-    }
+      }
         </div>
       </div>
     `;
@@ -204,7 +204,7 @@ function navigateLesson(direction) {
   } else if (direction === 'prev' && currentLessonIndex > 0) {
     currentLessonIndex--;
   }
-  
+
   const lesson = allLessons[currentLessonIndex];
   if (lesson) {
     // Open the chapter if closed
@@ -213,7 +213,7 @@ function navigateLesson(direction) {
     if (lessonsContainer && lessonsContainer.style.display === 'none') {
       toggleChapter(chapterIndex);
     }
-    
+
     // Wait a bit for chapter to open, then scroll
     setTimeout(() => {
       const lessonElement = document.querySelector(`[data-lesson-id="${lesson.lesson_id}"]`);
@@ -226,20 +226,20 @@ function navigateLesson(direction) {
         lessonElement.classList.add('current-lesson');
       }
     }, 300);
-    
+
     // Open video link in new tab
     setTimeout(() => {
       window.open(lesson.content_url, '_blank');
     }, 500);
   }
-  
+
   updateNavigationButtons();
 }
 
 function updateNavigationButtons() {
   const prevBtn = document.querySelector('.btn-prev');
   const nextBtn = document.querySelector('.btn-next');
-  
+
   if (prevBtn) {
     prevBtn.disabled = currentLessonIndex <= 0;
   }
@@ -257,9 +257,9 @@ async function markLessonComplete(lessonId, lessonIndex) {
       },
       body: JSON.stringify({ lessonId })
     });
-    
+
     const result = await response.json();
-    
+
     if (result.success) {
       // Update UI
       const lessonElement = document.querySelector(`[data-lesson-id="${lessonId}"]`);
@@ -267,16 +267,16 @@ async function markLessonComplete(lessonId, lessonIndex) {
         lessonElement.classList.add('completed');
         const lessonNumber = lessonElement.querySelector('.lesson-number');
         if (lessonNumber) lessonNumber.classList.add('completed');
-        
+
         const title = lessonElement.querySelector('.lesson-title');
         if (title && !title.querySelector('.completed-badge')) {
           title.innerHTML += '<span class="completed-badge"><span class="material-symbols-outlined">check_circle</span></span>';
         }
-        
+
         const markBtn = lessonElement.querySelector('.btn-mark-complete');
         if (markBtn) markBtn.remove();
       }
-      
+
       // Reload progress in dashboard
       if (typeof loadCourseProgress === 'function') {
         loadCourseProgress();

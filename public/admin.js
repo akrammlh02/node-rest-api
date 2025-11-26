@@ -27,15 +27,15 @@ async function deleteCourse(courseId) {
 
 async function manageCourse(courseId) {
   currentCourseId = courseId;
-  
+
   // Get course title
   const courseRow = document.querySelector(`tr:has(button[onclick*="${courseId}"])`);
   const courseTitle = courseRow ? courseRow.querySelector('td strong').textContent : 'Course';
   document.getElementById('manageCourseTitle').textContent = courseTitle;
-  
+
   // Load chapters
   await loadChapters(courseId);
-  
+
   const modal = new bootstrap.Modal(document.getElementById('manageCourseModal'));
   modal.show();
 }
@@ -45,7 +45,7 @@ async function loadChapters(courseId) {
   try {
     const response = await fetch(`/admin/api/courses/${courseId}/chapters`);
     const result = await response.json();
-    
+
     if (result.success) {
       renderChapters(result.chapters);
     } else {
@@ -111,15 +111,15 @@ async function deleteChapter(chapterId) {
 
 async function manageChapter(chapterId) {
   currentChapterId = chapterId;
-  
+
   // Get chapter title
   const chapterRow = document.querySelector(`tr:has(button[onclick*="manageChapter(${chapterId})"])`);
   const chapterTitle = chapterRow ? chapterRow.querySelector('td:nth-child(2) strong').textContent : 'Chapter';
   document.getElementById('manageChapterTitle').textContent = chapterTitle;
-  
+
   // Load lessons
   await loadLessons(chapterId);
-  
+
   const modal = new bootstrap.Modal(document.getElementById('manageChapterModal'));
   modal.show();
 }
@@ -210,7 +210,7 @@ async function loadLessonCount(chapterId) {
   try {
     const response = await fetch(`/admin/api/chapters/${chapterId}/lessons`);
     const result = await response.json();
-    
+
     if (result.success) {
       const countElement = document.querySelector(`.chapter-lesson-count-${chapterId}`);
       if (countElement) {
@@ -227,7 +227,7 @@ async function loadLessons(chapterId) {
   try {
     const response = await fetch(`/admin/api/chapters/${chapterId}/lessons`);
     const result = await response.json();
-    
+
     if (result.success) {
       renderLessons(result.lessons);
     } else {
@@ -381,7 +381,7 @@ function renderLessons(lessons) {
 // Course Stats
 async function loadCourseStats() {
   const courseRows = document.querySelectorAll('#coursesTableBody tr');
-  
+
   for (const row of courseRows) {
     const manageButton = row.querySelector('button[onclick*="manageCourse"]');
     if (manageButton) {
@@ -391,11 +391,11 @@ async function loadCourseStats() {
         try {
           const response = await fetch(`/admin/api/courses/${courseId}/stats`);
           const result = await response.json();
-          
+
           if (result.success) {
             const chapterCountCell = row.querySelector(`.chapter-count-${courseId}`);
             const lessonCountCell = row.querySelector(`.lesson-count-${courseId}`);
-            
+
             if (chapterCountCell) chapterCountCell.textContent = result.stats.chaptersCount;
             if (lessonCountCell) lessonCountCell.textContent = result.stats.lessonsCount;
           }
@@ -412,7 +412,7 @@ async function loadClients() {
   try {
     const response = await fetch('/admin/api/clients');
     const result = await response.json();
-    
+
     if (result.success) {
       // Load purchased courses for each client
       const clientsWithCourses = await Promise.all(result.clients.map(async (client) => {
@@ -423,7 +423,7 @@ async function loadClients() {
           purchasedCourses: purchasesResult.success ? purchasesResult.courses : []
         };
       }));
-      
+
       renderClients(clientsWithCourses);
     } else {
       console.error('Failed to load clients');
@@ -435,7 +435,7 @@ async function loadClients() {
 
 function renderClients(clients) {
   const tbody = document.getElementById('clientsTableBody');
-  
+
   if (!clients || clients.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" class="text-center">No clients registered yet.</td></tr>';
     return;
@@ -446,7 +446,7 @@ function renderClients(clients) {
     let totalCourses = client.purchasedCourses.length;
     let completedCourses = client.purchasedCourses.filter(c => c.progress && c.progress.isCompleted).length;
     let overallProgress = totalCourses > 0 ? Math.round((completedCourses / totalCourses) * 100) : 0;
-    
+
     // Build progress display
     let progressHTML = '';
     if (totalCourses === 0) {
@@ -465,7 +465,7 @@ function renderClients(clients) {
         </div>
       `;
     }
-    
+
     return `
       <tr>
         <td><strong>${client.fullname}</strong></td>
@@ -503,46 +503,46 @@ async function removeCourseFromClient(clientId, clientName) {
   try {
     const response = await fetch(`/admin/api/clients/${clientId}/purchases`);
     const result = await response.json();
-    
+
     if (!result.success || result.courses.length === 0) {
       alert('This client has no purchased courses');
       return;
     }
-    
+
     document.getElementById('selectedClientIdRemove').value = clientId;
     document.getElementById('removeCourseFromClientModalLabel').textContent = `Remove Course from ${clientName}`;
-    
+
     const select = document.getElementById('clientCourseSelectRemove');
     select.innerHTML = '<option value="">-- Select Course to Remove --</option>' +
-      result.courses.map(course => 
+      result.courses.map(course =>
         `<option value="${course.course_id}">${course.course_title} - ${course.price} DA</option>`
       ).join('');
-    
+
     const modal = new bootstrap.Modal(document.getElementById('removeCourseFromClientModal'));
     modal.show();
   } catch (error) {
     console.error('Error loading courses:', error);
     alert('Error loading courses');
   }
-  
+
   // Setup form submission
   const form = document.getElementById('removeCourseFromClientForm');
   form.onsubmit = async (e) => {
     e.preventDefault();
     const courseId = document.getElementById('clientCourseSelectRemove').value;
     const message = document.getElementById('messageClientCourseRemove');
-    
+
     if (!courseId) {
       message.textContent = 'Please select a course';
       message.style.display = 'block';
       message.style.color = 'red';
       return;
     }
-    
+
     if (!confirm('Are you sure you want to remove this course from the client? This action cannot be undone.')) {
       return;
     }
-    
+
     try {
       const response = await fetch('/admin/api/clients/remove-course', {
         method: 'POST',
@@ -554,9 +554,9 @@ async function removeCourseFromClient(clientId, clientName) {
           courseId
         })
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         message.textContent = result.message;
         message.style.display = 'block';
@@ -579,19 +579,19 @@ async function removeCourseFromClient(clientId, clientName) {
 async function addCourseToClient(clientId, clientName) {
   document.getElementById('selectedClientId').value = clientId;
   document.getElementById('addCourseToClientModalLabel').textContent = `Add Course to ${clientName}`;
-  
+
   // Load available courses
   try {
     const response = await fetch('/admin/api/courses');
     const result = await response.json();
-    
+
     if (result.success) {
       const select = document.getElementById('clientCourseSelect');
       select.innerHTML = '<option value="">-- Select Course --</option>' +
-        result.courses.map(course => 
+        result.courses.map(course =>
           `<option value="${course.course_id}">${course.title} - ${course.price} DA</option>`
         ).join('');
-      
+
       const modal = new bootstrap.Modal(document.getElementById('addCourseToClientModal'));
       modal.show();
     }
@@ -599,21 +599,21 @@ async function addCourseToClient(clientId, clientName) {
     console.error('Error loading courses:', error);
     alert('Error loading courses');
   }
-  
+
   // Setup form submission
   const form = document.getElementById('addCourseToClientForm');
   form.onsubmit = async (e) => {
     e.preventDefault();
     const courseId = document.getElementById('clientCourseSelect').value;
     const message = document.getElementById('messageClientCourse');
-    
+
     if (!courseId) {
       message.textContent = 'Please select a course';
       message.style.display = 'block';
       message.style.color = 'red';
       return;
     }
-    
+
     try {
       const response = await fetch('/admin/api/clients/add-course', {
         method: 'POST',
@@ -625,9 +625,9 @@ async function addCourseToClient(clientId, clientName) {
           courseId
         })
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         message.textContent = result.message;
         message.style.display = 'block';
@@ -664,19 +664,19 @@ async function viewClientProgress(clientId, name, email) {
   try {
     const response = await fetch(`/admin/api/clients/${clientId}/purchases`);
     const result = await response.json();
-    
+
     if (!result.success) {
       alert('Error loading client progress');
       return;
     }
-    
+
     const courses = result.courses || [];
-    
+
     if (courses.length === 0) {
       alert(`${name} has no purchased courses yet.`);
       return;
     }
-    
+
     // Create modal content
     let modalContent = `
       <div class="modal fade" id="clientProgressModal" tabindex="-1" aria-labelledby="clientProgressModalLabel" aria-hidden="true">
@@ -702,16 +702,16 @@ async function viewClientProgress(clientId, name, email) {
                   </thead>
                   <tbody>
     `;
-    
+
     courses.forEach(course => {
       const progress = course.progress || { total: 0, completed: 0, percentage: 0, isCompleted: false };
-      const statusBadge = progress.isCompleted 
-        ? '<span class="badge badge-success">Completed</span>' 
+      const statusBadge = progress.isCompleted
+        ? '<span class="badge badge-success">Completed</span>'
         : `<span class="badge badge-warning">In Progress</span>`;
-      const certificateBadge = progress.isCompleted 
-        ? '<span class="badge badge-info">✓ Has Certificate</span>' 
+      const certificateBadge = progress.isCompleted
+        ? '<span class="badge badge-info">✓ Has Certificate</span>'
         : '<span class="text-muted">-</span>';
-      
+
       modalContent += `
         <tr>
           <td><strong>${course.course_title}</strong></td>
@@ -732,7 +732,7 @@ async function viewClientProgress(clientId, name, email) {
         </tr>
       `;
     });
-    
+
     modalContent += `
                   </tbody>
                 </table>
@@ -745,25 +745,25 @@ async function viewClientProgress(clientId, name, email) {
         </div>
       </div>
     `;
-    
+
     // Remove existing modal if any
     const existingModal = document.getElementById('clientProgressModal');
     if (existingModal) {
       existingModal.remove();
     }
-    
+
     // Add modal to body
     document.body.insertAdjacentHTML('beforeend', modalContent);
-    
+
     // Show modal
     const modal = new bootstrap.Modal(document.getElementById('clientProgressModal'));
     modal.show();
-    
+
     // Remove modal from DOM when hidden
-    document.getElementById('clientProgressModal').addEventListener('hidden.bs.modal', function() {
+    document.getElementById('clientProgressModal').addEventListener('hidden.bs.modal', function () {
       this.remove();
     });
-    
+
   } catch (error) {
     console.error('Error loading client progress:', error);
     alert('Error loading client progress');
@@ -796,7 +796,7 @@ async function loadPurchases() {
   try {
     const response = await fetch('/admin/api/purchases');
     const result = await response.json();
-    
+
     if (result.success) {
       renderPurchases(result.purchases);
     } else {
@@ -809,7 +809,7 @@ async function loadPurchases() {
 
 function renderPurchases(purchases) {
   const tbody = document.getElementById('purchasesTableBody');
-  
+
   if (!purchases || purchases.length === 0) {
     tbody.innerHTML = '<tr><td colspan="7" class="text-center">No purchases yet.</td></tr>';
     document.getElementById('totalPurchases').textContent = '0';
@@ -884,7 +884,7 @@ async function loadDashboardStats() {
   try {
     const response = await fetch('/admin/api/stats');
     const result = await response.json();
-    
+
     if (result.success) {
       const stats = result.stats;
       // English version
@@ -892,18 +892,18 @@ async function loadDashboardStats() {
       const totalCoursesEl = document.getElementById('totalCourses');
       const totalPurchasesEl = document.getElementById('totalPurchases');
       const totalEarningsEl = document.getElementById('totalEarnings');
-      
+
       if (totalUsersEl) totalUsersEl.textContent = stats.totalUsers || 0;
       if (totalCoursesEl) totalCoursesEl.textContent = stats.totalCourses || 0;
       if (totalPurchasesEl) totalPurchasesEl.textContent = stats.totalPurchases || 0;
       if (totalEarningsEl) totalEarningsEl.textContent = (stats.totalRevenue || 0).toFixed(2) + ' DA';
-      
+
       // Arabic version
       const totalUsersArEl = document.getElementById('totalUsersAr');
       const totalCoursesArEl = document.getElementById('totalCoursesAr');
       const totalPurchasesArEl = document.getElementById('totalPurchasesAr');
       const totalEarningsArEl = document.getElementById('totalEarningsAr');
-      
+
       if (totalUsersArEl) totalUsersArEl.textContent = stats.totalUsers || 0;
       if (totalCoursesArEl) totalCoursesArEl.textContent = stats.totalCourses || 0;
       if (totalPurchasesArEl) totalPurchasesArEl.textContent = stats.totalPurchases || 0;
@@ -924,13 +924,13 @@ function openAddCourseModal() {
   document.getElementById('addCourseModalLabel').textContent = 'Add New Course';
   const submitBtn = document.querySelector('#addCourseForm button[type="submit"]');
   if (submitBtn) submitBtn.textContent = 'Save Course';
-  
+
   // Reset image preview
   const imagePreview = document.getElementById('imagePreview');
   const courseImageInput = document.getElementById('courseImage');
   if (imagePreview) imagePreview.style.display = 'none';
   if (courseImageInput) courseImageInput.setAttribute('required', 'required');
-  
+
   const modal = new bootstrap.Modal(document.getElementById('addCourseModal'));
   modal.show();
 }
@@ -939,7 +939,7 @@ async function editCourse(courseId) {
   try {
     const response = await fetch(`/admin/api/courses/${courseId}`);
     const result = await response.json();
-    
+
     if (result.success) {
       const course = result.course;
       document.getElementById('editCourseId').value = courseId;
@@ -950,17 +950,17 @@ async function editCourse(courseId) {
       const imagePreview = document.getElementById('imagePreview');
       const previewImg = document.getElementById('previewImg');
       const courseImageInput = document.getElementById('courseImage');
-      
+
       if (existingImageUrl) {
         existingImageUrl.value = course.thumbnail_url;
       }
-      
+
       // Show existing image preview
       if (imagePreview && previewImg && course.thumbnail_url) {
         previewImg.src = course.thumbnail_url;
         imagePreview.style.display = 'block';
       }
-      
+
       // Make image input optional for edit (not required)
       if (courseImageInput) {
         courseImageInput.removeAttribute('required');
@@ -969,11 +969,11 @@ async function editCourse(courseId) {
       document.getElementById('durationHours').value = course.duration_hours;
       document.getElementById('courseCategory').value = course.level || '';
       document.getElementById('isPublished').value = course.is_published ? 'publish' : 'draft';
-      
+
       document.getElementById('addCourseModalLabel').textContent = 'Edit Course';
       const submitBtn = document.querySelector('#addCourseForm button[type="submit"]');
       if (submitBtn) submitBtn.textContent = 'Update Course';
-      
+
       const modal = new bootstrap.Modal(document.getElementById('addCourseModal'));
       modal.show();
     } else {
@@ -990,7 +990,7 @@ async function loadCertificates() {
   try {
     const response = await fetch('/admin/api/certificates');
     const result = await response.json();
-    
+
     if (result.success) {
       renderCertificates(result.certificates);
     } else {
@@ -1003,7 +1003,7 @@ async function loadCertificates() {
 
 function renderCertificates(certificates) {
   const tbody = document.getElementById('certificatesTableBody');
-  
+
   if (!certificates || certificates.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" class="text-center">No certificates issued yet.</td></tr>';
     return;
@@ -1033,34 +1033,34 @@ async function openIssueCertificateModal() {
   try {
     const clientsResponse = await fetch('/admin/api/clients');
     const clientsResult = await clientsResponse.json();
-    
+
     if (clientsResult.success) {
       const clientSelect = document.getElementById('certificateClientSelect');
       clientSelect.innerHTML = '<option value="">-- Select Client --</option>' +
-        clientsResult.clients.map(client => 
+        clientsResult.clients.map(client =>
           `<option value="${client.id}">${client.fullname} (${client.email})</option>`
         ).join('');
     }
-    
+
     // Load courses
     const coursesResponse = await fetch('/admin/api/courses');
     const coursesResult = await coursesResponse.json();
-    
+
     if (coursesResult.success) {
       const courseSelect = document.getElementById('certificateCourseSelect');
       courseSelect.innerHTML = '<option value="">-- Select Course --</option>' +
-        coursesResult.courses.map(course => 
+        coursesResult.courses.map(course =>
           `<option value="${course.course_id}">${course.title}</option>`
         ).join('');
     }
-    
+
     const modal = new bootstrap.Modal(document.getElementById('issueCertificateModal'));
     modal.show();
   } catch (error) {
     console.error('Error loading data:', error);
     alert('Error loading data');
   }
-  
+
   // Setup form submission
   const form = document.getElementById('issueCertificateForm');
   form.onsubmit = async (e) => {
@@ -1068,14 +1068,14 @@ async function openIssueCertificateModal() {
     const clientId = document.getElementById('certificateClientSelect').value;
     const courseId = document.getElementById('certificateCourseSelect').value;
     const message = document.getElementById('messageCertificate');
-    
+
     if (!clientId || !courseId) {
       message.textContent = 'Please select both client and course';
       message.style.display = 'block';
       message.style.color = 'red';
       return;
     }
-    
+
     try {
       const response = await fetch('/admin/api/certificates/issue', {
         method: 'POST',
@@ -1084,12 +1084,12 @@ async function openIssueCertificateModal() {
         },
         body: JSON.stringify({ clientId, courseId })
       });
-      
+
       const result = await response.json();
       message.style.display = 'block';
       message.style.color = result.success ? 'green' : 'red';
       message.textContent = result.message;
-      
+
       if (result.success) {
         setTimeout(() => {
           modal.hide();
@@ -1107,14 +1107,14 @@ async function openIssueCertificateModal() {
 
 async function deleteCertificate(certId) {
   if (!confirm('Are you sure you want to delete this certificate?')) return;
-  
+
   try {
     const response = await fetch(`/admin/api/certificates/${certId}`, {
       method: 'DELETE',
     });
-    
+
     const result = await response.json();
-    
+
     if (result.success) {
       await loadCertificates();
     } else {

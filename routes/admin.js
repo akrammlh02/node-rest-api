@@ -6,7 +6,7 @@ const conn = require('../config/db');
 
 // Multer setup to store file in memory (better for Cloudinary)
 const storage = multer.memoryStorage();
-const upload = multer({ 
+const upload = multer({
   storage,
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
@@ -77,13 +77,13 @@ router.get('/ar', (req, res) => {
 router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
   try {
     const { courseTitle, courseDescription, isPublished, durationHours, coursePrice, courseCategory } = req.body;
-    
+
     if (!courseTitle || !courseDescription || !coursePrice || !durationHours || !courseCategory) {
       return res.json({ success: false, message: 'All fields are required' });
     }
 
     let imageUrl = '';
-    
+
     // Upload image to Cloudinary if provided
     if (req.file) {
       try {
@@ -109,7 +109,7 @@ router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
     } else {
       etat = true;
     }
-    
+
     const sql = `
       INSERT INTO courses 
       (title, description, price, duration_hours,
@@ -117,7 +117,7 @@ router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
       VALUES
       (?,?,?,?,?,?,?,?)
     `;
-    
+
     conn.query(sql, [
       courseTitle, courseDescription,
       coursePrice, durationHours,
@@ -275,7 +275,7 @@ router.put('/api/chapters/:chapterId/order', (req, res) => {
     const orderOperator = direction === 'up' ? '<' : '>';
     const orderDirection = direction === 'up' ? 'DESC' : 'ASC';
     const getAdjacentSql = `SELECT * FROM chapters WHERE course_id = ? AND \`order\` ${orderOperator} ? ORDER BY \`order\` ${orderDirection} LIMIT 1`;
-    
+
     conn.query(getAdjacentSql, [courseId, currentOrder], (err, adjacentChapters) => {
       if (err || adjacentChapters.length === 0) {
         return res.json({ success: false, message: 'Cannot move chapter' });
@@ -385,7 +385,7 @@ router.put('/api/lessons/:lessonId/order', (req, res) => {
     const orderOperator = direction === 'up' ? '<' : '>';
     const orderDirection = direction === 'up' ? 'DESC' : 'ASC';
     const getAdjacentSql = `SELECT * FROM lessons WHERE chapitre_id = ? AND order_number ${orderOperator} ? ORDER BY order_number ${orderDirection} LIMIT 1`;
-    
+
     conn.query(getAdjacentSql, [chapterId, currentOrder], (err, adjacentLessons) => {
       if (err || adjacentLessons.length === 0) {
         return res.json({ success: false, message: 'Cannot move lesson' });
@@ -437,14 +437,14 @@ router.get('/api/clients/:clientId/purchases', (req, res) => {
       console.error(err);
       return res.status(500).json({ success: false, message: 'Server error' });
     }
-    
+
     // Get progress for each course
     if (result.length === 0) {
       return res.json({ success: true, courses: [] });
     }
-    
+
     const courseIds = result.map(c => c.course_id);
-    
+
     // Get total lessons count for each course
     const totalLessonsSql = `
       SELECT ch.course_id, COUNT(l.lesson_id) as total_lessons
@@ -453,12 +453,12 @@ router.get('/api/clients/:clientId/purchases', (req, res) => {
       WHERE ch.course_id IN (?)
       GROUP BY ch.course_id
     `;
-    
+
     conn.query(totalLessonsSql, [courseIds], (err, totalLessons) => {
       if (err) {
         return res.json({ success: true, courses: result });
       }
-      
+
       // Get completed lessons count for each course
       const completedSql = `
         SELECT ch.course_id, COUNT(DISTINCT pr.lesson_id) as completed_lessons
@@ -468,19 +468,19 @@ router.get('/api/clients/:clientId/purchases', (req, res) => {
         WHERE pr.client_id = ? AND pr.completed = 1 AND ch.course_id IN (?)
         GROUP BY ch.course_id
       `;
-      
+
       conn.query(completedSql, [clientId, courseIds], (err, completedLessons) => {
         if (err) {
           return res.json({ success: true, courses: result });
         }
-        
+
         // Calculate progress for each course
         const coursesWithProgress = result.map(course => {
           const total = totalLessons.find(t => t.course_id === course.course_id)?.total_lessons || 0;
           const completed = completedLessons.find(c => c.course_id === course.course_id)?.completed_lessons || 0;
           const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
           const isCompleted = total > 0 && completed >= total;
-          
+
           return {
             ...course,
             progress: {
@@ -491,7 +491,7 @@ router.get('/api/clients/:clientId/purchases', (req, res) => {
             }
           };
         });
-        
+
         res.json({ success: true, courses: coursesWithProgress });
       });
     });
@@ -501,18 +501,18 @@ router.get('/api/clients/:clientId/purchases', (req, res) => {
 // API: Manually add course to client (for manual payment)
 router.post('/api/clients/add-course', (req, res) => {
   const { clientId, courseId } = req.body;
-  
+
   if (!clientId || !courseId) {
     return res.json({ success: false, message: 'Client ID and Course ID are required' });
   }
-  
+
   // Check if purchase already exists
   const checkSql = 'SELECT * FROM purchases WHERE client_id = ? AND course_id = ?';
   conn.query(checkSql, [clientId, courseId], (err, existing) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Server error' });
     }
-    
+
     if (existing.length > 0) {
       // Update existing purchase to paid
       const updateSql = 'UPDATE purchases SET paid = 1 WHERE client_id = ? AND course_id = ?';
@@ -567,13 +567,13 @@ router.put('/updateCourse/:id', upload.single('courseImage'), async (req, res) =
   try {
     const courseId = req.params.id;
     const { courseTitle, courseDescription, isPublished, durationHours, coursePrice, courseCategory, existingImageUrl } = req.body;
-    
+
     if (!courseTitle || !courseDescription || !coursePrice || !durationHours || !courseCategory) {
       return res.json({ success: false, message: 'All fields are required' });
     }
 
     let imageUrl = existingImageUrl || '';
-    
+
     // Upload new image to Cloudinary if provided
     if (req.file) {
       try {
@@ -589,25 +589,25 @@ router.put('/updateCourse/:id', upload.single('courseImage'), async (req, res) =
         return res.json({ success: false, message: 'Failed to upload image. Please try again.' });
       }
     }
-    
+
     if (!imageUrl) {
       return res.json({ success: false, message: 'Course image is required' });
     }
-    
+
     let etat;
     if (isPublished === 'draft') {
       etat = false;
     } else {
       etat = true;
     }
-    
+
     const sql = `
       UPDATE courses 
       SET title = ?, description = ?, price = ?, duration_hours = ?,
           thumbnail_url = ?, is_published = ?, level = ?
       WHERE course_id = ?
     `;
-    
+
     conn.query(sql, [
       courseTitle, courseDescription,
       coursePrice, durationHours,
@@ -628,18 +628,18 @@ router.put('/updateCourse/:id', upload.single('courseImage'), async (req, res) =
 // API: Remove course from client
 router.post('/api/clients/remove-course', (req, res) => {
   const { clientId, courseId } = req.body;
-  
+
   if (!clientId || !courseId) {
     return res.json({ success: false, message: 'Client ID and Course ID are required' });
   }
-  
+
   // Delete purchase record
   const deleteSql = 'DELETE FROM purchases WHERE client_id = ? AND course_id = ?';
   conn.query(deleteSql, [clientId, courseId], (err, result) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Server error' });
     }
-    
+
     // Also delete progress for this course
     const deleteProgressSql = `
       DELETE pr FROM progress pr
@@ -751,7 +751,7 @@ router.get('/api/stats', (req, res) => {
 // API: Get course with chapters and lessons count
 router.get('/api/courses/:courseId/stats', (req, res) => {
   const courseId = req.params.courseId;
-  
+
   // Get chapters count
   conn.query('SELECT COUNT(*) as count FROM chapters WHERE course_id = ?', [courseId], (err, chapterResult) => {
     if (err) {
@@ -773,12 +773,12 @@ router.get('/api/courses/:courseId/stats', (req, res) => {
 
       const lessonsCount = lessonResult[0].count;
 
-      res.json({ 
-        success: true, 
-        stats: { 
-          chaptersCount, 
-          lessonsCount 
-        } 
+      res.json({
+        success: true,
+        stats: {
+          chaptersCount,
+          lessonsCount
+        }
       });
     });
   });
@@ -794,7 +794,7 @@ router.get('/api/certificates', (req, res) => {
     INNER JOIN courses co ON c.course_id = co.course_id
     ORDER BY c.date_issued DESC
   `;
-  
+
   conn.query(sql, (err, result) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Server error' });
@@ -806,22 +806,22 @@ router.get('/api/certificates', (req, res) => {
 // API: Manually issue certificate to a client
 router.post('/api/certificates/issue', (req, res) => {
   const { clientId, courseId } = req.body;
-  
+
   if (!clientId || !courseId) {
     return res.json({ success: false, message: 'Client ID and Course ID are required' });
   }
-  
+
   // Check if certificate already exists
   const checkSql = 'SELECT * FROM certificates WHERE client_id = ? AND course_id = ?';
   conn.query(checkSql, [clientId, courseId], (err, existing) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Server error' });
     }
-    
+
     if (existing.length > 0) {
       return res.json({ success: false, message: 'Certificate already exists for this client and course' });
     }
-    
+
     // Insert new certificate
     const certificateUrl = `/course/certificate/${clientId}/${courseId}`;
     const insertSql = 'INSERT INTO certificates (client_id, course_id, date_issued, certificate_url) VALUES (?, ?, ?, ?)';
@@ -837,17 +837,17 @@ router.post('/api/certificates/issue', (req, res) => {
 // API: Delete certificate
 router.delete('/api/certificates/:id', (req, res) => {
   const certId = req.params.id;
-  
+
   const deleteSql = 'DELETE FROM certificates WHERE id = ?';
   conn.query(deleteSql, [certId], (err, result) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Server error' });
     }
-    
+
     if (result.affectedRows === 0) {
       return res.json({ success: false, message: 'Certificate not found' });
     }
-    
+
     res.json({ success: true, message: 'Certificate deleted successfully' });
   });
 });
@@ -884,7 +884,7 @@ router.post('/api/quizzes', (req, res) => {
   if (!language || !question || !option_a || !option_b || !option_c || !option_d || !correct_option) {
     return res.json({ success: false, message: 'All fields are required' });
   }
-  if (!['A','B','C','D'].includes(correct_option)) {
+  if (!['A', 'B', 'C', 'D'].includes(correct_option)) {
     return res.json({ success: false, message: 'correct_option must be one of A,B,C,D' });
   }
   const sql = `INSERT INTO quizzes (language, question, option_a, option_b, option_c, option_d, correct_option) VALUES (?,?,?,?,?,?,?)`;

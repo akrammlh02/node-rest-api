@@ -86,7 +86,7 @@ router.get('/tv', (req, res) => {
 router.get('/api/lesson/:lessonId', (req, res) => {
   const lessonId = req.params.lessonId;
   const clientId = req.session.user ? req.session.user.id : null;
-  
+
   // Get lesson details
   const lessonSql = `
     SELECT l.*, ch.title as chapter_title, ch.order as chapter_order, ch.course_id, c.title as course_title, c.thumbnail_url
@@ -95,19 +95,19 @@ router.get('/api/lesson/:lessonId', (req, res) => {
     INNER JOIN courses c ON ch.course_id = c.course_id
     WHERE l.lesson_id = ?
   `;
-  
+
   conn.query(lessonSql, [lessonId], (err, lessons) => {
     if (err || lessons.length === 0) {
       return res.status(404).json({ success: false, message: 'Lesson not found' });
     }
-    
+
     const lesson = lessons[0];
     const courseId = lesson.course_id;
-    
+
     // Check if client has access
     let hasAccess = false;
     if (clientId) {
-      conn.query('SELECT * FROM purchases WHERE client_id = ? AND course_id = ? AND paid = 1', 
+      conn.query('SELECT * FROM purchases WHERE client_id = ? AND course_id = ? AND paid = 1',
         [clientId, courseId], (err, purchases) => {
           hasAccess = !err && purchases.length > 0;
           loadLessonData(hasAccess);
@@ -115,12 +115,12 @@ router.get('/api/lesson/:lessonId', (req, res) => {
     } else {
       loadLessonData(false);
     }
-    
+
     function loadLessonData(hasAccess) {
       if (!hasAccess) {
         return res.json({ success: false, message: 'Access denied. Please purchase the course first.' });
       }
-      
+
       // Get all lessons in the course for navigation
       const allLessonsSql = `
         SELECT l.lesson_id, l.title, l.order_number, l.content_url, ch.id as chapter_id, ch.title as chapter_title, ch.order as chapter_order
@@ -129,17 +129,17 @@ router.get('/api/lesson/:lessonId', (req, res) => {
         WHERE ch.course_id = ?
         ORDER BY ch.order ASC, l.order_number ASC
       `;
-      
+
       conn.query(allLessonsSql, [courseId], (err, allLessons) => {
         if (err) {
           return res.status(500).json({ success: false, message: 'Server error' });
         }
-        
+
         // Get current lesson index
         const currentIndex = allLessons.findIndex(l => l.lesson_id == lessonId);
         const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
         const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
-        
+
         // Get all chapters with lessons for sidebar
         const chaptersSql = `
           SELECT ch.*, COUNT(l.lesson_id) as lessons_count
@@ -149,12 +149,12 @@ router.get('/api/lesson/:lessonId', (req, res) => {
           GROUP BY ch.id
           ORDER BY ch.order ASC
         `;
-        
+
         conn.query(chaptersSql, [courseId], (err, chapters) => {
           if (err) {
             return res.status(500).json({ success: false, message: 'Server error' });
           }
-          
+
           // Get lessons for each chapter
           const chapterIds = chapters.map(ch => ch.id);
           if (chapterIds.length === 0) {
@@ -169,7 +169,7 @@ router.get('/api/lesson/:lessonId', (req, res) => {
               }
             });
           }
-          
+
           const lessonsSql = `
             SELECT l.*, ch.id as chapter_id
             FROM lessons l
@@ -177,25 +177,25 @@ router.get('/api/lesson/:lessonId', (req, res) => {
             WHERE ch.id IN (?)
             ORDER BY ch.order ASC, l.order_number ASC
           `;
-          
+
           conn.query(lessonsSql, [chapterIds], (err, allLessonsForChapters) => {
             if (err) {
               return res.status(500).json({ success: false, message: 'Server error' });
             }
-            
+
             // Group lessons by chapter
             const chaptersWithLessons = chapters.map(chapter => ({
               ...chapter,
               lessons: allLessonsForChapters.filter(l => l.chapter_id === chapter.id)
             }));
-            
+
             // Check if lesson is completed
             let isCompleted = false;
             if (clientId) {
               conn.query('SELECT * FROM progress WHERE client_id = ? AND lesson_id = ? AND completed = 1',
                 [clientId, lessonId], (err, progress) => {
                   isCompleted = !err && progress.length > 0;
-                  
+
                   // Get course progress
                   const progressSql = `
                     SELECT COUNT(DISTINCT pr.lesson_id) as completed_count,
@@ -205,10 +205,10 @@ router.get('/api/lesson/:lessonId', (req, res) => {
                     INNER JOIN chapters ch ON l.chapitre_id = ch.id
                     WHERE pr.client_id = ? AND pr.completed = 1 AND ch.course_id = ?
                   `;
-                  
+
                   conn.query(progressSql, [courseId, clientId, courseId], (err, progressResult) => {
                     const courseProgress = progressResult && progressResult.length > 0 ? progressResult[0] : { completed_count: 0, total_lessons: 0 };
-                    
+
                     res.json({
                       success: true,
                       lesson: {

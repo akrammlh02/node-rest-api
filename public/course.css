@@ -47,13 +47,13 @@ body::before {
 
 header {
   border-bottom: 3px solid #7b09cd;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-    background-color: white;
-    box-shadow: 0 5px 20px rgba(123, 9, 205, 0.15);
-    animation: headerGlow 4s ease-in-out infinite;
-    z-index: 9999;
-    position: sticky;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background-color: white;
+  box-shadow: 0 5px 20px rgba(123, 9, 205, 0.15);
+  animation: headerGlow 4s ease-in-out infinite;
+  z-index: 9999;
+  position: sticky;
   top: 0;
   z-index: 1000;
   transition: all 0.3s ease;
@@ -82,6 +82,7 @@ nav {
 nav img {
   margin-bottom: 10px;
 }
+
 nav ul {
   display: flex;
   align-items: center;
@@ -106,6 +107,7 @@ nav ul li a {
 nav ul li button a {
   color: white;
 }
+
 nav ul li a::before {
   content: '';
   position: absolute;
@@ -142,7 +144,8 @@ nav ul li a:hover::before {
   box-shadow: 0 0 20px rgba(123, 9, 205, 0.6), 0 0 30px rgba(152, 16, 250, 0.4);
   transform: translateY(-2px);
 }
-.signup:hover a{
+
+.signup:hover a {
   color: white !important;
 }
 
@@ -151,7 +154,7 @@ nav ul li a:hover::before {
 }
 
 .menu-button {
-  
+
   background: linear-gradient(135deg, #7b09cd, #0d00ff) !important;
   border: none !important;
   padding: 10px 20px !important;
@@ -160,18 +163,20 @@ nav ul li a:hover::before {
   border-radius: 15px !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
   box-shadow: 0 8px 32px rgba(123, 9, 205, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
-.menu-button span{
+
+.menu-button span {
   color: white !important;
   font-size: 24px !important;
   padding: 0;
   margin: 0;
 }
-.menu-button::before{
+
+.menu-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -181,14 +186,16 @@ nav ul li a:hover::before {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.5s;
 }
+
 .menu-button:hover::before {
   left: 100%;
 }
+
 .menu-button:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(123, 9, 205, 0.5), 
-              0 0 60px rgba(152, 16, 250, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 12px 40px rgba(123, 9, 205, 0.5),
+    0 0 60px rgba(152, 16, 250, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
   background: linear-gradient(135deg, #0d00ff, #7b09cd) !important;
 }
 
@@ -331,6 +338,8 @@ hr {
   -webkit-backdrop-filter: blur(10px);
   animation: fadeInUp 0.6s ease-out;
   border: 1px solid rgba(123, 9, 205, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .course::after {
@@ -653,5 +662,42 @@ hr {
   .category button {
     margin: 2px;
     margin-top: 40px;
+  }
+
+  /* Hide the button on mobile, make entire card clickable */
+  .button-join {
+    display: none !important;
+  }
+}
+
+/* Course card link styling */
+.course-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  flex: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(123, 9, 205, 0.1);
+  transition: all 0.3s ease;
+}
+
+.course-card-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.course-card-link:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* Show button on desktop, hide card link pointer on desktop */
+@media (min-width: 769px) {
+  .course-card-link {
+    pointer-events: none;
+  }
+
+  .button-join {
+    display: flex !important;
   }
 }

@@ -394,7 +394,8 @@ nav ul li a:hover {
 
 .lesson-item.locked {
   opacity: 0.6;
-  background: #f3f4f6;
+  /* background: #f3f4f6; */
+  color: black;
   position: relative;
 }
 
@@ -405,17 +406,19 @@ nav ul li a:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
+  /* background: rgba(255, 255, 255, 0.322); */
   border-radius: 12px;
 }
 
 .lesson-item.locked .lesson-title {
-  color: #9ca3af;
+  /* color: #9ca3af; */
+  color: black;
 }
 
 .lesson-item.locked .lesson-number {
   background: #d1d5db;
-  color: #6b7280;
+  /* color: #6b7280; */
+  color: black;
 }
 
 .lock-badge {
@@ -425,7 +428,7 @@ nav ul li a:hover {
 }
 
 .locked-link {
-  color: #9ca3af !important;
+  /* color: #9ca3af !important; */
   cursor: not-allowed;
   pointer-events: none;
   opacity: 0.7;

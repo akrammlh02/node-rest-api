@@ -187,25 +187,41 @@
   </div>
   <!--===================Second section================-->
   <section class="second-section">
-    <div class="card">
-      <span class="material-symbols-outlined">school</span>
-      <h2>+99</h2>
-      <p>Registred Students</p>
+    <div class="stat-card">
+      <div class="icon-wrapper student-icon">
+        <span class="material-symbols-outlined">school</span>
+      </div>
+      <div class="stat-content">
+        <h2>+99</h2>
+        <p>Registered Students</p>
+      </div>
     </div>
-    <div class="card">
-      <span class="material-symbols-outlined">star_shine</span>
-      <h2>+2</h2>
-      <p>Expert</p>
+    <div class="stat-card">
+      <div class="icon-wrapper expert-icon">
+        <span class="material-symbols-outlined">star_shine</span>
+      </div>
+      <div class="stat-content">
+        <h2>+5</h2>
+        <p>Expert Instructors</p>
+      </div>
     </div>
-    <div class="card">
-      <span class="material-symbols-outlined">book</span>
-      <h2>2</h2>
-      <p>Training Courses</p>
+    <div class="stat-card">
+      <div class="icon-wrapper course-icon">
+        <span class="material-symbols-outlined">book</span>
+      </div>
+      <div class="stat-content">
+        <h2>2</h2>
+        <p>Training Courses</p>
+      </div>
     </div>
-    <div class="card">
-      <span class="material-symbols-outlined">check_circle</span>
-      <h2>97%</h2>
-      <p>Completion Rate</p>
+    <div class="stat-card">
+      <div class="icon-wrapper rate-icon">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <div class="stat-content">
+        <h2>97%</h2>
+        <p>Completion Rate</p>
+      </div>
     </div>
   </section>
 
@@ -217,25 +233,29 @@
       {{#if courses}}
       {{#each courses}}
       <div class="course">
-        <div class="image-box">
-          <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
-          <span class="price">{{price}} DA</span>
-        </div>
-        <p class="category">{{#if level}}{{level}}{{else}}COURSE{{/if}}</p>
-        <div style="width: 100%;display: flex; justify-content: center;">
-          <hr>
-        </div>
-        <h5>{{title}}</h5>
-        <p class="description">{{description}}</p>
-        <p class="powered">By Akram Melihi</p>
-        <div style="width: 100%;display: flex; justify-content: center;">
-          <hr>
-        </div>
-        <div class="information">
-          <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
-          <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
-        </div>
-        <button class="btn btn-primary" style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;">
+        <a href="/course/course-view?id={{course_id}}" class="course-card-link">
+          <div class="image-box">
+            <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
+            <span class="price">{{price}} DA</span>
+          </div>
+          <p class="category">{{#if level}}{{level}}{{else}}COURSE{{/if}}</p>
+          <div style="width: 100%;display: flex; justify-content: center;">
+            <hr>
+          </div>
+          <h5>{{title}}</h5>
+          <p class="description">{{description}}</p>
+          <p class="powered"><span class="material-symbols-outlined"
+              style="font-size: 18px; vertical-align: middle; margin-right: 5px;">person</span>By Akram Melihi</p>
+          <div style="width: 100%;display: flex; justify-content: center;">
+            <hr>
+          </div>
+          <div class="information">
+            <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
+            <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
+          </div>
+        </a>
+        <button class="btn btn-primary course-button"
+          style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;">
           <a href="/course/course-view?id={{course_id}}" style="color: white; text-decoration: none;">Learn More</a>
         </button>
       </div>
@@ -384,11 +404,10 @@
   <section class="fourth-section">
     <h2>Start Your Learning Journey Today</h2>
     <p>Join thousands of students learning with us</p>
-    <button type="button" class="btn btn-light"><a href="https://wa.me/213540921726?text=Salam%20Akram%2C%20ana%20mhtam%20bdwrat%20Front-End
-" target="_blank">
-        <img src="/images/WhatsApp.webp" width="40px" style="margin: 0; padding: 0;">
-        Contact us in Whatsapp
-      </a></button>
+    <a href="/signup" class="cta-signup-btn">
+      <span class="btn-text">Sign Up Now</span>
+      <span class="btn-arrow">→</span>
+    </a>
   </section>
 
   <section class="copyright">
@@ -401,25 +420,44 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   <script>
-
-    const text = "Learn programming from real-world developers.";
+    const phrases = [
+      "Learn programming from real-world developers.",
+      "Master the latest web technologies.",
+      "Build your future with DevAcademy."
+    ];
     const h1 = document.getElementById("animated-h1");
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeSpeed = 100;
 
-    function typeWriter(text, element, delay = 50) {
-      element.textContent = ""; // reset text
-      let i = 0;
-      const interval = setInterval(() => {
-        element.textContent += text.charAt(i);
-        i++;
-        if (i >= text.length) clearInterval(interval);
-      }, delay);
+    function typeEffect() {
+      const currentPhrase = phrases[phraseIndex];
+
+      if (isDeleting) {
+        h1.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+        typeSpeed = 30; // Faster when deleting
+      } else {
+        h1.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+        typeSpeed = 70; // Normal typing speed
+      }
+
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        isDeleting = true;
+        typeSpeed = 2000; // Pause at end of phrase
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        typeSpeed = 500; // Pause before typing next phrase
+      }
+
+      setTimeout(typeEffect, typeSpeed);
     }
 
-    typeWriter(text, h1);
-
-    setInterval(() => {
-      typeWriter(text, h1);
-    }, 12000);
+    // Start the animation
+    document.addEventListener('DOMContentLoaded', typeEffect);
   </script>
 
   {{!-- <div class="lang-switch">

@@ -653,7 +653,8 @@
           <div class="section-header">
             <h3>Quiz Questions</h3>
             <div class="filter-buttons">
-              <select class="form-select" id="languageFilter" onchange="filterQuizzesByLanguage()" style="width: auto; display: inline-block;">
+              <select class="form-select" id="languageFilter" onchange="filterQuizzesByLanguage()"
+                style="width: auto; display: inline-block;">
                 <option value="">All Languages</option>
               </select>
             </div>
@@ -676,8 +677,7 @@
       </section>
 
       <!-- Add Quiz Modal -->
-      <div class="modal fade" id="addQuizModal" tabindex="-1" aria-labelledby="addQuizModalLabel"
-        aria-hidden="true">
+      <div class="modal fade" id="addQuizModal" tabindex="-1" aria-labelledby="addQuizModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
@@ -688,7 +688,8 @@
               <form id="addQuizForm">
                 <input type="hidden" id="editQuizId" value="">
                 <div class="mb-3">
-                  <label for="programmingLanguage" class="form-label">Programming Language <span class="text-danger">*</span></label>
+                  <label for="programmingLanguage" class="form-label">Programming Language <span
+                      class="text-danger">*</span></label>
                   <input type="text" class="form-control" id="programmingLanguage" required
                     placeholder="e.g., JavaScript, Python, Java">
                 </div>
@@ -730,7 +731,8 @@
                 </div>
 
                 <div class="mb-3">
-                  <label for="correctOption" class="form-label">Correct Answer <span class="text-danger">*</span></label>
+                  <label for="correctOption" class="form-label">Correct Answer <span
+                      class="text-danger">*</span></label>
                   <select class="form-control" id="correctOption" required>
                     <option value="">-- Select Correct Answer --</option>
                     <option value="A">A</option>
@@ -914,7 +916,7 @@
     });
 
     // ======== Quiz Management Functions ========
-    
+
     // Load quizzes data
     function loadQuizzes() {
       fetch('/admin/api/quizzes')
@@ -932,7 +934,7 @@
     function displayQuizzes(quizzes) {
       const tbody = document.getElementById('quizzesTableBody');
       tbody.innerHTML = '';
-      
+
       quizzes.forEach(quiz => {
         const row = `
           <tr>
@@ -958,10 +960,10 @@
     function loadLanguageFilter(quizzes) {
       const filter = document.getElementById('languageFilter');
       const languages = [...new Set(quizzes.map(q => q.language))];
-      
+
       // Clear existing options except "All Languages"
       filter.innerHTML = '<option value="">All Languages</option>';
-      
+
       languages.forEach(lang => {
         filter.innerHTML += `<option value="${lang}">${lang}</option>`;
       });
@@ -971,7 +973,7 @@
     function filterQuizzesByLanguage() {
       const selectedLanguage = document.getElementById('languageFilter').value;
       const url = selectedLanguage ? `/admin/api/quizzes?language=${selectedLanguage}` : '/admin/api/quizzes';
-      
+
       fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -988,7 +990,7 @@
       document.getElementById('addQuizForm').reset();
       document.getElementById('editQuizId').value = '';
       document.getElementById('messageQuiz').style.display = 'none';
-      
+
       const modal = new bootstrap.Modal(document.getElementById('addQuizModal'));
       modal.show();
     }
@@ -997,7 +999,7 @@
     function editQuiz(quizId) {
       document.getElementById('addQuizModalLabel').textContent = 'Edit Quiz Question';
       document.getElementById('editQuizId').value = quizId;
-      
+
       const modal = new bootstrap.Modal(document.getElementById('addQuizModal'));
       modal.show();
     }
@@ -1008,29 +1010,29 @@
         fetch(`/admin/api/quizzes/${quizId}`, {
           method: 'DELETE'
         })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert('Question deleted successfully!');
-            loadQuizzes(); // Reload the table
-          } else {
-            alert('Error: ' + data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Error deleting quiz:', error);
-          alert('Error deleting question');
-        });
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Question deleted successfully!');
+              loadQuizzes(); // Reload the table
+            } else {
+              alert('Error: ' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error deleting quiz:', error);
+            alert('Error deleting question');
+          });
       }
     }
 
     // Setup quiz form submission
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const quizForm = document.getElementById('addQuizForm');
       if (quizForm) {
         quizForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-          
+
           const editQuizId = document.getElementById('editQuizId').value;
           const programmingLanguage = document.getElementById('programmingLanguage').value;
           const quizQuestion = document.getElementById('quizQuestion').value;
@@ -1070,7 +1072,7 @@
               },
               body: JSON.stringify(quizData)
             });
-            
+
             const result = await response.json();
 
             if (result.success) {
