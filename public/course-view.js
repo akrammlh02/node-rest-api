@@ -27,18 +27,43 @@ async function loadCourse() {
     document.getElementById('courseTitle').textContent = course.title;
     document.getElementById('courseDescription').textContent = course.description || 'No description available.';
     document.getElementById('coursePrice').textContent = course.price + ' DA';
-    document.getElementById('coursePriceBtn').textContent = course.price + ' DA';
-    document.getElementById('courseImage').src = course.thumbnail_url || '/images/front-end-1.jpg';
-    document.getElementById('courseImage').alt = course.title;
 
+    // Update category badge
     if (course.level) {
-      document.getElementById('courseCategory').textContent = course.level;
-      document.getElementById('courseCategory').style.display = 'inline-block';
+      const categoryEl = document.getElementById('courseCategory');
+      if (categoryEl) {
+        categoryEl.textContent = course.level;
+        categoryEl.style.display = 'inline-block';
+      }
+    }
+
+    // Populate duration and level for landing page
+    const durationEl = document.getElementById('courseDuration');
+    const levelEl = document.getElementById('courseLevel');
+    if (durationEl) durationEl.textContent = (course.duration_hours || '0') + ' Hours';
+    if (levelEl) levelEl.textContent = course.level || 'All Levels';
+
+    // Display preview video with AUTOPLAY
+    if (course.preview_video_url && course.preview_video_url.trim() !== '') {
+      const previewSection = document.getElementById('previewVideoSection');
+      const previewFrame = document.getElementById('previewVideoFrame');
+      if (previewSection && previewFrame) {
+        let videoUrl = course.preview_video_url;
+
+        // Add YouTube autoplay parameters (mute required for autoplay)
+        if (videoUrl.includes('youtube.com/embed/')) {
+          const separator = videoUrl.includes('?') ? '&' : '?';
+          videoUrl += `${separator}autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1`;
+        }
+
+        previewFrame.src = videoUrl;
+        previewSection.style.display = 'block';
+      }
     }
 
     currentCourseId = courseId;
 
-    // Load completed lessons for this course
+    // Load completed lessons
     let completedLessons = [];
     if (course.hasAccess) {
       try {
@@ -66,13 +91,12 @@ async function loadCourse() {
     // Display chapters and lessons
     renderChapters(course.chapters || [], course.hasAccess || false);
 
-    // Update enroll button based on access
+    // Update enroll button for enrolled users
     if (course.hasAccess) {
-      const enrollBtn = document.querySelector('.btn-enroll');
+      const enrollBtn = document.querySelector('.btn-enroll-primary');
       if (enrollBtn) {
         enrollBtn.innerHTML = '<span class="material-symbols-outlined">play_circle</span> Continue Learning';
         enrollBtn.onclick = () => {
-          // Scroll to first chapter
           const firstChapter = document.querySelector('.chapter-header');
           if (firstChapter) {
             firstChapter.scrollIntoView({ behavior: 'smooth' });
@@ -207,19 +231,16 @@ function navigateLesson(direction) {
 
   const lesson = allLessons[currentLessonIndex];
   if (lesson) {
-    // Open the chapter if closed
     const chapterIndex = lesson.chapterIndex;
     const lessonsContainer = document.getElementById(`lessons-${chapterIndex}`);
     if (lessonsContainer && lessonsContainer.style.display === 'none') {
       toggleChapter(chapterIndex);
     }
 
-    // Wait a bit for chapter to open, then scroll
     setTimeout(() => {
       const lessonElement = document.querySelector(`[data-lesson-id="${lesson.lesson_id}"]`);
       if (lessonElement) {
         lessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Highlight the current lesson
         document.querySelectorAll('.lesson-item').forEach(item => {
           item.classList.remove('current-lesson');
         });
@@ -227,7 +248,6 @@ function navigateLesson(direction) {
       }
     }, 300);
 
-    // Open video link in new tab
     setTimeout(() => {
       window.open(lesson.content_url, '_blank');
     }, 500);
@@ -261,7 +281,6 @@ async function markLessonComplete(lessonId, lessonIndex) {
     const result = await response.json();
 
     if (result.success) {
-      // Update UI
       const lessonElement = document.querySelector(`[data-lesson-id="${lessonId}"]`);
       if (lessonElement) {
         lessonElement.classList.add('completed');
@@ -277,7 +296,6 @@ async function markLessonComplete(lessonId, lessonIndex) {
         if (markBtn) markBtn.remove();
       }
 
-      // Reload progress in dashboard
       if (typeof loadCourseProgress === 'function') {
         loadCourseProgress();
       }
@@ -306,7 +324,6 @@ function toggleChapter(index) {
 function enrollCourse() {
   const courseId = getCourseIdFromUrl();
   if (courseId) {
-    // Redirect to WhatsApp for payment
     const whatsappUrl = `https://wa.me/213540921726?text=Salam%20Akram%2C%20ana%20mhtam%20bdwrat%20ID:${courseId}`;
     window.open(whatsappUrl, '_blank');
   }
@@ -316,4 +333,3 @@ function enrollCourse() {
 document.addEventListener('DOMContentLoaded', function () {
   loadCourse();
 });
-

@@ -243,10 +243,23 @@
             <hr>
           </div>
           <h5>{{title}}</h5>
+          {{#if skills}}
+          <div class="skills-container"
+            style="display: flex;text-align: start; flex-direction: column;padding-left: 20px;gap: 4px; margin: 0px -5px; font-size: 0.9rem;">
+            {{#each (split skills ",")}}
+            <span style="color: #0e1af8;">
+              <span class="material-symbols-outlined"
+                style="font-size: 16px; vertical-align: middle; margin-right: 4px;">check_circle</span>
+              {{trim this}}
+            </span>
+            {{/each}}
+          </div>
+          {{else}}
           <p class="description">{{description}}</p>
+          {{/if}}
           <p class="powered"><span class="material-symbols-outlined"
               style="font-size: 18px; vertical-align: middle; margin-right: 5px;">person</span>By Akram Melihi</p>
-          <div style="width: 100%;display: flex; justify-content: center;">
+          <div style="width: 100%;display: flex; justify-content: center;margin:0;margin-top: -40px;">
             <hr>
           </div>
           <div class="information">
@@ -471,7 +484,107 @@
     </a>
   </div> --}}
 
+  <style>
+    /* Scroll Animation Styles */
+    .scroll-animate {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
 
+    .scroll-animate.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger animation for children */
+    .scroll-animate-stagger>* {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+
+    .scroll-animate-stagger.animate-in>* {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-animate-stagger.animate-in>*:nth-child(1) {
+      transition-delay: 0.1s;
+    }
+
+    .scroll-animate-stagger.animate-in>*:nth-child(2) {
+      transition-delay: 0.2s;
+    }
+
+    .scroll-animate-stagger.animate-in>*:nth-child(3) {
+      transition-delay: 0.3s;
+    }
+
+    .scroll-animate-stagger.animate-in>*:nth-child(4) {
+      transition-delay: 0.4s;
+    }
+
+    .scroll-animate-stagger.animate-in>*:nth-child(5) {
+      transition-delay: 0.5s;
+    }
+
+    .scroll-animate-stagger.animate-in>*:nth-child(6) {
+      transition-delay: 0.6s;
+    }
+  </style>
+
+  <script>
+    // Scroll Animation Observer
+    document.addEventListener('DOMContentLoaded', function () {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+            // Optional: stop observing after animation
+            // observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections
+      document.querySelectorAll('.second-section, .third-section, .five-section, .faq-section, .fourth-section').forEach(section => {
+        section.classList.add('scroll-animate');
+        observer.observe(section);
+      });
+
+      // Observe stat cards with stagger
+      const secondSection = document.querySelector('.second-section');
+      if (secondSection) {
+        secondSection.classList.add('scroll-animate-stagger');
+      }
+
+      // Observe feature cards with stagger
+      const thirdSection = document.querySelector('.third-section .cards');
+      if (thirdSection) {
+        thirdSection.classList.add('scroll-animate-stagger');
+        observer.observe(thirdSection);
+      }
+
+      // Observe course cards with stagger
+      const coursesContainer = document.querySelector('.five-section .courses');
+      if (coursesContainer) {
+        coursesContainer.classList.add('scroll-animate-stagger');
+        observer.observe(coursesContainer);
+      }
+
+      // Observe FAQ items with stagger
+      const faqSection = document.querySelector('.faq-section');
+      if (faqSection) {
+        faqSection.classList.add('scroll-animate-stagger');
+      }
+    });
+  </script>
 
 </body>
 

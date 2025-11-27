@@ -968,6 +968,8 @@ async function editCourse(courseId) {
       document.getElementById('coursePrice').value = course.price;
       document.getElementById('durationHours').value = course.duration_hours;
       document.getElementById('courseCategory').value = course.level || '';
+      document.getElementById('previewVideoUrl').value = course.preview_video_url || '';
+      document.getElementById('courseSkills').value = course.skills || '';
       document.getElementById('isPublished').value = course.is_published ? 'publish' : 'draft';
 
       document.getElementById('addCourseModalLabel').textContent = 'Edit Course';

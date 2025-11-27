@@ -103,6 +103,7 @@ CREATE TABLE `courses` (
   `duration_hours` varchar(20) NOT NULL,
   `level` varchar(20) NOT NULL,
   `thumbnail_url` text NOT NULL,
+  `preview_video_url` text NOT NULL,
   `is_published` tinyint(1) NOT NULL,
   `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -111,8 +112,8 @@ CREATE TABLE `courses` (
 -- Déchargement des données de la table `courses`
 --
 
-INSERT INTO `courses` (`course_id`, `title`, `description`, `price`, `duration_hours`, `level`, `thumbnail_url`, `is_published`, `created_at`) VALUES
-(1, 'trading', 'akjjdjja)zdkqpokcsdmkvnmlskdnvljsqvn', '54999', '33', '', 'http://localhost:3000/admin', 0, '2025-11-08');
+INSERT INTO `courses` (`course_id`, `title`, `description`, `price`, `duration_hours`, `level`, `thumbnail_url`, `preview_video_url`, `is_published`, `created_at`) VALUES
+(1, 'trading', 'akjjdjja)zdkqpokcsdmkvnmlskdnvljsqvn', '54999', '33', '', 'http://localhost:3000/admin', '', 0, '2025-11-08');
 
 -- --------------------------------------------------------
 

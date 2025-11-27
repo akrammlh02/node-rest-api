@@ -12,7 +12,7 @@ router.get('', (req, res) => {
     LEFT JOIN chapters ch ON c.course_id = ch.course_id
     LEFT JOIN lessons l ON ch.id = l.chapitre_id
     WHERE c.is_published = 1
-    GROUP BY c.course_id, c.title, c.description, c.price, c.duration_hours, c.level, c.thumbnail_url, c.is_published, c.created_at
+    GROUP BY c.course_id, c.title, c.description, c.price, c.duration_hours, c.level, c.thumbnail_url, c.is_published, c.created_at, c.skills
     ORDER BY c.course_id DESC
     LIMIT 3
   `;
@@ -40,7 +40,7 @@ router.get('/ar', (req, res) => {
     LEFT JOIN chapters ch ON c.course_id = ch.course_id
     LEFT JOIN lessons l ON ch.id = l.chapitre_id
     WHERE c.is_published = 1
-    GROUP BY c.course_id, c.title, c.description, c.price, c.duration_hours, c.level, c.thumbnail_url, c.is_published, c.created_at
+    GROUP BY c.course_id, c.title, c.description, c.price, c.duration_hours, c.level, c.thumbnail_url, c.is_published, c.created_at, c.skills
     ORDER BY c.course_id DESC
     LIMIT 3
   `;

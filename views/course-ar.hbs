@@ -109,35 +109,37 @@
   <section class="second-section">
     <div class="courses" id="coursesContainer">
       {{#if courses}}
-        {{#each courses}}
-        <div class="course" data-course-id="{{course_id}}">
-          <div class="image-box">
-            <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
-            <div class="price-badge">{{price}} دج</div>
-          </div>
-          <p style="padding-right: 10px;" class="category">{{#if level}}{{level}}{{else}}دورة{{/if}}</p>
-          <div style="width: 100%;display: flex; justify-content: center;">
-            <hr>
-          </div>
-          <h5 style="padding-right: 10px;">{{title}}</h5>
-          <p class="description">{{description}}</p>
-          <p class="powered" style="padding-right: 10px;">بواسطة أكرم مليحي</p>
-          <div style="width: 100%;display: flex; justify-content: center;">
-            <hr>
-          </div>
-          <div class="information">
-            <p><span class="material-symbols-outlined" style="padding-left: 10px;">alarm</span> {{duration_hours}} ساعة</p>
-            <p><span class="material-symbols-outlined" style="padding-left: 10px;">book_ribbon</span> {{lessons_count}} درس</p>
-          </div>
-          <div class="button-join">
-            <a href="/course/course-view?id={{course_id}}" class="view-courses">المزيد</a>
-          </div>
+      {{#each courses}}
+      <div class="course" data-course-id="{{course_id}}">
+        <div class="image-box">
+          <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
+          <div class="price-badge">{{price}} دج</div>
         </div>
-        {{/each}}
+        <p style="padding-right: 10px;" class="category">{{#if level}}{{level}}{{else}}دورة{{/if}}</p>
+        <div style="width: 100%;display: flex; justify-content: center;">
+          <hr>
+        </div>
+        <h5 style="padding-right: 10px;">{{title}}</h5>
+        <p class="description">{{description}}</p>
+        <p class="powered" style="padding-right: 10px;">بواسطة أكرم مليحي</p>
+        <div style="width: 100%;display: flex; justify-content: center;">
+          <hr>
+        </div>
+        <div class="information">
+          <p><span class="material-symbols-outlined" style="padding-left: 10px;">alarm</span> {{duration_hours}} ساعة
+          </p>
+          <p><span class="material-symbols-outlined" style="padding-left: 10px;">book_ribbon</span> {{lessons_count}}
+            درس</p>
+        </div>
+        <div class="button-join">
+          <a href="/course/course-view?id={{course_id}}" class="view-courses">المزيد</a>
+        </div>
+      </div>
+      {{/each}}
       {{else}}
-        <div class="no-courses">
-          <p>لا توجد دورات متاحة في الوقت الحالي.</p>
-        </div>
+      <div class="no-courses">
+        <p>لا توجد دورات متاحة في الوقت الحالي.</p>
+      </div>
       {{/if}}
     </div>
 
@@ -145,7 +147,7 @@
   <section class="copyright">
     <p>جميع الحقوق محفوظة © 2025 DevAcademy</p>
   </section>
-  
+
   <script src="/course.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

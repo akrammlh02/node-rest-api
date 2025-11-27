@@ -286,6 +286,25 @@
                     placeholder="e.g., Web Development, AI, Python" required>
                 </div>
                 <div class="mb-3">
+                  <label for="previewVideoUrl" class="form-label">Preview Video URL</label>
+                  <input type="url" class="form-control" id="previewVideoUrl"
+                    placeholder="https://www.youtube.com/embed/VIDEO_ID">
+                  <small class="form-text text-muted">
+                    <strong>Important:</strong> Use YouTube embed format:
+                    <code>https://www.youtube.com/embed/VIDEO_ID</code>
+                    <br>
+                    Example: If your video is <code>youtu.be/ABC123</code>, use
+                    <code>https://www.youtube.com/embed/ABC123</code>
+                  </small>
+                </div>
+                <div class="mb-3">
+                  <label for="courseSkills" class="form-label">Skills (Comma separated)</label>
+                  <input type="text" class="form-control" id="courseSkills"
+                    placeholder="e.g., HTML, CSS, JavaScript, React">
+                  <small class="form-text text-muted">These will be displayed on the course card instead of the
+                    description.</small>
+                </div>
+                <div class="mb-3">
                   <label for="isPublished" class="form-label">Status <span class="text-danger">*</span></label>
                   <select type="select" class="form-control" id="isPublished" required>
                     <option value="draft">Draft</option>
@@ -825,6 +844,49 @@
         });
       }
 
+      // Auto-convert YouTube URLs to embed format
+      const previewVideoInput = document.getElementById('previewVideoUrl');
+      if (previewVideoInput) {
+        previewVideoInput.addEventListener('blur', function () {
+          let url = this.value.trim();
+          if (url) {
+            // Convert various YouTube URL formats to embed format
+            // youtu.be/VIDEO_ID -> youtube.com/embed/VIDEO_ID
+            // youtube.com/watch?v=VIDEO_ID -> youtube.com/embed/VIDEO_ID
+
+            let videoId = null;
+
+            // Check for youtu.be format
+            if (url.includes('youtu.be/')) {
+              videoId = url.split('youtu.be/')[1].split('?')[0].split('&')[0];
+            }
+            // Check for youtube.com/watch format
+            else if (url.includes('youtube.com/watch')) {
+              const urlParams = new URLSearchParams(url.split('?')[1]);
+              videoId = urlParams.get('v');
+            }
+            // Check if already in embed format
+            else if (url.includes('youtube.com/embed/')) {
+              return; // Already in correct format
+            }
+
+            // Convert to embed format if we found a video ID
+            if (videoId) {
+              this.value = `https://www.youtube.com/embed/${videoId}`;
+              // Show success message
+              const helpText = this.nextElementSibling;
+              if (helpText) {
+                const originalText = helpText.innerHTML;
+                helpText.innerHTML = '\u003cspan style="color: green;"\u003e✓ URL converted to embed format!\u003c/span\u003e';
+                setTimeout(() => {
+                  helpText.innerHTML = originalText;
+                }, 3000);
+              }
+            }
+          }
+        });
+      }
+
       // Setup course form
       const form = document.getElementById('addCourseForm');
       if (form) {
@@ -836,6 +898,8 @@
           const courseImage = document.getElementById('courseImage');
           const coursePrice = document.getElementById('coursePrice').value;
           const courseCategory = document.getElementById('courseCategory').value;
+          const previewVideoUrl = document.getElementById('previewVideoUrl').value;
+          const courseSkills = document.getElementById('courseSkills').value;
           const message = document.getElementById('messageCourse');
           const isPublished = document.getElementById('isPublished').value;
           const durationHours = document.getElementById('durationHours').value;
@@ -873,10 +937,12 @@
 
           // Create FormData for file upload
           const formData = new FormData();
-          formData.append('courseTitle', courseTitle);
-          formData.append('courseDescription', courseDescription);
-          formData.append('coursePrice', coursePrice);
-          formData.append('courseCategory', courseCategory);
+          formData.append('title', courseTitle);
+          formData.append('description', courseDescription);
+          formData.append('price', coursePrice);
+          formData.append('level', courseCategory);
+          formData.append('previewVideoUrl', previewVideoUrl);
+          formData.append('skills', courseSkills);
           formData.append('isPublished', isPublished);
           formData.append('durationHours', durationHours);
 

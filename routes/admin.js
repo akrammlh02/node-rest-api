@@ -76,9 +76,25 @@ router.get('/ar', (req, res) => {
 
 router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
   try {
-    const { courseTitle, courseDescription, isPublished, durationHours, coursePrice, courseCategory } = req.body;
+    // Support both old and new field names for backward compatibility during transition
+    const {
+      title, courseTitle,
+      description, courseDescription,
+      price, coursePrice,
+      level, courseCategory,
+      skills,
+      previewVideoUrl,
+      isPublished,
+      durationHours
+    } = req.body;
 
-    if (!courseTitle || !courseDescription || !coursePrice || !durationHours || !courseCategory) {
+    // Normalize values
+    const finalTitle = title || courseTitle;
+    const finalDescription = description || courseDescription;
+    const finalPrice = price || coursePrice;
+    const finalLevel = level || courseCategory;
+
+    if (!finalTitle || !finalDescription || !finalPrice || !durationHours || !finalLevel) {
       return res.json({ success: false, message: 'All fields are required' });
     }
 
@@ -104,7 +120,7 @@ router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
 
     const created_at = new Date();
     let etat;
-    if (isPublished === 'draft') {
+    if (isPublished === 'draft' || isPublished === 'false' || isPublished === false) {
       etat = false;
     } else {
       etat = true;
@@ -113,15 +129,15 @@ router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
     const sql = `
       INSERT INTO courses 
       (title, description, price, duration_hours,
-       thumbnail_url, is_published, created_at, level)
+       thumbnail_url, preview_video_url, is_published, created_at, level, skills)
       VALUES
-      (?,?,?,?,?,?,?,?)
+      (?,?,?,?,?,?,?,?,?,?)
     `;
 
     conn.query(sql, [
-      courseTitle, courseDescription,
-      coursePrice, durationHours,
-      imageUrl, etat, created_at, courseCategory || '',
+      finalTitle, finalDescription,
+      finalPrice, durationHours,
+      imageUrl, previewVideoUrl || '', etat, created_at, finalLevel || '', skills || ''
     ], (err, result) => {
       if (err) {
         console.error('Database error:', err);
@@ -566,9 +582,26 @@ router.get('/api/courses', (req, res) => {
 router.put('/updateCourse/:id', upload.single('courseImage'), async (req, res) => {
   try {
     const courseId = req.params.id;
-    const { courseTitle, courseDescription, isPublished, durationHours, coursePrice, courseCategory, existingImageUrl } = req.body;
+    // Support both old and new field names
+    const {
+      title, courseTitle,
+      description, courseDescription,
+      price, coursePrice,
+      level, courseCategory,
+      skills,
+      previewVideoUrl,
+      isPublished,
+      durationHours,
+      existingImageUrl
+    } = req.body;
 
-    if (!courseTitle || !courseDescription || !coursePrice || !durationHours || !courseCategory) {
+    // Normalize values
+    const finalTitle = title || courseTitle;
+    const finalDescription = description || courseDescription;
+    const finalPrice = price || coursePrice;
+    const finalLevel = level || courseCategory;
+
+    if (!finalTitle || !finalDescription || !finalPrice || !durationHours || !finalLevel) {
       return res.json({ success: false, message: 'All fields are required' });
     }
 
@@ -595,7 +628,7 @@ router.put('/updateCourse/:id', upload.single('courseImage'), async (req, res) =
     }
 
     let etat;
-    if (isPublished === 'draft') {
+    if (isPublished === 'draft' || isPublished === 'false' || isPublished === false) {
       etat = false;
     } else {
       etat = true;
@@ -604,14 +637,14 @@ router.put('/updateCourse/:id', upload.single('courseImage'), async (req, res) =
     const sql = `
       UPDATE courses 
       SET title = ?, description = ?, price = ?, duration_hours = ?,
-          thumbnail_url = ?, is_published = ?, level = ?
+          thumbnail_url = ?, preview_video_url = ?, is_published = ?, level = ?, skills = ?
       WHERE course_id = ?
     `;
 
     conn.query(sql, [
-      courseTitle, courseDescription,
-      coursePrice, durationHours,
-      imageUrl, etat, courseCategory || '', courseId
+      finalTitle, finalDescription,
+      finalPrice, durationHours,
+      imageUrl, previewVideoUrl || '', etat, finalLevel || '', skills || '', courseId
     ], (err, result) => {
       if (err) {
         console.error('Database error:', err);

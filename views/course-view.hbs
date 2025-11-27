@@ -84,37 +84,66 @@
 
   <main class="course-main">
     <div class="course-container">
-      <!-- Course Header -->
-      <div class="course-header-section" id="courseHeader">
-        <div class="course-image-container">
-          <img id="courseImage" src="" alt="Course Image" class="course-image">
-        </div>
-        <div class="course-info-header">
-          <div class="course-category" id="courseCategory"></div>
-          <h1 id="courseTitle" class="course-title">Loading...</h1>
-          <div class="course-meta-info">
-            <div class="author-info">
-              <span class="material-symbols-outlined">person</span>
-              <span>Author: <strong>Akram Melihi</strong></span>
-            </div>
-            <div class="price-info">
-              <span class="material-symbols-outlined">attach_money</span>
-              <span id="coursePrice" class="price">0 DA</span>
-            </div>
-          </div>
-          <p id="courseDescription" class="course-description"></p>
-          <button class="btn btn-enroll" onclick="enrollCourse()">
-            <span class="material-symbols-outlined">shopping_cart</span>
-            Enroll Now - <span id="coursePriceBtn">0 DA</span>
-          </button>
+
+      <!-- Preview Video Hero Section -->
+      <div class="preview-hero-section" id="previewVideoSection" style="display: none;">
+        <div class="video-container">
+          <iframe id="previewVideoFrame" width="100%" height="500" frameborder="0" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
         </div>
       </div>
 
-      <!-- Course Content -->
+      <!-- Course Info & CTA Section -->
+      <div class="course-info-section">
+        <div class="course-info-content">
+          <div class="course-category" id="courseCategory" style="display: none;"></div>
+          <h1 id="courseTitle" class="course-title">Loading...</h1>
+          <p id="courseDescription" class="course-description"></p>
+
+          <div class="course-highlights">
+            <div class="highlight-item">
+              <span class="material-symbols-outlined">person</span>
+              <div>
+                <span class="highlight-label">Instructor</span>
+                <span class="highlight-value">Akram Melihi</span>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <span class="material-symbols-outlined">schedule</span>
+              <div>
+                <span class="highlight-label">Duration</span>
+                <span class="highlight-value" id="courseDuration">0 Hours</span>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <span class="material-symbols-outlined">signal_cellular_alt</span>
+              <div>
+                <span class="highlight-label">Level</span>
+                <span class="highlight-value" id="courseLevel">All Levels</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="price-cta-section">
+            <div class="price-box">
+              <span class="price-label">Price</span>
+              <span id="coursePrice" class="price">0 DA</span>
+            </div>
+            <button class="btn-enroll-primary" onclick="enrollCourse()">
+              <span class="material-symbols-outlined">shopping_cart</span>
+              Enroll Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Content Section -->
       <div class="course-content-section">
         <h2 class="section-title">
           <span class="material-symbols-outlined">menu_book</span>
-          Course Content
+          What You'll Learn
         </h2>
         <div id="chaptersContainer" class="chapters-container">
           <!-- Chapters will be dynamically added here -->

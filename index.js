@@ -25,6 +25,21 @@ app.use(session({
 //Templating engine
 app.set('view engine', 'hbs');
 
+// Register Handlebars helpers
+hbs.registerHelper('split', function (str, separator) {
+  if (typeof str === 'string') {
+    return str.split(separator);
+  }
+  return [];
+});
+
+hbs.registerHelper('trim', function (str) {
+  if (typeof str === 'string') {
+    return str.trim();
+  }
+  return str;
+});
+
 //Cloudinary 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
