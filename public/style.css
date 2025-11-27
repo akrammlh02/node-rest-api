@@ -426,6 +426,12 @@ nav ul li a:hover::before {
   -webkit-text-fill-color: transparent;
   animation: shimmer 4s linear infinite;
   filter: drop-shadow(0 0 20px rgba(255, 54, 248, 0.4));
+  line-height: 1.3;
+  min-height: 143px;
+  /* 55px * 1.3 * 2 lines = 143px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes shimmer {
