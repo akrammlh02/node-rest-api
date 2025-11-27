@@ -3,7 +3,7 @@ async function loadDashboardStats() {
   try {
     const response = await fetch('/dashboard/api/stats');
     const result = await response.json();
-    
+
     if (result.success) {
       const stats = result.stats;
       const enrolledEl = document.getElementById('enrolledCountStat');
@@ -24,14 +24,14 @@ async function loadCourseProgress() {
   try {
     const response = await fetch('/dashboard/api/progress');
     const result = await response.json();
-    
+
     if (result.success && result.progress) {
       result.progress.forEach(courseProgress => {
         const progressBar = document.getElementById(`progress-bar-${courseProgress.course_id}`);
         const progressText = document.getElementById(`progress-${courseProgress.course_id}`);
         const progressBarMy = document.getElementById(`progress-bar-my-${courseProgress.course_id}`);
         const progressTextMy = document.getElementById(`progress-my-${courseProgress.course_id}`);
-        
+
         if (progressBar) {
           progressBar.style.width = `${courseProgress.percentage}%`;
         }
@@ -56,7 +56,7 @@ async function loadMyCourses() {
   try {
     const response = await fetch('/dashboard/api/my-courses');
     const result = await response.json();
-    
+
     if (result.success && result.courses.length > 0) {
       const container = document.getElementById('myCoursesContainer');
       container.innerHTML = result.courses.map(course => `
@@ -64,7 +64,7 @@ async function loadMyCourses() {
           <div class="course-image-wrapper">
             <img src="${course.thumbnail_url || '/images/front-end-1.jpg'}" alt="${course.title}" onerror="this.src='/images/front-end-1.jpg'">
             <div class="course-overlay">
-              <a href="/course/course-view?id=${course.course_id}" class="btn-overlay">
+              <a href="#" onclick="continueLearning(${course.course_id}); return false;" class="btn-overlay">
                 <span class="material-symbols-outlined">play_circle</span>
               </a>
             </div>
@@ -89,7 +89,7 @@ async function loadMyCourses() {
               </div>
             </div>
             <div class="course-footer">
-              <a href="/course/course-view?id=${course.course_id}" class="btn-continue-modern">
+              <a href="#" onclick="continueLearning(${course.course_id}); return false;" class="btn-continue-modern">
                 <span class="material-symbols-outlined">play_arrow</span>
                 Continue Learning
               </a>
@@ -97,7 +97,7 @@ async function loadMyCourses() {
           </div>
         </div>
       `).join('');
-      
+
       // Load progress after rendering
       loadCourseProgress();
     }
@@ -111,7 +111,7 @@ async function loadCertificates() {
   try {
     const response = await fetch('/dashboard/api/certificates');
     const result = await response.json();
-    
+
     if (result.success) {
       renderCertificates(result.certificates);
     } else {
@@ -126,9 +126,9 @@ async function loadCertificates() {
 
 function renderCertificates(certificates) {
   const container = document.getElementById('certificatesContainer');
-  
+
   if (!container) return;
-  
+
   if (!certificates || certificates.length === 0) {
     container.innerHTML = `
       <div class="empty-state-modern">
@@ -139,7 +139,7 @@ function renderCertificates(certificates) {
     `;
     return;
   }
-  
+
   container.innerHTML = certificates.map(cert => `
     <div class="certificate-card">
       <div class="certificate-image">
@@ -159,5 +159,22 @@ function renderCertificates(certificates) {
       </div>
     </div>
   `).join('');
+}
+
+// Continue learning - redirect to TV page with first lesson
+async function continueLearning(courseId) {
+  try {
+    const response = await fetch(`/dashboard/api/first-lesson/${courseId}`);
+    const result = await response.json();
+
+    if (result.success && result.lessonId) {
+      window.location.href = `/course/tv?lessonId=${result.lessonId}`;
+    } else {
+      alert('No lessons found for this course');
+    }
+  } catch (error) {
+    console.error('Error getting first lesson:', error);
+    alert('Error loading course. Please try again.');
+  }
 }
 

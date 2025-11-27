@@ -358,7 +358,7 @@ router.get('/api/certificates', (req, res) => {
   }
 
   const clientId = req.session.user.id;
-  
+
   const sql = `
     SELECT c.*, co.title as course_title, co.level as course_category, co.thumbnail_url
     FROM certificates c
@@ -366,12 +366,48 @@ router.get('/api/certificates', (req, res) => {
     WHERE c.client_id = ?
     ORDER BY c.date_issued DESC
   `;
-  
+
   conn.query(sql, [clientId], (err, result) => {
     if (err) {
       return res.status(500).json({ success: false, message: 'Server error' });
     }
     res.json({ success: true, certificates: result });
+  });
+});
+
+// API: Get first lesson of a course
+router.get('/api/first-lesson/:courseId', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+
+  const courseId = req.params.courseId;
+  const clientId = req.session.user.id;
+
+  // Check if user has access to this course
+  const checkAccessSql = 'SELECT * FROM purchases WHERE client_id = ? AND course_id = ? AND paid = 1';
+  conn.query(checkAccessSql, [clientId, courseId], (err, purchases) => {
+    if (err || purchases.length === 0) {
+      return res.status(403).json({ success: false, message: 'Access denied' });
+    }
+
+    // Get the first lesson of the course
+    const sql = `
+      SELECT l.lesson_id
+      FROM lessons l
+      INNER JOIN chapters ch ON l.chapitre_id = ch.id
+      WHERE ch.course_id = ?
+      ORDER BY ch.order ASC, l.order_number ASC
+      LIMIT 1
+    `;
+
+    conn.query(sql, [courseId], (err, result) => {
+      if (err || result.length === 0) {
+        return res.status(404).json({ success: false, message: 'No lessons found for this course' });
+      }
+
+      res.json({ success: true, lessonId: result[0].lesson_id });
+    });
   });
 });
 

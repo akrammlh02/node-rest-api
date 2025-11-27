@@ -231,26 +231,8 @@ function navigateLesson(direction) {
 
   const lesson = allLessons[currentLessonIndex];
   if (lesson) {
-    const chapterIndex = lesson.chapterIndex;
-    const lessonsContainer = document.getElementById(`lessons-${chapterIndex}`);
-    if (lessonsContainer && lessonsContainer.style.display === 'none') {
-      toggleChapter(chapterIndex);
-    }
-
-    setTimeout(() => {
-      const lessonElement = document.querySelector(`[data-lesson-id="${lesson.lesson_id}"]`);
-      if (lessonElement) {
-        lessonElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        document.querySelectorAll('.lesson-item').forEach(item => {
-          item.classList.remove('current-lesson');
-        });
-        lessonElement.classList.add('current-lesson');
-      }
-    }, 300);
-
-    setTimeout(() => {
-      window.open(lesson.content_url, '_blank');
-    }, 500);
+    // Redirect to TV page with the lesson ID
+    window.location.href = `/course/tv?lessonId=${lesson.lesson_id}`;
   }
 
   updateNavigationButtons();
