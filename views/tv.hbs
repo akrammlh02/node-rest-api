@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DevAcademy - Watch Lesson</title>
   <link rel="stylesheet" href="/tv.css">
-  <link rel="stylesheet" href="/custom-player.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link rel="stylesheet"
@@ -75,42 +74,11 @@
 
         <!-- Video Player Container -->
         <div class="video-player-container">
-          <div class="custom-video-wrapper paused" id="customVideoWrapper">
+          <div class="video-wrapper">
             <div id="videoContainer" class="video-container">
-              <!-- Iframe will be injected here -->
-            </div>
-
-            <!-- Click Area for Play/Pause -->
-            <div class="video-click-area" onclick="togglePlayPause()">
-              <div class="big-play-button">
-                <span class="material-symbols-outlined" style="font-size: 40px;">play_arrow</span>
-              </div>
-            </div>
-
-            <!-- Controls Overlay -->
-            <div class="video-controls-overlay">
-              <!-- Timeline -->
-              <div class="video-timeline-container" id="videoTimeline" onclick="seekVideo(event)">
-                <div class="video-progress-bar" id="videoProgressBar">
-                  <div class="video-progress-handle"></div>
-                </div>
-              </div>
-
-              <!-- Buttons Row -->
-              <div class="controls-row">
-                <div class="left-controls">
-                  <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()">
-                    <span class="material-symbols-outlined">play_arrow</span>
-                  </button>
-                  <div class="time-display">
-                    <span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
-                  </div>
-                </div>
-                <div class="right-controls">
-                  <button class="control-btn" onclick="toggleFullscreen()">
-                    <span class="material-symbols-outlined">fullscreen</span>
-                  </button>
-                </div>
+              <div class="video-placeholder">
+                <span class="material-symbols-outlined">play_circle</span>
+                <p>Loading video...</p>
               </div>
             </div>
           </div>
