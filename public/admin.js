@@ -187,6 +187,9 @@ function renderChapters(chapters) {
         <button class="btn btn-sm btn-primary" onclick="manageChapter(${chapter.id})" title="Manage Lessons">
           <span class="material-symbols-outlined">settings</span>
         </button>
+        <button class="btn btn-sm btn-info" onclick="editChapter(${chapter.id}, '${chapter.title.replace(/'/g, "\\'")}')" title="Edit Chapter">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
         <button class="btn btn-sm btn-order" onclick="moveChapterUp(${chapter.id})" title="Move Up">
           <span class="material-symbols-outlined">arrow_upward</span>
         </button>
@@ -364,6 +367,9 @@ function renderLessons(lessons) {
         </a>
       </td>
       <td>
+        <button class="btn btn-sm btn-info" onclick="editLesson(${lesson.lesson_id}, '${lesson.title.replace(/'/g, "\\'")}', '${lesson.content_url.replace(/'/g, "\\'")}')" title="Edit Lesson">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
         <button class="btn btn-sm btn-order" onclick="moveLessonUp(${lesson.lesson_id})" title="Move Up">
           <span class="material-symbols-outlined">arrow_upward</span>
         </button>

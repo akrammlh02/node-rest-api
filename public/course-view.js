@@ -43,21 +43,12 @@ async function loadCourse() {
     if (durationEl) durationEl.textContent = (course.duration_hours || '0') + ' Hours';
     if (levelEl) levelEl.textContent = course.level || 'All Levels';
 
-    // Display preview video with AUTOPLAY
+    // Display preview video with Custom Player
     if (course.preview_video_url && course.preview_video_url.trim() !== '') {
       const previewSection = document.getElementById('previewVideoSection');
-      const previewFrame = document.getElementById('previewVideoFrame');
-      if (previewSection && previewFrame) {
-        let videoUrl = course.preview_video_url;
-
-        // Add YouTube autoplay parameters (mute required for autoplay)
-        if (videoUrl.includes('youtube.com/embed/')) {
-          const separator = videoUrl.includes('?') ? '&' : '?';
-          videoUrl += `${separator}autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1`;
-        }
-
-        previewFrame.src = videoUrl;
+      if (previewSection) {
         previewSection.style.display = 'block';
+        loadPreviewVideo(course.preview_video_url);
       }
     }
 
@@ -310,6 +301,158 @@ function enrollCourse() {
     window.open(whatsappUrl, '_blank');
   }
 }
+
+// YouTube Player Variables
+let player;
+let updateInterval;
+
+// Load YouTube IFrame API
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+const firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+function loadPreviewVideo(videoUrl) {
+  // Extract Video ID
+  let videoId = '';
+  if (videoUrl.includes('youtube.com/watch?v=')) {
+    videoId = videoUrl.split('v=')[1]?.split('&')[0];
+  } else if (videoUrl.includes('youtu.be/')) {
+    videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+  } else if (videoUrl.includes('youtube.com/embed/')) {
+    videoId = videoUrl.split('embed/')[1]?.split('?')[0];
+  }
+
+  if (videoId) {
+    if (window.YT && window.YT.Player) {
+      createPlayer(videoId);
+    } else {
+      window.onYouTubeIframeAPIReady = function () {
+        createPlayer(videoId);
+      };
+    }
+  }
+}
+
+function createPlayer(videoId) {
+  player = new YT.Player('videoContainer', {
+    height: '100%',
+    width: '100%',
+    videoId: videoId,
+    playerVars: {
+      'playsinline': 1,
+      'controls': 0,
+      'modestbranding': 1,
+      'rel': 0,
+      'iv_load_policy': 3,
+      'fs': 0,
+      'disablekb': 1,
+      'autoplay': 1,
+      'mute': 1 // Mute required for autoplay
+    },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerReady(event) {
+  updateTimerDisplay();
+  clearInterval(updateInterval);
+  updateInterval = setInterval(updateProgressBar, 500);
+}
+
+function onPlayerStateChange(event) {
+  const wrapper = document.getElementById('customVideoWrapper');
+  const btnIcon = document.querySelector('#playPauseBtn span');
+  const bigPlayBtn = document.querySelector('.big-play-button span');
+
+  if (event.data == YT.PlayerState.PLAYING) {
+    wrapper.classList.remove('paused');
+    btnIcon.textContent = 'pause';
+    bigPlayBtn.textContent = 'pause';
+  } else {
+    wrapper.classList.add('paused');
+    btnIcon.textContent = 'play_arrow';
+    bigPlayBtn.textContent = 'play_arrow';
+  }
+}
+
+function togglePlayPause() {
+  if (!player) return;
+  const state = player.getPlayerState();
+  if (state == YT.PlayerState.PLAYING) {
+    player.pauseVideo();
+  } else {
+    player.playVideo();
+  }
+}
+
+function seekVideo(event) {
+  if (!player) return;
+  const timeline = document.getElementById('videoTimeline');
+  const rect = timeline.getBoundingClientRect();
+  const offsetX = event.clientX - rect.left;
+  const percentage = offsetX / rect.width;
+  const duration = player.getDuration();
+
+  player.seekTo(duration * percentage, true);
+}
+
+function updateProgressBar() {
+  if (!player || !player.getDuration) return;
+
+  const currentTime = player.getCurrentTime();
+  const duration = player.getDuration();
+
+  if (duration) {
+    const percentage = (currentTime / duration) * 100;
+    document.getElementById('videoProgressBar').style.width = `${percentage}%`;
+    updateTimerDisplay(currentTime, duration);
+  }
+}
+
+function updateTimerDisplay(current = 0, total = 0) {
+  document.getElementById('currentTime').textContent = formatTime(current);
+  document.getElementById('totalTime').textContent = formatTime(total);
+}
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function toggleFullscreen() {
+  const wrapper = document.getElementById('customVideoWrapper');
+  if (!document.fullscreenElement) {
+    if (wrapper.requestFullscreen) {
+      wrapper.requestFullscreen();
+    } else if (wrapper.webkitRequestFullscreen) {
+      wrapper.webkitRequestFullscreen();
+    } else if (wrapper.msRequestFullscreen) {
+      wrapper.msRequestFullscreen();
+    }
+    wrapper.classList.add('fullscreen');
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    wrapper.classList.remove('fullscreen');
+  }
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const wrapper = document.getElementById('customVideoWrapper');
+  if (!document.fullscreenElement) {
+    wrapper.classList.remove('fullscreen');
+  }
+});
 
 // Load course on page load
 document.addEventListener('DOMContentLoaded', function () {

@@ -316,6 +316,30 @@ router.put('/api/chapters/:chapterId/order', (req, res) => {
   });
 });
 
+// API: Update chapter title
+router.put('/api/chapters/:chapterId', (req, res) => {
+  const chapterId = req.params.chapterId;
+  const { title } = req.body;
+
+  if (!title || !title.trim()) {
+    return res.json({ success: false, message: 'Chapter title is required' });
+  }
+
+  const sql = 'UPDATE chapters SET title = ? WHERE id = ?';
+  conn.query(sql, [title.trim(), chapterId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Chapter not found' });
+    }
+
+    res.json({ success: true, message: 'Chapter updated successfully' });
+  });
+});
+
 // API: Get lessons for a chapter
 router.get('/api/chapters/:chapterId/lessons', (req, res) => {
   const chapterId = req.params.chapterId;
@@ -423,6 +447,34 @@ router.put('/api/lessons/:lessonId/order', (req, res) => {
         });
       });
     });
+  });
+});
+
+// API: Update lesson title and video URL
+router.put('/api/lessons/:lessonId', (req, res) => {
+  const lessonId = req.params.lessonId;
+  const { title, videoUrl } = req.body;
+
+  if (!title || !title.trim()) {
+    return res.json({ success: false, message: 'Lesson title is required' });
+  }
+
+  if (!videoUrl || !videoUrl.trim()) {
+    return res.json({ success: false, message: 'Video URL is required' });
+  }
+
+  const sql = 'UPDATE lessons SET title = ?, content_url = ? WHERE lesson_id = ?';
+  conn.query(sql, [title.trim(), videoUrl.trim(), lessonId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Lesson not found' });
+    }
+
+    res.json({ success: true, message: 'Lesson updated successfully' });
   });
 });
 

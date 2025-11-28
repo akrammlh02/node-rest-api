@@ -75,7 +75,7 @@ function updateLessonUI() {
   // Update mark complete button
   const markCompleteBtn = document.getElementById('markCompleteBtn');
   const markCompleteText = document.getElementById('markCompleteText');
-  
+
   if (currentLessonData.isCompleted) {
     markCompleteBtn.classList.add('completed');
     markCompleteText.textContent = 'Completed';
@@ -90,10 +90,20 @@ function updateLessonUI() {
   loadVideo(currentLessonData.content_url);
 }
 
+// YouTube Player Variables
+let player;
+let updateInterval;
+
+// Load YouTube IFrame API
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+const firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
 // Load video into iframe
 function loadVideo(videoUrl) {
   const videoContainer = document.getElementById('videoContainer');
-  
+
   if (!videoUrl) {
     videoContainer.innerHTML = `
       <div class="video-placeholder">
@@ -104,26 +114,158 @@ function loadVideo(videoUrl) {
     return;
   }
 
-  // Convert YouTube URL to embed format if needed
-  let embedUrl = videoUrl;
+  // Extract Video ID
+  let videoId = '';
   if (videoUrl.includes('youtube.com/watch?v=')) {
-    const videoId = videoUrl.split('v=')[1]?.split('&')[0];
-    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    videoId = videoUrl.split('v=')[1]?.split('&')[0];
   } else if (videoUrl.includes('youtu.be/')) {
-    const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
-    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+  } else if (videoUrl.includes('youtube.com/embed/')) {
+    videoId = videoUrl.split('embed/')[1]?.split('?')[0];
   }
 
-  videoContainer.innerHTML = `
-    <iframe 
-      src="${embedUrl}" 
-      frameborder="0" 
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-      allowfullscreen
-      class="video-iframe">
-    </iframe>
-  `;
+  if (videoId) {
+    if (player) {
+      player.loadVideoById(videoId);
+    } else {
+      // Initialize Player if API is ready, otherwise it will be init by onYouTubeIframeAPIReady
+      if (window.YT && window.YT.Player) {
+        createPlayer(videoId);
+      } else {
+        window.onYouTubeIframeAPIReady = function () {
+          createPlayer(videoId);
+        };
+      }
+    }
+  } else {
+    // Fallback for non-YouTube videos (if any)
+    videoContainer.innerHTML = '<p>Video format not supported for custom player</p>';
+  }
 }
+
+function createPlayer(videoId) {
+  player = new YT.Player('videoContainer', {
+    height: '100%',
+    width: '100%',
+    videoId: videoId,
+    playerVars: {
+      'playsinline': 1,
+      'controls': 0, // Hide default controls
+      'modestbranding': 1,
+      'rel': 0,
+      'iv_load_policy': 3,
+      'fs': 0,
+      'disablekb': 1
+    },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerReady(event) {
+  updateTimerDisplay();
+  // Start updating progress
+  clearInterval(updateInterval);
+  updateInterval = setInterval(updateProgressBar, 500);
+}
+
+function onPlayerStateChange(event) {
+  const wrapper = document.getElementById('customVideoWrapper');
+  const btnIcon = document.querySelector('#playPauseBtn span');
+  const bigPlayBtn = document.querySelector('.big-play-button span');
+
+  if (event.data == YT.PlayerState.PLAYING) {
+    wrapper.classList.remove('paused');
+    if (btnIcon) btnIcon.textContent = 'pause';
+    if (bigPlayBtn) bigPlayBtn.textContent = 'pause';
+  } else {
+    wrapper.classList.add('paused');
+    if (btnIcon) btnIcon.textContent = 'play_arrow';
+    if (bigPlayBtn) bigPlayBtn.textContent = 'play_arrow';
+  }
+}
+
+// Custom Control Functions
+function togglePlayPause() {
+  if (!player) return;
+  const state = player.getPlayerState();
+  if (state == YT.PlayerState.PLAYING) {
+    player.pauseVideo();
+  } else {
+    player.playVideo();
+  }
+}
+
+function seekVideo(event) {
+  if (!player) return;
+  const timeline = document.getElementById('videoTimeline');
+  const rect = timeline.getBoundingClientRect();
+  const offsetX = event.clientX - rect.left;
+  const percentage = offsetX / rect.width;
+  const duration = player.getDuration();
+
+  player.seekTo(duration * percentage, true);
+}
+
+function updateProgressBar() {
+  if (!player || !player.getDuration) return;
+
+  const currentTime = player.getCurrentTime();
+  const duration = player.getDuration();
+
+  if (duration) {
+    const percentage = (currentTime / duration) * 100;
+    const progressBar = document.getElementById('videoProgressBar');
+    if (progressBar) progressBar.style.width = `${percentage}%`;
+    updateTimerDisplay(currentTime, duration);
+  }
+}
+
+function updateTimerDisplay(current = 0, total = 0) {
+  const currentTimeEl = document.getElementById('currentTime');
+  const totalTimeEl = document.getElementById('totalTime');
+  if (currentTimeEl) currentTimeEl.textContent = formatTime(current);
+  if (totalTimeEl) totalTimeEl.textContent = formatTime(total);
+}
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function toggleFullscreen() {
+  const wrapper = document.getElementById('customVideoWrapper');
+  if (!document.fullscreenElement) {
+    if (wrapper.requestFullscreen) {
+      wrapper.requestFullscreen();
+    } else if (wrapper.webkitRequestFullscreen) { /* Safari */
+      wrapper.webkitRequestFullscreen();
+    } else if (wrapper.msRequestFullscreen) { /* IE11 */
+      wrapper.msRequestFullscreen();
+    }
+    wrapper.classList.add('fullscreen');
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { /* Safari */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE11 */
+      document.msExitFullscreen();
+    }
+    wrapper.classList.remove('fullscreen');
+  }
+}
+
+// Listen for fullscreen change to update class
+document.addEventListener('fullscreenchange', () => {
+  const wrapper = document.getElementById('customVideoWrapper');
+  if (!document.fullscreenElement) {
+    wrapper.classList.remove('fullscreen');
+  }
+});
 
 // Render chapters in sidebar
 function renderChapters() {
@@ -155,9 +297,9 @@ function renderChapters() {
           <div class="accordion-body-modern">
             <ul class="lessons-list-modern">
               ${chapter.lessons.map(lesson => {
-                const isCurrent = lesson.lesson_id == currentLessonId;
-                const isCompleted = lesson.completed || false;
-                return `
+      const isCurrent = lesson.lesson_id == currentLessonId;
+      const isCompleted = lesson.completed || false;
+      return `
                   <li class="lesson-item-modern ${isCurrent ? 'active' : ''} ${isCompleted ? 'completed' : ''}">
                     <a href="/course/tv?lessonId=${lesson.lesson_id}" class="lesson-link-modern">
                       <span class="lesson-number-modern">${lesson.order_number || ''}</span>
@@ -167,7 +309,7 @@ function renderChapters() {
                     </a>
                   </li>
                 `;
-              }).join('')}
+    }).join('')}
             </ul>
           </div>
         </div>
@@ -240,7 +382,7 @@ async function markLessonComplete() {
       // Update UI
       const markCompleteBtn = document.getElementById('markCompleteBtn');
       const markCompleteText = document.getElementById('markCompleteText');
-      
+
       markCompleteBtn.classList.add('completed');
       markCompleteText.textContent = 'Completed';
       markCompleteBtn.disabled = true;
@@ -298,4 +440,3 @@ function showSuccessMessage(message) {
 document.addEventListener('DOMContentLoaded', function () {
   loadLesson();
 });
-
