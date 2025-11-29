@@ -174,7 +174,7 @@ function renderChapters(chapters) {
   const tbody = document.getElementById('chaptersTableBody');
 
   if (!chapters || chapters.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No chapters yet. Add one above.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center">No chapters yet. Add one above.</td></tr>';
     return;
   }
 
@@ -182,6 +182,14 @@ function renderChapters(chapters) {
     <tr>
       <td class="text-center"><strong>${chapter.order}</strong></td>
       <td><strong>${chapter.title}</strong></td>
+      <td class="text-center">
+        <button class="btn btn-sm ${chapter.is_free ? 'btn-success' : 'btn-warning'}" 
+                onclick="toggleChapterFree(${chapter.id}, ${chapter.is_free ? 1 : 0})"
+                title="Click to toggle Free/Paid status"
+                style="min-width: 70px;">
+          ${chapter.is_free ? '🆓 FREE' : '💰 PAID'}
+        </button>
+      </td>
       <td class="text-center chapter-lesson-count-${chapter.id}">0</td>
       <td>
         <button class="btn btn-sm btn-primary" onclick="manageChapter(${chapter.id})" title="Manage Lessons">
@@ -352,7 +360,7 @@ function renderLessons(lessons) {
   const tbody = document.getElementById('lessonsTableBody');
 
   if (!lessons || lessons.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No lessons yet. Add one above.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center">No lessons yet. Add one above.</td></tr>';
     return;
   }
 
@@ -360,6 +368,14 @@ function renderLessons(lessons) {
     <tr>
       <td class="text-center"><strong>${lesson.order_number}</strong></td>
       <td><strong>${lesson.title}</strong></td>
+      <td class="text-center">
+        <button class="btn btn-sm ${lesson.is_free ? 'btn-success' : 'btn-warning'}" 
+                onclick="toggleLessonFree(${lesson.lesson_id}, ${lesson.is_free ? 1 : 0})"
+                title="Click to toggle Free/Paid status"
+                style="min-width: 70px;">
+          ${lesson.is_free ? '🆓 FREE' : '💰 PAID'}
+        </button>
+      </td>
       <td>
         <a href="${lesson.content_url}" target="_blank" class="text-decoration-none">
           ${lesson.content_url}
@@ -1146,6 +1162,153 @@ async function checkSession() {
       window.location.replace('/login');
       return false;
     }
+    if (result.success) {
+      renderCertificates(result.certificates);
+    } else {
+      console.error('Failed to load certificates');
+    }
+  } catch (error) {
+    console.error('Error loading certificates:', error);
+  }
+}
+
+function renderCertificates(certificates) {
+  const tbody = document.getElementById('certificatesTableBody');
+
+  if (!certificates || certificates.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No certificates issued yet.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = certificates.map(cert => `
+    <tr>
+      <td><strong>#${cert.id}</strong></td>
+      <td>${cert.client_name || 'Unknown'}</td>
+      <td>${cert.course_title || 'Unknown Course'}</td>
+      <td><span class="badge badge-info">${cert.course_category || 'N/A'}</span></td>
+      <td>${new Date(cert.date_issued).toLocaleDateString()}</td>
+      <td>
+        <a href="${cert.certificate_url}" target="_blank" class="btn btn-sm btn-primary" title="View Certificate">
+          <span class="material-symbols-outlined">visibility</span>
+        </a>
+        <button class="btn btn-sm btn-danger" onclick="deleteCertificate(${cert.id})" title="Delete">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function openIssueCertificateModal() {
+  // Load clients
+  try {
+    const clientsResponse = await fetch('/admin/api/clients');
+    const clientsResult = await clientsResponse.json();
+
+    if (clientsResult.success) {
+      const clientSelect = document.getElementById('certificateClientSelect');
+      clientSelect.innerHTML = '<option value="">-- Select Client --</option>' +
+        clientsResult.clients.map(client =>
+          `<option value="${client.id}">${client.fullname} (${client.email})</option>`
+        ).join('');
+    }
+
+    // Load courses
+    const coursesResponse = await fetch('/admin/api/courses');
+    const coursesResult = await coursesResponse.json();
+
+    if (coursesResult.success) {
+      const courseSelect = document.getElementById('certificateCourseSelect');
+      courseSelect.innerHTML = '<option value="">-- Select Course --</option>' +
+        coursesResult.courses.map(course =>
+          `<option value="${course.course_id}">${course.title}</option>`
+        ).join('');
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('issueCertificateModal'));
+    modal.show();
+  } catch (error) {
+    console.error('Error loading data:', error);
+    alert('Error loading data');
+  }
+
+  // Setup form submission
+  const form = document.getElementById('issueCertificateForm');
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const clientId = document.getElementById('certificateClientSelect').value;
+    const courseId = document.getElementById('certificateCourseSelect').value;
+    const message = document.getElementById('messageCertificate');
+
+    if (!clientId || !courseId) {
+      message.textContent = 'Please select both client and course';
+      message.style.display = 'block';
+      message.style.color = 'red';
+      return;
+    }
+
+    try {
+      const response = await fetch('/admin/api/certificates/issue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ clientId, courseId })
+      });
+
+      const result = await response.json();
+      message.style.display = 'block';
+      message.style.color = result.success ? 'green' : 'red';
+      message.textContent = result.message;
+
+      if (result.success) {
+        setTimeout(() => {
+          modal.hide();
+          loadCertificates();
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Error issuing certificate:', error);
+      message.style.display = 'block';
+      message.style.color = 'red';
+      message.textContent = 'Error issuing certificate';
+    }
+  };
+}
+
+async function deleteCertificate(certId) {
+  if (!confirm('Are you sure you want to delete this certificate?')) return;
+
+  try {
+    const response = await fetch(`/admin/api/certificates/${certId}`, {
+      method: 'DELETE',
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      await loadCertificates();
+    } else {
+      alert(result.message || 'Failed to delete certificate');
+    }
+  } catch (error) {
+    console.error('Error deleting certificate:', error);
+    alert('Error connecting to the server.');
+  }
+}
+
+// Session check
+async function checkSession() {
+  try {
+    const response = await fetch('/api/check-session', {
+      method: 'GET',
+      credentials: 'include'
+    });
+
+    if (!response.ok || response.status === 401) {
+      window.location.replace('/login');
+      return false;
+    }
     return true;
   } catch (error) {
     console.error('Session check failed:', error);
@@ -1162,4 +1325,109 @@ window.addEventListener('pageshow', async (event) => {
   }
 });
 window.addEventListener('popstate', checkSession);
+
+// ======== Free/Paid Toggle Functions ========
+async function toggleCourseFree(courseId, currentIsFree) {
+  const action = currentIsFree ? 'paid' : 'free';
+  const message = currentIsFree
+    ? 'Are you sure you want to make this course paid? It will not automatically affect existing chapters and lessons.'
+    : 'Are you sure you want to make this course FREE? All chapters and lessons will also become free.';
+
+  if (!confirm(message)) return;
+
+  try {
+    const response = await fetch(`/admin/api/courses/${courseId}/toggle-free`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isFree: !currentIsFree })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert(result.message || `Course set to ${action} successfully!`);
+      // Reload current view
+      if (currentCourseId) {
+        await loadChapters(currentCourseId);
+      }
+      location.reload(); // Refresh to update the course list
+    } else {
+      alert(result.message || `Failed to set course to ${action}`);
+    }
+  } catch (error) {
+    console.error('Error toggling course free status:', error);
+    alert('Error connecting to the server.');
+  }
+}
+
+async function toggleChapterFree(chapterId, currentIsFree) {
+  const action = currentIsFree ? 'paid' : 'free';
+  const message = currentIsFree
+    ? 'Are you sure you want to make this chapter paid? It will not automatically affect existing lessons.'
+    : 'Are you sure you want to make this chapter FREE? All its lessons will also become free.';
+
+  if (!confirm(message)) return;
+
+  try {
+    const response = await fetch(`/admin/api/chapters/${chapterId}/toggle-free`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isFree: !currentIsFree })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert(result.message || `Chapter set to ${action} successfully!`);
+      // Reload chapters and lessons
+      if (currentCourseId) {
+        await loadChapters(currentCourseId);
+      }
+      if (currentChapterId) {
+        await loadLessons(currentChapterId);
+      }
+    } else {
+      alert(result.message || `Failed to set chapter to ${action}`);
+    }
+  } catch (error) {
+    console.error('Error toggling chapter free status:', error);
+    alert('Error connecting to the server.');
+  }
+}
+
+async function toggleLessonFree(lessonId, currentIsFree) {
+  const action = currentIsFree ? 'paid' : 'free';
+  const message = `Are you sure you want to make this lesson ${action}?`;
+
+  if (!confirm(message)) return;
+
+  try {
+    const response = await fetch(`/admin/api/lessons/${lessonId}/toggle-free`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isFree: !currentIsFree })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert(result.message || `Lesson set to ${action} successfully!`);
+      // Reload lessons
+      if (currentChapterId) {
+        await loadLessons(currentChapterId);
+      }
+    } else {
+      alert(result.message || `Failed to set lesson to ${action}`);
+    }
+  } catch (error) {
+    console.error('Error toggling lesson free status:', error);
+    alert('Error connecting to the server.');
+  }
+}
 

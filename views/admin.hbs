@@ -191,6 +191,7 @@
                 <th>Category</th>
                 <th>Price</th>
                 <th>Status</th>
+                <th>Access Type</th>
                 <th>Chapters</th>
                 <th>Total Lessons</th>
                 <th>Actions</th>
@@ -216,6 +217,13 @@
                   {{else}}
                   <span class="badge badge-warning">Draft</span>
                   {{/if}}
+                </td>
+                <td>
+                  <button class="btn btn-sm {{#if is_free}}btn-success{{else}}btn-warning{{/if}}"
+                    onclick="toggleCourseFree({{course_id}}, {{#if is_free}}1{{else}}0{{/if}})"
+                    title="Click to toggle Free/Paid access" style="min-width: 70px;">
+                    {{#if is_free}}🆓 FREE{{else}}💰 PAID{{/if}}
+                  </button>
                 </td>
                 <td class="chapter-count-{{course_id}}">0</td>
                 <td class="lesson-count-{{course_id}}">0</td>
@@ -355,8 +363,9 @@
                   <tr>
                     <th style="width: 50px;">Order</th>
                     <th>Title</th>
+                    <th style="width: 100px;">Status</th>
                     <th>Lessons</th>
-                    <th style="width: 200px;">Actions</th>
+                    <th style="width: 300px;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="chaptersTableBody">
@@ -404,8 +413,9 @@
                   <tr>
                     <th style="width: 50px;">Order</th>
                     <th>Title</th>
+                    <th style="width: 100px;">Status</th>
                     <th>Video URL</th>
-                    <th style="width: 200px;">Actions</th>
+                    <th style="width: 300px;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="lessonsTableBody">

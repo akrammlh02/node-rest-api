@@ -989,4 +989,154 @@ router.delete('/api/quizzes/:id', (req, res) => {
   });
 });
 
+// ======== Free/Paid Status Management ========
+// Toggle course free status
+router.put('/api/courses/:courseId/toggle-free', (req, res) => {
+  const courseId = req.params.courseId;
+  const { isFree } = req.body;
+
+  if (typeof isFree !== 'boolean' && isFree !== 0 && isFree !== 1) {
+    return res.json({ success: false, message: 'isFree must be a boolean or 0/1' });
+  }
+
+  const freeValue = isFree ? 1 : 0;
+
+  // Update course
+  const updateCourseSql = 'UPDATE courses SET is_free = ? WHERE course_id = ?';
+  conn.query(updateCourseSql, [freeValue, courseId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Course not found' });
+    }
+
+    // If course is set to free, cascade to all chapters and lessons
+    if (freeValue === 1) {
+      // Update all chapters of this course
+      const updateChaptersSql = 'UPDATE chapters SET is_free = 1 WHERE course_id = ?';
+      conn.query(updateChaptersSql, [courseId], (err) => {
+        if (err) console.error('Error updating chapters:', err);
+
+        // Update all lessons of chapters in this course
+        const updateLessonsSql = `
+          UPDATE lessons l
+          INNER JOIN chapters ch ON l.chapitre_id = ch.id
+          SET l.is_free = 1
+          WHERE ch.course_id = ?
+        `;
+        conn.query(updateLessonsSql, [courseId], (err) => {
+          if (err) console.error('Error updating lessons:', err);
+          res.json({ success: true, message: 'Course and all its content set to free' });
+        });
+      });
+    } else {
+      res.json({ success: true, message: 'Course free status updated' });
+    }
+  });
+});
+
+// Toggle chapter free status
+router.put('/api/chapters/:chapterId/toggle-free', (req, res) => {
+  const chapterId = req.params.chapterId;
+  const { isFree } = req.body;
+
+  if (typeof isFree !== 'boolean' && isFree !== 0 && isFree !== 1) {
+    return res.json({ success: false, message: 'isFree must be a boolean or 0/1' });
+  }
+
+  const freeValue = isFree ? 1 : 0;
+
+  // Get chapter to check course free status
+  const getChapterSql = 'SELECT ch.*, c.is_free as course_is_free FROM chapters ch INNER JOIN courses c ON ch.course_id = c.course_id WHERE ch.id = ?';
+  conn.query(getChapterSql, [chapterId], (err, chapters) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Database error: ' + err.message });
+    }
+
+    if (chapters.length === 0) {
+      return res.status(404).json({ success: false, message: 'Chapter not found' });
+    }
+
+    const chapter = chapters[0];
+
+    // If course is free, chapter must be free
+    if (chapter.course_is_free === 1 && freeValue === 0) {
+      return res.json({ success: false, message: 'Cannot make chapter paid when course is free' });
+    }
+
+    // Update chapter
+    const updateChapterSql = 'UPDATE chapters SET is_free = ? WHERE id = ?';
+    conn.query(updateChapterSql, [freeValue, chapterId], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'Server error' });
+      }
+
+      // If chapter is set to free, cascade to all its lessons
+      if (freeValue === 1) {
+        const updateLessonsSql = 'UPDATE lessons SET is_free = 1 WHERE chapitre_id = ?';
+        conn.query(updateLessonsSql, [chapterId], (err) => {
+          if (err) console.error('Error updating lessons:', err);
+          res.json({ success: true, message: 'Chapter and all its lessons set to free' });
+        });
+      } else {
+        res.json({ success: true, message: 'Chapter free status updated' });
+      }
+    });
+  });
+});
+
+// Toggle lesson free status
+router.put('/api/lessons/:lessonId/toggle-free', (req, res) => {
+  const lessonId = req.params.lessonId;
+  const { isFree } = req.body;
+
+  if (typeof isFree !== 'boolean' && isFree !== 0 && isFree !== 1) {
+    return res.json({ success: false, message: 'isFree must be a boolean or 0/1' });
+  }
+
+  const freeValue = isFree ? 1 : 0;
+
+  // Get lesson to check chapter and course free status
+  const getLessonSql = `
+    SELECT l.*, ch.is_free as chapter_is_free, c.is_free as course_is_free 
+    FROM lessons l
+    INNER JOIN chapters ch ON l.chapitre_id = ch.id
+    INNER JOIN courses c ON ch.course_id = c.course_id
+    WHERE l.lesson_id = ?
+  `;
+  conn.query(getLessonSql, [lessonId], (err, lessons) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Database error: ' + err.message });
+    }
+
+    if (lessons.length === 0) {
+      return res.status(404).json({ success: false, message: 'Lesson not found' });
+    }
+
+    const lesson = lessons[0];
+
+    // If chapter or course is free, lesson must be free
+    if ((lesson.chapter_is_free === 1 || lesson.course_is_free === 1) && freeValue === 0) {
+      return res.json({ success: false, message: 'Cannot make lesson paid when chapter or course is free' });
+    }
+
+    // Update lesson
+    const updateLessonSql = 'UPDATE lessons SET is_free = ? WHERE lesson_id = ?';
+    conn.query(updateLessonSql, [freeValue, lessonId], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'Server error' });
+      }
+
+      res.json({ success: true, message: 'Lesson free status updated' });
+    });
+  });
+});
+
 module.exports = router;
