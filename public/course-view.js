@@ -4,6 +4,8 @@ function getCourseIdFromUrl() {
   return params.get('id');
 }
 
+let previewVideoPlayer = null;
+
 // Load and display course from database
 async function loadCourse() {
   const courseId = getCourseIdFromUrl();
@@ -43,21 +45,31 @@ async function loadCourse() {
     if (durationEl) durationEl.textContent = (course.duration_hours || '0') + ' Hours';
     if (levelEl) levelEl.textContent = course.level || 'All Levels';
 
-    // Display preview video with AUTOPLAY
+    // Display preview video with Secure Video Player
     if (course.preview_video_url && course.preview_video_url.trim() !== '') {
       const previewSection = document.getElementById('previewVideoSection');
-      const previewFrame = document.getElementById('previewVideoFrame');
-      if (previewSection && previewFrame) {
-        let videoUrl = course.preview_video_url;
+      const previewContainer = document.getElementById('previewVideoContainer');
 
-        // Add YouTube autoplay parameters (mute required for autoplay)
-        if (videoUrl.includes('youtube.com/embed/')) {
-          const separator = videoUrl.includes('?') ? '&' : '?';
-          videoUrl += `${separator}autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1`;
+      if (previewSection && previewContainer) {
+        // Clear previous player
+        if (previewVideoPlayer) {
+          try {
+            previewVideoPlayer.destroy();
+          } catch (e) {
+            console.log('Error destroying previous player:', e);
+          }
         }
 
-        previewFrame.src = videoUrl;
-        previewSection.style.display = 'block';
+        // Create a div for the player
+        previewContainer.innerHTML = '<div id="coursePreviewPlayer"></div>';
+
+        // Initialize the secure video player
+        try {
+          previewVideoPlayer = new SecureVideoPlayer('coursePreviewPlayer', course.preview_video_url);
+          previewSection.style.display = 'block';
+        } catch (error) {
+          console.error('Error initializing preview video player:', error);
+        }
       }
     }
 
