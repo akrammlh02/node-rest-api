@@ -91,8 +91,6 @@ function updateLessonUI() {
 }
 
 // Load video into iframe
-let videoPlayer = null;
-
 function loadVideo(videoUrl) {
   const videoContainer = document.getElementById('videoContainer');
 
@@ -106,37 +104,26 @@ function loadVideo(videoUrl) {
     return;
   }
 
-  // Clear previous player
-  if (videoPlayer) {
-    try {
-      videoPlayer.destroy();
-    } catch (e) {
-      console.log('Error destroying previous player:', e);
-    }
+  // Convert YouTube URL to embed format if needed
+  let embedUrl = videoUrl;
+  if (videoUrl.includes('youtube.com/watch?v=')) {
+    const videoId = videoUrl.split('v=')[1]?.split('&')[0];
+    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+  } else if (videoUrl.includes('youtu.be/')) {
+    const videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+    embedUrl = `https://www.youtube.com/embed/${videoId}`;
   }
 
-  // Clear container
-  videoContainer.innerHTML = '';
-
-  // Create a new container div for the player
-  const playerDiv = document.createElement('div');
-  playerDiv.id = 'secureVideoPlayerContainer';
-  videoContainer.appendChild(playerDiv);
-
-  // Initialize the secure video player
-  try {
-    videoPlayer = new SecureVideoPlayer('secureVideoPlayerContainer', videoUrl);
-  } catch (error) {
-    console.error('Error initializing video player:', error);
-    videoContainer.innerHTML = `
-      <div class="video-placeholder">
-        <span class="material-symbols-outlined">error</span>
-        <p>Error loading video player</p>
-      </div>
-    `;
-  }
+  videoContainer.innerHTML = `
+    <iframe 
+      src="${embedUrl}" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+      allowfullscreen
+      class="video-iframe">
+    </iframe>
+  `;
 }
-
 
 // Render chapters in sidebar
 function renderChapters() {
