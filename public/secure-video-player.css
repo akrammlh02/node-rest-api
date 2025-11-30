@@ -6,7 +6,8 @@
 .secure-player-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  padding-bottom: 56.25%;
+  /* 16:9 aspect ratio */
   background: #000;
   border-radius: 12px;
   overflow: hidden;
@@ -256,7 +257,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Big Play Button */
@@ -328,12 +331,38 @@
 }
 
 /* Fullscreen Styles */
-.secure-player-wrapper:fullscreen {
+/* Fullscreen Styles */
+.secure-player-wrapper:fullscreen,
+.secure-player-wrapper:-webkit-full-screen,
+.secure-player-wrapper:-moz-full-screen,
+.secure-player-wrapper:-ms-fullscreen {
   border-radius: 0;
   padding-bottom: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
-.secure-player-wrapper:fullscreen .secure-player-iframe {
+.secure-player-wrapper:fullscreen .secure-player-iframe,
+.secure-player-wrapper:-webkit-full-screen .secure-player-iframe,
+.secure-player-wrapper:-moz-full-screen .secure-player-iframe,
+.secure-player-wrapper:-ms-fullscreen .secure-player-iframe {
+  border-radius: 0;
+}
+
+/* Fallback for iOS/Mobile that doesn't support API */
+.secure-player-wrapper.fullscreen-fallback {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  padding-bottom: 0;
+  border-radius: 0;
+  background: #000;
+}
+
+.secure-player-wrapper.fullscreen-fallback .secure-player-iframe {
   border-radius: 0;
 }
 

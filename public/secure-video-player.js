@@ -290,9 +290,29 @@ class SecureVideoPlayer {
         wrapper?.addEventListener('mousemove', showControls);
         wrapper?.addEventListener('touchstart', showControls);
 
+        // Fullscreen change listeners
+        const onFullscreenChange = () => {
+            const isFullscreen = document.fullscreenElement ||
+                document.webkitFullscreenElement ||
+                document.mozFullScreenElement ||
+                document.msFullscreenElement;
+            this.updateFullscreenButton(!!isFullscreen);
+
+            // If we exited native fullscreen, ensure fallback class is removed too
+            if (!isFullscreen) {
+                this.exitFullscreenFallback(wrapper);
+            }
+        };
+
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+        document.addEventListener('mozfullscreenchange', onFullscreenChange);
+        document.addEventListener('MSFullscreenChange', onFullscreenChange);
+
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
-            if (!this.player) return;
+            // Check if player exists and is visible
+            if (!this.player || this.container.offsetParent === null) return;
 
             switch (e.key) {
                 case ' ':
@@ -315,6 +335,13 @@ class SecureVideoPlayer {
                 case 'f':
                     e.preventDefault();
                     this.toggleFullscreen();
+                    break;
+                case 'Escape':
+                    const wrapper = this.container.querySelector('.secure-player-wrapper');
+                    if (wrapper.classList.contains('fullscreen-fallback')) {
+                        this.exitFullscreenFallback(wrapper);
+                        this.updateFullscreenButton(false);
+                    }
                     break;
             }
         });
@@ -382,16 +409,58 @@ class SecureVideoPlayer {
 
     toggleFullscreen() {
         const wrapper = this.container.querySelector('.secure-player-wrapper');
+        const isFullscreen = document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement ||
+            wrapper.classList.contains('fullscreen-fallback');
 
-        if (!document.fullscreenElement) {
-            wrapper.requestFullscreen().catch(err => {
-                console.error('Error attempting to enable fullscreen:', err);
-            });
+        if (!isFullscreen) {
+            if (wrapper.requestFullscreen) {
+                wrapper.requestFullscreen().catch(err => {
+                    console.error('Error attempting to enable fullscreen:', err);
+                    // Fallback for iOS/Mobile if API fails
+                    this.enterFullscreenFallback(wrapper);
+                });
+            } else if (wrapper.webkitRequestFullscreen) {
+                wrapper.webkitRequestFullscreen();
+            } else if (wrapper.mozRequestFullScreen) {
+                wrapper.mozRequestFullScreen();
+            } else if (wrapper.msRequestFullscreen) {
+                wrapper.msRequestFullscreen();
+            } else if (wrapper.webkitEnterFullscreen) {
+                // iOS Video Element specific
+                const video = wrapper.querySelector('video');
+                if (video) video.webkitEnterFullscreen();
+                else this.enterFullscreenFallback(wrapper);
+            } else {
+                this.enterFullscreenFallback(wrapper);
+            }
             this.updateFullscreenButton(true);
         } else {
-            document.exitFullscreen();
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => this.exitFullscreenFallback(wrapper));
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else {
+                this.exitFullscreenFallback(wrapper);
+            }
             this.updateFullscreenButton(false);
         }
+    }
+
+    enterFullscreenFallback(wrapper) {
+        wrapper.classList.add('fullscreen-fallback');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    exitFullscreenFallback(wrapper) {
+        wrapper.classList.remove('fullscreen-fallback');
+        document.body.style.overflow = ''; // Restore scrolling
     }
 
     updatePlayButton(isPlaying) {
