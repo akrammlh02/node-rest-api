@@ -331,7 +331,6 @@
 }
 
 /* Fullscreen Styles */
-/* Fullscreen Styles */
 .secure-player-wrapper:fullscreen,
 .secure-player-wrapper:-webkit-full-screen,
 .secure-player-wrapper:-moz-full-screen,
@@ -351,19 +350,21 @@
 
 /* Fallback for iOS/Mobile that doesn't support API */
 .secure-player-wrapper.fullscreen-fallback {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  padding-bottom: 0;
-  border-radius: 0;
-  background: #000;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 2147483647 !important;
+  /* Max z-index */
+  padding-bottom: 0 !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+  margin: 0 !important;
 }
 
 .secure-player-wrapper.fullscreen-fallback .secure-player-iframe {
-  border-radius: 0;
+  border-radius: 0 !important;
 }
 
 /* Mobile Responsive */

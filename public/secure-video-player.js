@@ -13,6 +13,9 @@ class SecureVideoPlayer {
         this.currentTime = 0;
         this.duration = 0;
         this.volume = 100;
+        this.wrapper = null; // Store reference to wrapper
+        this.originalParent = null; // Store original parent for fallback
+        this.originalNextSibling = null; // Store original sibling for fallback
 
         this.init();
     }
@@ -126,6 +129,8 @@ class SecureVideoPlayer {
       </div>
     `;
 
+        // Store wrapper reference
+        this.wrapper = this.container.querySelector('.secure-player-wrapper');
         this.attachEventListeners();
     }
 
@@ -229,32 +234,34 @@ class SecureVideoPlayer {
     }
 
     attachEventListeners() {
+        if (!this.wrapper) return;
+
         // Play/Pause button
-        const playBtn = this.container.querySelector('.btn-play');
-        const bigPlayBtn = this.container.querySelector('.btn-big-play');
+        const playBtn = this.wrapper.querySelector('.btn-play');
+        const bigPlayBtn = this.wrapper.querySelector('.btn-big-play');
 
         playBtn?.addEventListener('click', () => this.togglePlay());
         bigPlayBtn?.addEventListener('click', () => this.togglePlay());
 
         // Volume button
-        const volumeBtn = this.container.querySelector('.btn-volume');
+        const volumeBtn = this.wrapper.querySelector('.btn-volume');
         volumeBtn?.addEventListener('click', () => this.toggleMute());
 
         // Volume slider
-        const volumeSlider = this.container.querySelector('.volume-slider');
+        const volumeSlider = this.wrapper.querySelector('.volume-slider');
         volumeSlider?.addEventListener('input', (e) => this.setVolume(e.target.value));
 
         // Fullscreen button
-        const fullscreenBtn = this.container.querySelector('.btn-fullscreen');
+        const fullscreenBtn = this.wrapper.querySelector('.btn-fullscreen');
         fullscreenBtn?.addEventListener('click', () => this.toggleFullscreen());
 
         // Timeline
-        const timeline = this.container.querySelector('.timeline');
+        const timeline = this.wrapper.querySelector('.timeline');
         timeline?.addEventListener('click', (e) => this.seekToPosition(e));
 
         // Timeline dragging
         let isDragging = false;
-        const timelineHandle = this.container.querySelector('.timeline-handle');
+        const timelineHandle = this.wrapper.querySelector('.timeline-handle');
 
         timelineHandle?.addEventListener('mousedown', () => {
             isDragging = true;
@@ -271,8 +278,7 @@ class SecureVideoPlayer {
         });
 
         // Show/hide controls on hover
-        const wrapper = this.container.querySelector('.secure-player-wrapper');
-        const controls = this.container.querySelector('.secure-player-controls');
+        const controls = this.wrapper.querySelector('.secure-player-controls');
 
         let hideControlsTimeout;
 
@@ -287,8 +293,8 @@ class SecureVideoPlayer {
             }
         };
 
-        wrapper?.addEventListener('mousemove', showControls);
-        wrapper?.addEventListener('touchstart', showControls);
+        this.wrapper.addEventListener('mousemove', showControls);
+        this.wrapper.addEventListener('touchstart', showControls);
 
         // Fullscreen change listeners
         const onFullscreenChange = () => {
@@ -300,7 +306,7 @@ class SecureVideoPlayer {
 
             // If we exited native fullscreen, ensure fallback class is removed too
             if (!isFullscreen) {
-                this.exitFullscreenFallback(wrapper);
+                this.exitFullscreenFallback(this.wrapper);
             }
         };
 
@@ -312,7 +318,7 @@ class SecureVideoPlayer {
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
             // Check if player exists and is visible
-            if (!this.player || this.container.offsetParent === null) return;
+            if (!this.player || !this.wrapper || this.wrapper.offsetParent === null) return;
 
             switch (e.key) {
                 case ' ':
@@ -337,9 +343,8 @@ class SecureVideoPlayer {
                     this.toggleFullscreen();
                     break;
                 case 'Escape':
-                    const wrapper = this.container.querySelector('.secure-player-wrapper');
-                    if (wrapper.classList.contains('fullscreen-fallback')) {
-                        this.exitFullscreenFallback(wrapper);
+                    if (this.wrapper.classList.contains('fullscreen-fallback')) {
+                        this.exitFullscreenFallback(this.wrapper);
                         this.updateFullscreenButton(false);
                     }
                     break;
@@ -387,9 +392,9 @@ class SecureVideoPlayer {
     }
 
     seekToPosition(event) {
-        if (!this.player) return;
+        if (!this.player || !this.wrapper) return;
 
-        const timeline = this.container.querySelector('.timeline');
+        const timeline = this.wrapper.querySelector('.timeline');
         const rect = timeline.getBoundingClientRect();
         const percent = (event.clientX - rect.left) / rect.width;
         const seekTime = percent * this.duration;
@@ -408,38 +413,39 @@ class SecureVideoPlayer {
     }
 
     toggleFullscreen() {
-        const wrapper = this.container.querySelector('.secure-player-wrapper');
+        if (!this.wrapper) return;
+
         const isFullscreen = document.fullscreenElement ||
             document.webkitFullscreenElement ||
             document.mozFullScreenElement ||
             document.msFullscreenElement ||
-            wrapper.classList.contains('fullscreen-fallback');
+            this.wrapper.classList.contains('fullscreen-fallback');
 
         if (!isFullscreen) {
-            if (wrapper.requestFullscreen) {
-                wrapper.requestFullscreen().catch(err => {
+            if (this.wrapper.requestFullscreen) {
+                this.wrapper.requestFullscreen().catch(err => {
                     console.error('Error attempting to enable fullscreen:', err);
                     // Fallback for iOS/Mobile if API fails
-                    this.enterFullscreenFallback(wrapper);
+                    this.enterFullscreenFallback(this.wrapper);
                 });
-            } else if (wrapper.webkitRequestFullscreen) {
-                wrapper.webkitRequestFullscreen();
-            } else if (wrapper.mozRequestFullScreen) {
-                wrapper.mozRequestFullScreen();
-            } else if (wrapper.msRequestFullscreen) {
-                wrapper.msRequestFullscreen();
-            } else if (wrapper.webkitEnterFullscreen) {
+            } else if (this.wrapper.webkitRequestFullscreen) {
+                this.wrapper.webkitRequestFullscreen();
+            } else if (this.wrapper.mozRequestFullScreen) {
+                this.wrapper.mozRequestFullScreen();
+            } else if (this.wrapper.msRequestFullscreen) {
+                this.wrapper.msRequestFullscreen();
+            } else if (this.wrapper.webkitEnterFullscreen) {
                 // iOS Video Element specific
-                const video = wrapper.querySelector('video');
+                const video = this.wrapper.querySelector('video');
                 if (video) video.webkitEnterFullscreen();
-                else this.enterFullscreenFallback(wrapper);
+                else this.enterFullscreenFallback(this.wrapper);
             } else {
-                this.enterFullscreenFallback(wrapper);
+                this.enterFullscreenFallback(this.wrapper);
             }
             this.updateFullscreenButton(true);
         } else {
             if (document.exitFullscreen) {
-                document.exitFullscreen().catch(() => this.exitFullscreenFallback(wrapper));
+                document.exitFullscreen().catch(() => this.exitFullscreenFallback(this.wrapper));
             } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
             } else if (document.mozCancelFullScreen) {
@@ -447,25 +453,43 @@ class SecureVideoPlayer {
             } else if (document.msExitFullscreen) {
                 document.msExitFullscreen();
             } else {
-                this.exitFullscreenFallback(wrapper);
+                this.exitFullscreenFallback(this.wrapper);
             }
             this.updateFullscreenButton(false);
         }
     }
 
     enterFullscreenFallback(wrapper) {
+        // Store original position if not already stored
+        if (!this.originalParent) {
+            this.originalParent = wrapper.parentNode;
+            this.originalNextSibling = wrapper.nextSibling;
+        }
+
         wrapper.classList.add('fullscreen-fallback');
+        document.body.appendChild(wrapper); // Move to body to break stacking contexts
         document.body.style.overflow = 'hidden'; // Prevent scrolling
     }
 
     exitFullscreenFallback(wrapper) {
         wrapper.classList.remove('fullscreen-fallback');
+
+        // Move back to original position
+        if (this.originalParent) {
+            if (this.originalNextSibling) {
+                this.originalParent.insertBefore(wrapper, this.originalNextSibling);
+            } else {
+                this.originalParent.appendChild(wrapper);
+            }
+        }
+
         document.body.style.overflow = ''; // Restore scrolling
     }
 
     updatePlayButton(isPlaying) {
-        const playIcon = this.container.querySelector('.icon-play');
-        const pauseIcon = this.container.querySelector('.icon-pause');
+        if (!this.wrapper) return;
+        const playIcon = this.wrapper.querySelector('.icon-play');
+        const pauseIcon = this.wrapper.querySelector('.icon-pause');
 
         if (isPlaying) {
             playIcon.style.display = 'none';
@@ -477,8 +501,9 @@ class SecureVideoPlayer {
     }
 
     updateVolumeButton(isMuted) {
-        const volumeUpIcon = this.container.querySelector('.icon-volume-up');
-        const volumeOffIcon = this.container.querySelector('.icon-volume-off');
+        if (!this.wrapper) return;
+        const volumeUpIcon = this.wrapper.querySelector('.icon-volume-up');
+        const volumeOffIcon = this.wrapper.querySelector('.icon-volume-off');
 
         if (isMuted) {
             volumeUpIcon.style.display = 'none';
@@ -490,8 +515,9 @@ class SecureVideoPlayer {
     }
 
     updateFullscreenButton(isFullscreen) {
-        const fullscreenIcon = this.container.querySelector('.icon-fullscreen');
-        const fullscreenExitIcon = this.container.querySelector('.icon-fullscreen-exit');
+        if (!this.wrapper) return;
+        const fullscreenIcon = this.wrapper.querySelector('.icon-fullscreen');
+        const fullscreenExitIcon = this.wrapper.querySelector('.icon-fullscreen-exit');
 
         if (isFullscreen) {
             fullscreenIcon.style.display = 'none';
@@ -503,8 +529,9 @@ class SecureVideoPlayer {
     }
 
     updateTimeline() {
-        const progress = this.container.querySelector('.timeline-progress');
-        const handle = this.container.querySelector('.timeline-handle');
+        if (!this.wrapper) return;
+        const progress = this.wrapper.querySelector('.timeline-progress');
+        const handle = this.wrapper.querySelector('.timeline-handle');
 
         if (this.duration > 0) {
             const percent = (this.currentTime / this.duration) * 100;
@@ -514,8 +541,9 @@ class SecureVideoPlayer {
     }
 
     updateTimeDisplay() {
-        const currentEl = this.container.querySelector('.time-current');
-        const durationEl = this.container.querySelector('.time-duration');
+        if (!this.wrapper) return;
+        const currentEl = this.wrapper.querySelector('.time-current');
+        const durationEl = this.wrapper.querySelector('.time-duration');
 
         currentEl.textContent = this.formatTime(this.currentTime);
         durationEl.textContent = this.formatTime(this.duration);
@@ -528,7 +556,8 @@ class SecureVideoPlayer {
     }
 
     showLoading() {
-        const loading = this.container.querySelector('.secure-player-loading');
+        if (!this.wrapper) return;
+        const loading = this.wrapper.querySelector('.secure-player-loading');
         if (loading) {
             loading.style.display = 'flex';
             loading.style.opacity = '1';
@@ -536,7 +565,8 @@ class SecureVideoPlayer {
     }
 
     hideLoading() {
-        const loading = this.container.querySelector('.secure-player-loading');
+        if (!this.wrapper) return;
+        const loading = this.wrapper.querySelector('.secure-player-loading');
         if (loading) {
             loading.style.display = 'none';
             loading.style.opacity = '0';
@@ -544,14 +574,16 @@ class SecureVideoPlayer {
     }
 
     showBigPlayButton() {
-        const bigPlay = this.container.querySelector('.secure-player-big-play');
+        if (!this.wrapper) return;
+        const bigPlay = this.wrapper.querySelector('.secure-player-big-play');
         if (bigPlay) {
             bigPlay.style.display = 'flex';
         }
     }
 
     hideBigPlayButton() {
-        const bigPlay = this.container.querySelector('.secure-player-big-play');
+        if (!this.wrapper) return;
+        const bigPlay = this.wrapper.querySelector('.secure-player-big-play');
         if (bigPlay) {
             bigPlay.style.display = 'none';
         }
