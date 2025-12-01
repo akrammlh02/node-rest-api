@@ -989,6 +989,45 @@ router.delete('/api/quizzes/:id', (req, res) => {
   });
 });
 
+// Bulk import quiz questions
+router.post('/api/quizzes/bulk', (req, res) => {
+  const { quizzes } = req.body;
+
+  if (!Array.isArray(quizzes) || quizzes.length === 0) {
+    return res.json({ success: false, message: 'Quizzes array is required' });
+  }
+
+  // Validate all quizzes
+  const validQuizzes = [];
+  for (let i = 0; i < quizzes.length; i++) {
+    const quiz = quizzes[i];
+    if (!quiz.language || !quiz.question || !quiz.option_a || !quiz.option_b ||
+      !quiz.option_c || !quiz.option_d || !quiz.correct_option) {
+      return res.json({ success: false, message: `Quiz ${i + 1} is missing required fields` });
+    }
+    validQuizzes.push([
+      quiz.language,
+      quiz.question,
+      quiz.option_a,
+      quiz.option_b,
+      quiz.option_c,
+      quiz.option_d,
+      quiz.correct_option.toUpperCase()
+    ]);
+  }
+
+  const sql = `INSERT INTO quizzes (language, question, option_a, option_b, option_c, option_d, correct_option) VALUES ?`;
+
+  conn.query(sql, [validQuizzes], (err, result) => {
+    if (err) {
+      console.error('Bulk insert error:', err);
+      return res.status(500).json({ success: false, message: 'Server error while importing' });
+    }
+    res.json({ success: true, message: `Successfully imported ${result.affectedRows} question(s)` });
+  });
+});
+
+
 // ======== Free/Paid Status Management ========
 // Toggle course free status
 router.put('/api/courses/:courseId/toggle-free', (req, res) => {

@@ -771,81 +771,222 @@
         </div>
       </section>
 
-      <!-- Add Quiz Modal -->
+      <!-- Add Quiz Modal - Improved UI -->
       <div class="modal fade" id="addQuizModal" tabindex="-1" aria-labelledby="addQuizModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="addQuizModalLabel">Add Quiz Question</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header" style="background: linear-gradient(135deg, #7b09cd, #a855f7); color: white;">
+              <h5 class="modal-title" id="addQuizModalLabel">
+                <span class="material-symbols-outlined" style="vertical-align: middle;">quiz</span>
+                Add Quiz Questions
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form id="addQuizForm">
-                <input type="hidden" id="editQuizId" value="">
-                <div class="mb-3">
-                  <label for="programmingLanguage" class="form-label">Programming Language <span
-                      class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="programmingLanguage" required
-                    placeholder="e.g., JavaScript, Python, Java">
-                </div>
+              <!-- Tab Navigation -->
+              <ul class="nav nav-tabs mb-4" id="quizTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single-question"
+                    type="button">
+                    <span class="material-symbols-outlined"
+                      style="vertical-align: middle; font-size: 18px;">edit_note</span>
+                    Single Question
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="bulk-tab" data-bs-toggle="tab" data-bs-target="#bulk-import"
+                    type="button">
+                    <span class="material-symbols-outlined"
+                      style="vertical-align: middle; font-size: 18px;">upload_file</span>
+                    Bulk Import
+                  </button>
+                </li>
+              </ul>
 
-                <div class="mb-3">
-                  <label for="quizQuestion" class="form-label">Question <span class="text-danger">*</span></label>
-                  <textarea class="form-control" id="quizQuestion" rows="3" required
-                    placeholder="Enter your programming question here..."></textarea>
-                </div>
+              <!-- Tab Content -->
+              <div class="tab-content" id="quizTabContent">
+                <!-- Single Question Tab -->
+                <div class="tab-pane fade show active" id="single-question" role="tabpanel">
+                  <form id="addQuizForm">
+                    <input type="hidden" id="editQuizId" value="">
 
-                <div class="row">
-                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="mb-3">
+                          <label for="programmingLanguage" class="form-label">
+                            <strong>Programming Language</strong> <span class="text-danger">*</span>
+                          </label>
+                          <select class="form-control form-select" id="programmingLanguage" required>
+                            <option value="">-- Select Language --</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="Python">Python</option>
+                            <option value="Java">Java</option>
+                            <option value="C++">C++</option>
+                            <option value="C#">C#</option>
+                            <option value="PHP">PHP</option>
+                            <option value="Ruby">Ruby</option>
+                            <option value="Go">Go</option>
+                            <option value="Rust">Rust</option>
+                            <option value="Swift">Swift</option>
+                            <option value="Kotlin">Kotlin</option>
+                            <option value="TypeScript">TypeScript</option>
+                            <option value="SQL">SQL</option>
+                            <option value="HTML/CSS">HTML/CSS</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <small class="text-muted">Select the programming language this question is about</small>
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="mb-3">
-                      <label for="optionA" class="form-label">Option A <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="optionA" required>
+                      <label for="quizQuestion" class="form-label">
+                        <strong>Question</strong> <span class="text-danger">*</span>
+                      </label>
+                      <textarea class="form-control" id="quizQuestion" rows="4" required
+                        placeholder="Enter your quiz question here..."></textarea>
+                      <small class="text-muted">Tip: Be clear and concise</small>
+                    </div>
+
+                    <div class="card mb-3" style="border: 2px dashed #dee2e6;">
+                      <div class="card-header" style="background-color: #f8f9fa;">
+                        <strong>Answer Options</strong>
+                      </div>
+                      <div class="card-body">
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label for="optionA" class="form-label">
+                              <span class="badge bg-primary">A</span> Option A <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="optionA" required placeholder="First option">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="optionB" class="form-label">
+                              <span class="badge bg-primary">B</span> Option B <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="optionB" required placeholder="Second option">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="optionC" class="form-label">
+                              <span class="badge bg-primary">C</span> Option C <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="optionC" required placeholder="Third option">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="optionD" class="form-label">
+                              <span class="badge bg-primary">D</span> Option D <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="optionD" required placeholder="Fourth option">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="correctOption" class="form-label">
+                        <strong>Correct Answer</strong> <span class="text-danger">*</span>
+                      </label>
+                      <div class="btn-group w-100" role="group" id="correctOptionGroup">
+                        <input type="radio" class="btn-check" name="correctOption" id="correctA" value="A">
+                        <label class="btn btn-outline-success" for="correctA">A</label>
+
+                        <input type="radio" class="btn-check" name="correctOption" id="correctB" value="B">
+                        <label class="btn btn-outline-success" for="correctB">B</label>
+
+                        <input type="radio" class="btn-check" name="correctOption" id="correctC" value="C">
+                        <label class="btn btn-outline-success" for="correctC">C</label>
+
+                        <input type="radio" class="btn-check" name="correctOption" id="correctD" value="D">
+                        <label class="btn btn-outline-success" for="correctD">D</label>
+                      </div>
+                      <small class="text-muted">Click the letter of the correct answer</small>
+                    </div>
+
+                    <div class="mb-3" id="messageQuiz" style="display: none;"></div>
+
+                    <div class="modal-footer" style="border-top: 2px solid #dee2e6; padding-top: 20px;">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-outline-primary" id="saveAndAddAnother">
+                        <span class="material-symbols-outlined"
+                          style="vertical-align: middle; font-size: 18px;">add</span>
+                        Save & Add Another
+                      </button>
+                      <button type="submit" class="btn btn-primary" style="background-color: #7b09cd; border: none;">
+                        <span class="material-symbols-outlined"
+                          style="vertical-align: middle; font-size: 18px;">save</span>
+                        Save Question
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Bulk Import Tab -->
+                <div class="tab-pane fade" id="bulk-import" role="tabpanel">
+                  <div class="alert alert-info">
+                    <strong>Import Multiple Questions at Once!</strong>
+                    <p class="mb-0">Upload a JSON file with multiple quiz questions. This is much faster than adding
+                      questions one by one.</p>
+                  </div>
+
+                  <div class="card mb-3">
+                    <div class="card-header" style="background-color: #f8f9fa;">
+                      <strong>JSON Format Example</strong>
+                    </div>
+                    <div class="card-body">
+                      <pre
+                        style="background-color: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>[
+  {
+    "language": "JavaScript",
+    "question": "What is the output of: console.log(typeof [])?",
+    "option_a": "array",
+    "option_b": "object",
+    "option_c": "undefined",
+    "option_d": "null",
+    "correct_option": "B"
+  },
+  {
+    "language": "Python",
+    "question": "Which keyword is used to define a function in Python?",
+    "option_a": "function",
+    "option_b": "def",
+    "option_c": "func",
+    "option_d": "define",
+    "correct_option": "B"
+  }
+]</code></pre>
+                      <button class="btn btn-sm btn-outline-secondary mt-2" onclick="downloadQuizTemplate()">
+                        <span class="material-symbols-outlined"
+                          style="vertical-align: middle; font-size: 18px;">download</span>
+                        Download Template
+                      </button>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="optionB" class="form-label">Option B <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="optionB" required>
-                    </div>
+
+                  <div class="mb-3">
+                    <label for="bulkQuizFile" class="form-label"><strong>Upload JSON File</strong></label>
+                    <input type="file" class="form-control" id="bulkQuizFile" accept=".json">
+                  </div>
+
+                  <div id="bulkPreview" class="mb-3" style="display: none;">
+                    <h6>Preview:</h6>
+                    <div id="bulkPreviewContent" class="alert alert-secondary"
+                      style="max-height: 300px; overflow-y: auto;"></div>
+                  </div>
+
+                  <div class="mb-3" id="messageBulk" style="display: none;"></div>
+
+                  <div class="modal-footer" style="border-top: 2px solid #dee2e6; padding-top: 20px;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="importBulkQuizzes"
+                      style="background-color: #7b09cd; border: none;" disabled>
+                      <span class="material-symbols-outlined"
+                        style="vertical-align: middle; font-size: 18px;">cloud_upload</span>
+                      Import Questions
+                    </button>
                   </div>
                 </div>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="optionC" class="form-label">Option C <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="optionC" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="optionD" class="form-label">Option D <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="optionD" required>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="correctOption" class="form-label">Correct Answer <span
-                      class="text-danger">*</span></label>
-                  <select class="form-control" id="correctOption" required>
-                    <option value="">-- Select Correct Answer --</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                  </select>
-                </div>
-
-                <div class="mb-3" id="messageQuiz" style="display: none;">
-                </div>
-
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="submit" class="btn btn-primary" style="background-color: #7b09cd; border: none;">Save
-                    Question</button>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -1175,72 +1316,262 @@
       if (quizForm) {
         quizForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-
-          const editQuizId = document.getElementById('editQuizId').value;
-          const programmingLanguage = document.getElementById('programmingLanguage').value;
-          const quizQuestion = document.getElementById('quizQuestion').value;
-          const optionA = document.getElementById('optionA').value;
-          const optionB = document.getElementById('optionB').value;
-          const optionC = document.getElementById('optionC').value;
-          const optionD = document.getElementById('optionD').value;
-          const correctOption = document.getElementById('correctOption').value;
-          const message = document.getElementById('messageQuiz');
-
-          message.textContent = '';
-          message.style.display = 'none';
-
-          // Validation
-          if (!programmingLanguage || !quizQuestion || !optionA || !optionB || !optionC || !optionD || !correctOption) {
-            message.textContent = 'Please fill in all fields.';
-            message.style.display = 'block';
-            message.style.color = 'red';
-            return;
-          }
-
-          const quizData = {
-            language: programmingLanguage,
-            question: quizQuestion,
-            option_a: optionA,
-            option_b: optionB,
-            option_c: optionC,
-            option_d: optionD,
-            correct_option: correctOption
-          };
-
-          try {
-            const response = await fetch('/admin/api/quizzes', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(quizData)
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-              message.textContent = result.message;
-              message.style.display = 'block';
-              message.style.color = 'green';
-              setTimeout(() => {
-                const modal = bootstrap.Modal.getInstance(document.getElementById('addQuizModal'));
-                modal.hide();
-                loadQuizzes(); // Reload the table
-              }, 1000);
-            } else {
-              message.textContent = result.message || 'Failed to save question.';
-              message.style.display = 'block';
-              message.style.color = 'red';
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            message.textContent = 'Error connecting to the server.';
-            message.style.display = 'block';
-            message.style.color = 'red';
-          }
+          await saveQuizQuestion(false);
         });
+
+        // Save & Add Another button
+        const saveAndAddBtn = document.getElementById('saveAndAddAnother');
+        if (saveAndAddBtn) {
+          saveAndAddBtn.addEventListener('click', async () => {
+            await saveQuizQuestion(true);
+          });
+        }
+      }
+
+      // Bulk import file handling
+      const bulkFileInput = document.getElementById('bulkQuizFile');
+      if (bulkFileInput) {
+        bulkFileInput.addEventListener('change', handleBulkFileUpload);
+      }
+
+      // Import button
+      const importBtn = document.getElementById('importBulkQuizzes');
+      if (importBtn) {
+        importBtn.addEventListener('click', importBulkQuizzes);
       }
     });
+
+    // Download quiz template
+    function downloadQuizTemplate() {
+      const template = [
+        {
+          "language": "JavaScript",
+          "question": "What is the output of: console.log(typeof [])?",
+          "option_a": "array",
+          "option_b": "object",
+          "option_c": "undefined",
+          "option_d": "null",
+          "correct_option": "B"
+        },
+        {
+          "language": "Python",
+          "question": "Which keyword is used to define a function in Python?",
+          "option_a": "function",
+          "option_b": "def",
+          "option_c": "func",
+          "option_d": "define",
+          "correct_option": "B"
+        }
+      ];
+
+      const jsonStr = JSON.stringify(template, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'quiz_template.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Save quiz question function
+    async function saveQuizQuestion(addAnother = false) {
+      const editQuizId = document.getElementById('editQuizId').value;
+      const programmingLanguage = document.getElementById('programmingLanguage').value;
+      const quizQuestion = document.getElementById('quizQuestion').value;
+      const optionA = document.getElementById('optionA').value;
+      const optionB = document.getElementById('optionB').value;
+      const optionC = document.getElementById('optionC').value;
+      const optionD = document.getElementById('optionD').value;
+
+      // Get the selected radio button value
+      const correctOptionInputs = document.querySelectorAll('input[name="correctOption"]');
+      let correctOption = '';
+      for (const input of correctOptionInputs) {
+        if (input.checked) {
+          correctOption = input.value;
+          break;
+        }
+      }
+
+      const message = document.getElementById('messageQuiz');
+
+      message.textContent = '';
+      message.style.display = 'none';
+
+      // Validation
+      if (!programmingLanguage || !quizQuestion || !optionA || !optionB || !optionC || !optionD || !correctOption) {
+        message.textContent = 'Please fill in all fields and select the correct answer.';
+        message.style.display = 'block';
+        message.style.color = 'red';
+        return;
+      }
+
+      const quizData = {
+        language: programmingLanguage,
+        question: quizQuestion,
+        option_a: optionA,
+        option_b: optionB,
+        option_c: optionC,
+        option_d: optionD,
+        correct_option: correctOption
+      };
+
+      try {
+        const response = await fetch('/admin/api/quizzes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(quizData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          message.textContent = result.message;
+          message.style.display = 'block';
+          message.style.color = 'green';
+
+          if (addAnother) {
+            // Reset form but keep it open
+            setTimeout(() => {
+              document.getElementById('addQuizForm').reset();
+              // Uncheck all radio buttons
+              correctOptionInputs.forEach(input => input.checked = false);
+              message.style.display = 'none';
+              loadQuizzes(); // Reload the table
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              const modal = bootstrap.Modal.getInstance(document.getElementById('addQuizModal'));
+              modal.hide();
+              loadQuizzes(); // Reload the table
+            }, 1000);
+          }
+        } else {
+          message.textContent = result.message || 'Failed to save question.';
+          message.style.display = 'block';
+          message.style.color = 'red';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        message.textContent = 'Error connecting to the server.';
+        message.style.display = 'block';
+        message.style.color = 'red';
+      }
+    }
+
+    // Handle bulk file upload
+    let bulkQuizData = null;
+
+    function handleBulkFileUpload(event) {
+      const file = event.target.files[0];
+      const preview = document.getElementById('bulkPreview');
+      const previewContent = document.getElementById('bulkPreviewContent');
+      const importBtn = document.getElementById('importBulkQuizzes');
+      const message = document.getElementById('messageBulk');
+
+      if (!file) {
+        preview.style.display = 'none';
+        importBtn.disabled = true;
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const json = JSON.parse(e.target.result);
+
+          if (!Array.isArray(json)) {
+            throw new Error('JSON must be an array of quiz questions');
+          }
+
+          // Validate each question
+          for (let i = 0; i < json.length; i++) {
+            const q = json[i];
+            if (!q.language || !q.question || !q.option_a || !q.option_b || !q.option_c || !q.option_d || !q.correct_option) {
+              throw new Error(`Question ${i + 1} is missing required fields`);
+            }
+          }
+
+          bulkQuizData = json;
+
+          // Show preview
+          previewContent.innerHTML = `
+            <p><strong>Found ${json.length} question(s)</strong></p>
+            <ul style="margin-bottom: 0;">
+              ${json.slice(0, 3).map((q, i) => `<li><strong>${q.language}:</strong> ${q.question.substring(0, 60)}...</li>`).join('')}
+              ${json.length > 3 ? `<li><em>... and ${json.length - 3} more question(s)</em></li>` : ''}
+            </ul>
+          `;
+          preview.style.display = 'block';
+          importBtn.disabled = false;
+          message.style.display = 'none';
+
+        } catch (error) {
+          message.textContent = 'Invalid JSON file: ' + error.message;
+          message.style.display = 'block';
+          message.style.color = 'red';
+          preview.style.display = 'none';
+          importBtn.disabled = true;
+          bulkQuizData = null;
+        }
+      };
+
+      reader.readAsText(file);
+    }
+
+    // Import bulk quizzes
+    async function importBulkQuizzes() {
+      if (!bulkQuizData) return;
+
+      const message = document.getElementById('messageBulk');
+      const importBtn = document.getElementById('importBulkQuizzes');
+
+      importBtn.disabled = true;
+      message.textContent = 'Importing questions...';
+      message.style.display = 'block';
+      message.style.color = 'blue';
+
+      try {
+        const response = await fetch('/admin/api/quizzes/bulk', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ quizzes: bulkQuizData })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          message.textContent = `Successfully imported ${bulkQuizData.length} question(s)!`;
+          message.style.color = 'green';
+
+          setTimeout(() => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addQuizModal'));
+            modal.hide();
+            loadQuizzes(); // Reload the table
+
+            // Reset
+            document.getElementById('bulkQuizFile').value = '';
+            document.getElementById('bulkPreview').style.display = 'none';
+            message.style.display = 'none';
+            bulkQuizData = null;
+          }, 1500);
+        } else {
+          message.textContent = result.message || 'Failed to import questions.';
+          message.style.color = 'red';
+          importBtn.disabled = false;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        message.textContent = 'Error connecting to the server.';
+        message.style.color = 'red';
+        importBtn.disabled = false;
+      }
+    }
   </script>
 
 
