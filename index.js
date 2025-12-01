@@ -40,6 +40,10 @@ hbs.registerHelper('trim', function (str) {
   return str;
 });
 
+hbs.registerHelper('json', function (context) {
+  return JSON.stringify(context || []);
+});
+
 //Cloudinary 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
