@@ -190,14 +190,16 @@ nav ul li a:hover {
   font-weight: 600;
   font-size: 15px;
 } */
- .sidebar ul li a{
+.sidebar ul li a {
   color: white !important;
   text-decoration: none !important;
- }
+}
+
 .sidebar ul li a span {
   padding-right: 12px;
   font-size: 22px;
 }
+
 .sidebar ul li:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateX(5px);

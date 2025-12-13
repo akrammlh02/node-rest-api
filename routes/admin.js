@@ -1178,4 +1178,136 @@ router.put('/api/lessons/:lessonId/toggle-free', (req, res) => {
   });
 });
 
+// ============================================
+// AD CAMPAIGNS API ENDPOINTS
+// ============================================
+
+// API: Get all ad campaigns
+router.get('/api/ad-campaigns', (req, res) => {
+  const sql = `
+    SELECT * FROM ad_campaigns 
+    ORDER BY start_date DESC
+  `;
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, campaigns: result });
+  });
+});
+
+// API: Add new ad campaign
+router.post('/api/ad-campaigns', (req, res) => {
+  const { name, spend, startDate, endDate, notes } = req.body;
+
+  if (!name || !spend || !startDate) {
+    return res.json({ success: false, message: 'Campaign name, spend, and start date are required' });
+  }
+
+  if (parseFloat(spend) < 0) {
+    return res.json({ success: false, message: 'Spend amount cannot be negative' });
+  }
+
+  const sql = `
+    INSERT INTO ad_campaigns (campaign_name, spend_amount, start_date, end_date, notes)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  conn.query(sql, [name, spend, startDate, endDate || null, notes || ''], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, message: 'Ad campaign added successfully', campaignId: result.insertId });
+  });
+});
+
+// API: Update ad campaign
+router.put('/api/ad-campaigns/:id', (req, res) => {
+  const campaignId = req.params.id;
+  const { name, spend, startDate, endDate, notes } = req.body;
+
+  if (!name || !spend || !startDate) {
+    return res.json({ success: false, message: 'Campaign name, spend, and start date are required' });
+  }
+
+  if (parseFloat(spend) < 0) {
+    return res.json({ success: false, message: 'Spend amount cannot be negative' });
+  }
+
+  const sql = `
+    UPDATE ad_campaigns 
+    SET campaign_name = ?, spend_amount = ?, start_date = ?, end_date = ?, notes = ?
+    WHERE id = ?
+  `;
+
+  conn.query(sql, [name, spend, startDate, endDate || null, notes || '', campaignId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Campaign not found' });
+    }
+
+    res.json({ success: true, message: 'Ad campaign updated successfully' });
+  });
+});
+
+// API: Delete ad campaign
+router.delete('/api/ad-campaigns/:id', (req, res) => {
+  const campaignId = req.params.id;
+  const sql = 'DELETE FROM ad_campaigns WHERE id = ?';
+
+  conn.query(sql, [campaignId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Campaign not found' });
+    }
+
+    res.json({ success: true, message: 'Ad campaign deleted successfully' });
+  });
+});
+
+// API: Get total ad spend
+router.get('/api/ad-campaigns/total-spend', (req, res) => {
+  const sql = 'SELECT SUM(spend_amount) as total_spend FROM ad_campaigns';
+
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, totalSpend: result[0].total_spend || 0 });
+  });
+});
+
+// API: Get monthly ad spend breakdown
+router.get('/api/ad-campaigns/monthly-breakdown', (req, res) => {
+  const sql = `
+    SELECT 
+      DATE_FORMAT(start_date, '%Y-%m') as month,
+      SUM(spend_amount) as total_spend,
+      COUNT(*) as campaign_count
+    FROM ad_campaigns
+    GROUP BY DATE_FORMAT(start_date, '%Y-%m')
+    ORDER BY month DESC
+    LIMIT 12
+  `;
+
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, monthlyBreakdown: result });
+  });
+});
+
 module.exports = router;
