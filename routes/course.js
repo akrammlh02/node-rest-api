@@ -63,14 +63,30 @@ router.get('/ar', (req, res) => {
 });
 
 router.get('/course-view', (req, res) => {
+    const courseId = req.query.id;
+
+    // If no course ID provided, redirect to courses page
+    if (!courseId) {
+        return res.redirect('/course');
+    }
+
     res.render('course-view.hbs', {
-        isLoggedIn: !!req.session.user
+        isLoggedIn: !!req.session.user,
+        courseId: courseId
     });
 });
 
 router.get('/course-view/ar', (req, res) => {
+    const courseId = req.query.id;
+
+    // If no course ID provided, redirect to courses page
+    if (!courseId) {
+        return res.redirect('/course/ar');
+    }
+
     res.render('course-view-ar.hbs', {
-        isLoggedIn: !!req.session.user
+        isLoggedIn: !!req.session.user,
+        courseId: courseId
     });
 });
 
@@ -380,12 +396,22 @@ router.get('/api/course/:courseId', (req, res) => {
     const courseId = req.params.courseId;
     const clientId = req.session.user ? req.session.user.id : null;
 
+    console.log('Fetching course with ID:', courseId);
+
     // Get course details
     const courseSql = 'SELECT * FROM courses WHERE course_id = ?';
     conn.query(courseSql, [courseId], (err, courses) => {
-        if (err || courses.length === 0) {
+        if (err) {
+            console.error('Database error fetching course:', err);
+            return res.status(500).json({ success: false, message: 'Database error' });
+        }
+
+        if (courses.length === 0) {
+            console.log('No course found with ID:', courseId);
             return res.status(404).json({ success: false, message: 'Course not found' });
         }
+
+        console.log('Course found:', courses[0].title);
 
         const course = courses[0];
 
@@ -413,8 +439,11 @@ router.get('/api/course/:courseId', (req, res) => {
 
             conn.query(chaptersSql, [courseId], (err, chapters) => {
                 if (err) {
+                    console.error('Error fetching chapters:', err);
                     return res.status(500).json({ success: false, message: 'Server error' });
                 }
+
+                console.log(`Found ${chapters.length} chapters for course ${courseId}`);
 
                 // Get lessons for each chapter
                 const chapterIds = chapters.map(ch => ch.id);
@@ -430,7 +459,7 @@ router.get('/api/course/:courseId', (req, res) => {
                 }
 
                 const lessonsSql = `
-          SELECT lesson_id, chapitre_id, title, content_url, order_number, is_free, description
+          SELECT lesson_id, chapitre_id, title, content_url, order_number, is_free
           FROM lessons 
           WHERE chapitre_id IN (?)
           ORDER BY order_number ASC
@@ -438,8 +467,12 @@ router.get('/api/course/:courseId', (req, res) => {
 
                 conn.query(lessonsSql, [chapterIds], (err, lessons) => {
                     if (err) {
+                        console.error('Error fetching lessons:', err);
+                        console.error('Chapter IDs:', chapterIds);
                         return res.status(500).json({ success: false, message: 'Server error' });
                     }
+
+                    console.log(`Found ${lessons.length} lessons for course ${courseId}`);
 
                     // Group lessons by chapter
                     const chaptersWithLessons = chapters.map(chapter => ({

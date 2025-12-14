@@ -8,7 +8,8 @@ function getCourseIdFromUrl() {
 async function loadCourse() {
   const courseId = getCourseIdFromUrl();
   if (!courseId) {
-    document.getElementById('courseTitle').textContent = 'Course not found';
+    // Redirect to courses page if no course ID provided
+    window.location.href = '/course';
     return;
   }
 
@@ -17,7 +18,12 @@ async function loadCourse() {
     const result = await response.json();
 
     if (!result.success || !result.course) {
+      // Show error message and redirect after 2 seconds
       document.getElementById('courseTitle').textContent = 'Course not found';
+      document.getElementById('courseDescription').textContent = 'The course you are looking for does not exist or has been removed. Redirecting to courses page...';
+      setTimeout(() => {
+        window.location.href = '/course';
+      }, 2000);
       return;
     }
 
