@@ -651,7 +651,32 @@ main aside hr {
 }
 
 
+/* ========= Mobile Responsive Styles ========= */
+@media (max-width: 1024px) {
+
+  /* Tablet adjustments */
+  main aside {
+    width: 220px;
+  }
+
+  .right-side {
+    padding: 20px 15px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+}
+
 @media (max-width: 768px) {
+
+  /* Header and Navigation */
+  nav {
+    padding-inline-start: 20px;
+    padding-right: 15px;
+  }
+
   .nav-links {
     display: none;
     flex-direction: column;
@@ -674,7 +699,7 @@ main aside hr {
   }
 
   .offcanvas {
-    width: 60% !important;
+    width: 70% !important;
   }
 
   .offcanvas-body {
@@ -685,8 +710,14 @@ main aside hr {
   .offcanvas-body a {
     color: black;
     text-decoration: none;
-    padding: 5px;
-    margin-bottom: 15px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+
+  .offcanvas-body a:hover {
+    background: var(--hover-bg);
   }
 
   .offcanvas-body li {
@@ -700,28 +731,9 @@ main aside hr {
     justify-content: center;
   }
 
-  main aside {
-    width: 100%;
-    height: auto;
-    position: relative;
-    top: 0;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .section-header {
+  /* Main Layout */
+  main {
     flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-box {
-    width: 100%;
-  }
-
-  .stats-row {
-    grid-template-columns: 1fr;
   }
 
   aside {
@@ -729,7 +741,112 @@ main aside hr {
   }
 
   .right-side {
-    padding-inline: 5px !important;
+    width: 100%;
+    padding: 15px 10px !important;
+  }
+
+  /* Welcome Section */
+  .welcome {
+    padding: 20px 15px;
+    margin-right: 0;
+  }
+
+  .welcome h1 {
+    font-size: 22px;
+  }
+
+  .welcome p {
+    font-size: 13px;
+  }
+
+  /* Dashboard Cards */
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .cards .card {
+    padding: 20px;
+  }
+
+  .cards .card h3 {
+    font-size: 28px;
+  }
+
+  .card-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  /* Profit Analytics Section - Make Responsive */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Stats Row */
+  .stats-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .stat-info h4 {
+    font-size: 24px;
+  }
+
+  /* Section Headers */
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  /* Filter Buttons */
+  .filter-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .btn-filter {
+    flex: 1;
+    min-width: calc(50% - 4px);
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  /* Table Container */
+  .table-container {
+    padding: 15px;
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+
+  .table-container h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  /* Responsive Tables */
+  table {
+    font-size: 13px;
   }
 
   table,
@@ -744,47 +861,198 @@ main aside hr {
 
   thead tr {
     display: none;
-    /* hide table headers */
   }
 
   tr {
     margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    /* light gray card background */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 15px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+  }
+
+  tr:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
   }
 
   td {
     display: flex;
     justify-content: space-between;
-    padding: 6px 0;
+    align-items: center;
+    padding: 10px 0;
     border: none;
     position: relative;
+    min-height: 40px;
   }
 
   td::before {
     content: attr(data-label);
-    font-weight: 600;
-    color: #555;
-    flex: 1;
+    font-weight: 700;
+    color: var(--primary-color);
+    flex: 0 0 40%;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
   }
 
   td:last-child {
     justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding-top: 15px;
+    margin-top: 10px;
+    border-top: 2px solid var(--border-color);
+  }
+
+  td:last-child::before {
+    flex: 0 0 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Buttons in Mobile Tables */
+  .btn-sm {
+    padding: 8px 12px;
+    font-size: 11px;
+    margin: 2px;
+    white-space: nowrap;
+  }
+
+  .btn-sm .material-symbols-outlined {
+    font-size: 16px;
   }
 
   .btn {
-    margin-left: 5px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    padding: 8px 12px;
   }
 
-  /* Optional: make badges pop */
+  /* Badges */
   .badge {
-    padding: 3px 6px;
-    font-size: 0.75rem;
+    padding: 4px 8px;
+    font-size: 10px;
   }
 
+  /* Modal Improvements */
+  .modal-dialog {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+
+  .modal-body {
+    padding: 20px 15px;
+  }
+
+  .modal-header {
+    padding: 15px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+
+  .modal-footer {
+    padding: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .modal-footer .btn {
+    flex: 1;
+    min-width: calc(50% - 5px);
+  }
+
+  /* Form Controls */
+  .form-control {
+    font-size: 14px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  /* Quick Add Sections */
+  .quick-add-section {
+    padding: 15px;
+  }
+
+  .quick-add-section h6 {
+    font-size: 14px;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  .input-group .form-control {
+    margin-bottom: 10px;
+    border-radius: 8px !important;
+  }
+
+  .input-group .btn {
+    width: 100%;
+    border-radius: 8px !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Extra small devices */
+  nav {
+    padding-inline-start: 10px;
+    padding-right: 10px;
+  }
+
+  nav img {
+    height: 45px !important;
+  }
+
+  .welcome h1 {
+    font-size: 20px;
+  }
+
+  .welcome p {
+    font-size: 12px;
+  }
+
+  .cards .card h3 {
+    font-size: 24px;
+  }
+
+  .cards .card p {
+    font-size: 12px;
+  }
+
+  .stat-info h4 {
+    font-size: 20px;
+  }
+
+  .stat-info p {
+    font-size: 12px;
+  }
+
+  .table-container h3 {
+    font-size: 16px;
+  }
+
+  .btn-filter {
+    min-width: 100%;
+    font-size: 12px;
+  }
+
+  td::before {
+    flex: 0 0 45%;
+    font-size: 11px;
+  }
+
+  .offcanvas {
+    width: 85% !important;
+  }
 }

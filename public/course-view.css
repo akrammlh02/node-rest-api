@@ -427,6 +427,89 @@ nav ul li a:hover {
   border-radius: 20px;
 }
 
+/* Free Chapter Styles */
+.chapter-card.free-chapter {
+  border: 2px solid var(--accent-color);
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+  position: relative;
+  overflow: visible;
+}
+
+.chapter-card.free-chapter::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, var(--accent-color), #059669);
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chapter-card.free-chapter:hover::before {
+  opacity: 0.1;
+}
+
+.chapter-card.free-chapter:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.25);
+  transform: translateY(-2px);
+}
+
+.chapter-card.free-chapter .chapter-header {
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.5), rgba(220, 252, 231, 0.5));
+}
+
+.chapter-card.free-chapter .chapter-header:hover {
+  background: linear-gradient(135deg, rgba(220, 252, 231, 0.8), rgba(187, 247, 208, 0.8));
+}
+
+.chapter-card.free-chapter .expand-icon {
+  color: var(--accent-color);
+}
+
+.chapter-number.free {
+  background: linear-gradient(135deg, var(--accent-color), #059669);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  }
+}
+
+.chapter-free-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+}
+
+.chapter-card.free-chapter .lesson-count {
+  background: white;
+  color: var(--accent-color);
+  font-weight: 600;
+  border: 1px solid var(--accent-color);
+}
+
 .lessons-container {
   padding: 0 25px 20px 25px;
   animation: slideDown 0.3s ease;
@@ -873,5 +956,313 @@ nav ul li a:hover {
 
   .lesson-title {
     font-size: 14px;
+  }
+}
+
+/* ========= Free Lesson Modal Styles ========= */
+.free-lesson-modal-content {
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.free-lesson-modal-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 25px 30px;
+  border-bottom: none;
+}
+
+.free-lesson-modal-header .modal-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.free-lesson-modal-header .material-symbols-outlined {
+  font-size: 32px;
+}
+
+.free-lesson-modal-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 1;
+}
+
+.free-lesson-modal-body {
+  padding: 0;
+  background: #f8fafc;
+}
+
+.free-video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  /* 16:9 Aspect Ratio */
+  background: #000;
+  overflow: hidden;
+}
+
+.free-video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.free-lesson-description {
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+  background: white;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.description-icon {
+  flex-shrink: 0;
+}
+
+.description-icon .material-symbols-outlined {
+  font-size: 40px;
+  color: var(--primary-color);
+  background: var(--hover-bg);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.description-content h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 10px 0;
+}
+
+.description-content p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.motivation-section {
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.motivation-icon {
+  flex-shrink: 0;
+}
+
+.motivation-icon .material-symbols-outlined {
+  font-size: 48px;
+  color: var(--accent-color);
+  animation: rocket 2s ease-in-out infinite;
+}
+
+@keyframes rocket {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.motivation-content {
+  flex: 1;
+}
+
+.motivation-content h4 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+}
+
+.motivation-content>p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 20px 0;
+}
+
+.motivation-benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  background: white;
+  border-radius: 10px;
+  border-left: 3px solid var(--accent-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-item .material-symbols-outlined {
+  font-size: 24px;
+  color: var(--accent-color);
+}
+
+.benefit-item span:last-child {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.btn-enroll-modal {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent-color), #059669);
+  color: white;
+  border: none;
+  padding: 18px 40px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-enroll-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-enroll-modal:hover::before {
+  left: 100%;
+}
+
+.btn-enroll-modal:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+}
+
+.btn-enroll-modal .material-symbols-outlined {
+  font-size: 24px;
+}
+
+/* Free Lesson Item Styles */
+.lesson-item.free-lesson {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-left: 3px solid var(--accent-color);
+}
+
+.lesson-item.free-lesson:hover {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  transform: translateX(5px);
+}
+
+.lesson-number.free {
+  background: linear-gradient(135deg, var(--accent-color), #059669);
+}
+
+.free-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 8px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(251, 191, 36, 0);
+  }
+}
+
+.btn-watch-free {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--accent-color), #059669);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-watch-free:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn-watch-free .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* Responsive Modal Styles */
+@media (max-width: 768px) {
+  .free-lesson-modal-header {
+    padding: 20px;
+  }
+
+  .free-lesson-modal-header .modal-title {
+    font-size: 18px;
+  }
+
+  .free-lesson-description,
+  .motivation-section {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .motivation-benefits {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-enroll-modal {
+    padding: 15px 30px;
+    font-size: 16px;
   }
 }

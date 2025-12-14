@@ -150,6 +150,71 @@
         </div>
       </div>
     </div>
+
+    <!-- Free Lesson Preview Modal -->
+    <div class="modal fade" id="freeLessonModal" tabindex="-1" aria-labelledby="freeLessonModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content free-lesson-modal-content">
+          <div class="modal-header free-lesson-modal-header">
+            <h3 class="modal-title" id="freeLessonModalLabel">
+              <span class="material-symbols-outlined">play_circle</span>
+              <span id="modalLessonTitle">Free Preview</span>
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body free-lesson-modal-body">
+            <div class="free-video-container">
+              <iframe id="modalVideoFrame" width="100%" height="500" frameborder="0" loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
+              </iframe>
+            </div>
+            <div class="free-lesson-description" id="modalLessonDescription">
+              <div class="description-icon">
+                <span class="material-symbols-outlined">info</span>
+              </div>
+              <div class="description-content">
+                <h4>About This Lesson</h4>
+                <p id="modalDescriptionText"></p>
+              </div>
+            </div>
+            <div class="motivation-section">
+              <div class="motivation-icon">
+                <span class="material-symbols-outlined">rocket_launch</span>
+              </div>
+              <div class="motivation-content">
+                <h4>🎯 Ready to Master This Course?</h4>
+                <p>This is just a taste of what you'll learn! Enroll now to unlock all lessons, downloadable resources,
+                  and earn your certificate of completion.</p>
+                <div class="motivation-benefits">
+                  <div class="benefit-item">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <span>Full Course Access</span>
+                  </div>
+                  <div class="benefit-item">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <span>Lifetime Updates</span>
+                  </div>
+                  <div class="benefit-item">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <span>Certificate of Completion</span>
+                  </div>
+                  <div class="benefit-item">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    <span>Expert Support</span>
+                  </div>
+                </div>
+                <button class="btn-enroll-modal" onclick="enrollCourse()">
+                  <span class="material-symbols-outlined">shopping_cart</span>
+                  Enroll in This Course Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script src="/course-view.js"></script>

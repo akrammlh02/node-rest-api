@@ -402,12 +402,12 @@ router.get('/api/course/:courseId', (req, res) => {
         function loadCourseData(hasAccess) {
             // Get chapters with lessons
             const chaptersSql = `
-        SELECT ch.*, 
+        SELECT ch.id, ch.course_id, ch.title, ch.\`order\`, ch.is_free, 
                COUNT(l.lesson_id) as lessons_count
         FROM chapters ch
         LEFT JOIN lessons l ON ch.id = l.chapitre_id
         WHERE ch.course_id = ?
-        GROUP BY ch.id
+        GROUP BY ch.id, ch.course_id, ch.title, ch.\`order\`, ch.is_free
         ORDER BY ch.\`order\` ASC
       `;
 
@@ -430,7 +430,8 @@ router.get('/api/course/:courseId', (req, res) => {
                 }
 
                 const lessonsSql = `
-          SELECT * FROM lessons 
+          SELECT lesson_id, chapitre_id, title, content_url, order_number, is_free, description
+          FROM lessons 
           WHERE chapitre_id IN (?)
           ORDER BY order_number ASC
         `;

@@ -138,15 +138,17 @@ function renderChapters(chapters, hasAccess) {
 
   container.innerHTML = chapters.map((chapter, chapterIndex) => {
     const sortedLessons = chapter.lessons || [];
+    const isChapterFree = chapter.is_free === 1;
 
     return `
-      <div class="chapter-card">
+      <div class="chapter-card ${isChapterFree ? 'free-chapter' : ''}">
         <div class="chapter-header" onclick="toggleChapter(${chapterIndex})">
           <div class="chapter-title-section">
             <span class="material-symbols-outlined expand-icon" id="icon-${chapterIndex}">expand_more</span>
             <h3 class="chapter-title">
-              <span class="chapter-number">Chapter ${chapter.order || chapterIndex + 1}</span>
+              <span class="chapter-number ${isChapterFree ? 'free' : ''}">Chapter ${chapter.order || chapterIndex + 1}</span>
               ${chapter.title}
+              ${isChapterFree ? '<span class="chapter-free-badge">🎁 FREE CHAPTER</span>' : ''}
             </h3>
           </div>
           <span class="lesson-count">${sortedLessons.length} ${sortedLessons.length === 1 ? 'Lesson' : 'Lessons'}</span>
@@ -157,6 +159,7 @@ function renderChapters(chapters, hasAccess) {
         : sortedLessons.map((lesson, lessonIndex) => {
           const globalIndex = allLessons.findIndex(l => l.lesson_id === lesson.lesson_id);
           const isCompleted = lesson.completed || false;
+          const isFree = lesson.is_free === 1 || chapter.is_free === 1;
 
           if (hasAccess) {
             return `
@@ -179,6 +182,23 @@ function renderChapters(chapters, hasAccess) {
                     </button>
                     ` : ''}
                   </div>
+                </div>
+              </div>
+            `;
+          } else if (isFree) {
+            // Show free preview button for free lessons
+            return `
+              <div class="lesson-item free-lesson" data-lesson-id="${lesson.lesson_id}">
+                <div class="lesson-number free">${lesson.order_number || lessonIndex + 1}</div>
+                <div class="lesson-content">
+                  <h4 class="lesson-title">
+                    ${lesson.title} 
+                    <span class="free-badge">🎁 FREE</span>
+                  </h4>
+                  <button class="btn-watch-free" onclick="openFreeLessonModal(${lesson.lesson_id}, '${lesson.title.replace(/'/g, "\\'")}', '${lesson.content_url}', '${(lesson.description || '').replace(/'/g, "\\'")}')">
+                    <span class="material-symbols-outlined">play_circle</span>
+                    Watch Free Preview
+                  </button>
                 </div>
               </div>
             `;
@@ -309,6 +329,56 @@ function enrollCourse() {
     const whatsappUrl = `https://wa.me/213540921726?text=Salam%20Akram%2C%20ana%20mhtam%20bdwrat%20ID:${courseId}`;
     window.open(whatsappUrl, '_blank');
   }
+}
+
+// Function to open free lesson modal
+function openFreeLessonModal(lessonId, title, videoUrl, description) {
+  // Set modal content
+  document.getElementById('modalLessonTitle').textContent = title;
+
+  // Format video URL for proper embedding (especially for YouTube)
+  let formattedVideoUrl = videoUrl;
+
+  // If it's a YouTube URL, ensure it's in embed format with proper parameters
+  if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+    // Convert various YouTube URL formats to embed format
+    let videoId = '';
+
+    if (videoUrl.includes('youtube.com/watch?v=')) {
+      videoId = videoUrl.split('v=')[1];
+      const ampersandPosition = videoId.indexOf('&');
+      if (ampersandPosition !== -1) {
+        videoId = videoId.substring(0, ampersandPosition);
+      }
+    } else if (videoUrl.includes('youtube.com/embed/')) {
+      videoId = videoUrl.split('embed/')[1].split('?')[0];
+    } else if (videoUrl.includes('youtu.be/')) {
+      videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+    }
+
+    if (videoId) {
+      // Create embed URL with parameters that allow embedding
+      formattedVideoUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    }
+  }
+
+  document.getElementById('modalVideoFrame').src = formattedVideoUrl;
+
+  // Set description or default message
+  const descriptionText = description && description.trim() !== ''
+    ? description
+    : 'This free lesson gives you a preview of the teaching style and content quality you can expect from this course. Discover the fundamentals and see how our expert instruction can help you achieve your learning goals.';
+
+  document.getElementById('modalDescriptionText').textContent = descriptionText;
+
+  // Show the modal using Bootstrap
+  const modal = new bootstrap.Modal(document.getElementById('freeLessonModal'));
+  modal.show();
+
+  // Clear video when modal is closed
+  document.getElementById('freeLessonModal').addEventListener('hidden.bs.modal', function () {
+    document.getElementById('modalVideoFrame').src = '';
+  }, { once: true }); // Use once: true to prevent multiple event listeners
 }
 
 // Load course on page load

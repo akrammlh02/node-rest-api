@@ -459,7 +459,7 @@ function renderClients(clients) {
   const tbody = document.getElementById('clientsTableBody');
 
   if (!clients || clients.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No clients registered yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No clients registered yet.</td></tr>';
     return;
   }
 
@@ -469,11 +469,23 @@ function renderClients(clients) {
     let completedCourses = client.purchasedCourses.filter(c => c.progress && c.progress.isCompleted).length;
     let overallProgress = totalCourses > 0 ? Math.round((completedCourses / totalCourses) * 100) : 0;
 
+    // Determine client type
+    const isPaying = totalCourses > 0;
+    const isActive = overallProgress > 0;
+    const clientType = isPaying ? 'paying' : 'free';
+    const clientTypeClass = isPaying ? 'active' : 'inactive';
+
+    // Type badge
+    const typeBadge = isPaying
+      ? '<span class="badge badge-success" style="background: linear-gradient(135deg, #10b981, #34d399);">💳 Paying Customer</span>'
+      : '<span class="badge badge-secondary" style="background: #9ca3af;">🆓 Free User</span>';
+
     // Build progress display
     let progressHTML = '';
     if (totalCourses === 0) {
       progressHTML = '<span class="text-muted">No courses</span>';
     } else {
+      const progressColor = overallProgress >= 75 ? '#10b981' : overallProgress >= 50 ? '#f59e0b' : '#3b82f6';
       progressHTML = `
         <div style="min-width: 150px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
@@ -481,36 +493,46 @@ function renderClients(clients) {
             <small><strong>${overallProgress}%</strong></small>
           </div>
           <div class="progress" style="height: 8px; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
-            <div class="progress-bar" role="progressbar" style="width: ${overallProgress}%; background: linear-gradient(135deg, #10b981, #34d399);" 
+            <div class="progress-bar" role="progressbar" style="width: ${overallProgress}%; background: ${progressColor};" 
                  aria-valuenow="${overallProgress}" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
         </div>
       `;
     }
 
+    // Courses display
+    const coursesHTML = totalCourses > 0
+      ? `<span class="badge badge-info" style="font-size: 12px;">${totalCourses} ${totalCourses === 1 ? 'Course' : 'Courses'}</span>`
+      : '<span class="text-muted">None</span>';
+
+    // Status badge
+    const statusBadge = isActive
+      ? '<span class="badge badge-success">🟢 Active</span>'
+      : '<span class="badge" style="background: #9ca3af; color: white;">⚪ Inactive</span>';
+
     return `
-      <tr>
-        <td><strong>${client.fullname}</strong></td>
-        <td>${client.email}</td>
-        <td>
-          <span class="badge badge-info">${totalCourses} courses</span>
-          ${totalCourses > 0 ? `<br><small style="font-size: 11px; color: #666;">${client.purchasedCourses.map(c => c.course_title).slice(0, 2).join(', ')}${totalCourses > 2 ? '...' : ''}</small>` : ''}
-        </td>
-        <td>${progressHTML}</td>
-        <td><span class="badge badge-success">Active</span></td>
-        <td>
-          <button class="btn btn-sm btn-info" onclick="viewClientProgress(${client.id}, '${client.fullname}', '${client.email}')" title="View Progress">
-            <span class="material-symbols-outlined">analytics</span>
-          </button>
-          <button class="btn btn-sm btn-primary" onclick="viewClient(${client.id}, '${client.fullname}', '${client.email}')" title="View Details">
+      <tr data-client-type="${clientType}" data-client-active="${isActive}">
+        <td data-label="Name"><strong>${client.fullname}</strong></td>
+        <td data-label="Email">${client.email}</td>
+        <td data-label="Type">${typeBadge}</td>
+        <td data-label="Courses">${coursesHTML}</td>
+        <td data-label="Progress">${progressHTML}</td>
+        <td data-label="Status">${statusBadge}</td>
+        <td data-label="Actions">
+          <button class="btn btn-sm btn-info" onclick="viewClientDetails(${client.id}, '${client.fullname.replace(/'/g, "\\'")}', '${client.email.replace(/'/g, "\\'")}', ${totalCourses}, ${overallProgress})" title="View Details">
             <span class="material-symbols-outlined">visibility</span>
           </button>
-          <button class="btn btn-sm btn-success" onclick="addCourseToClient(${client.id}, '${client.fullname}')" title="Add Course">
+          <button class="btn btn-sm btn-primary" onclick="viewClientProgress(${client.id}, '${client.fullname.replace(/'/g, "\\'")}', '${client.email.replace(/'/g, "\\'")}')\" title="View Progress">
+            <span class="material-symbols-outlined">analytics</span>
+          </button>
+          <button class="btn btn-sm btn-success" onclick="addCourseToClient(${client.id}, '${client.fullname.replace(/'/g, "\\'")}')\" title="Add Course">
             <span class="material-symbols-outlined">add</span>
           </button>
-          <button class="btn btn-sm btn-warning" onclick="removeCourseFromClient(${client.id}, '${client.fullname}')" title="Remove Course">
+          ${totalCourses > 0 ? `
+          <button class="btn btn-sm btn-warning" onclick="removeCourseFromClient(${client.id}, '${client.fullname.replace(/'/g, "\\'")}')\" title="Remove Course">
             <span class="material-symbols-outlined">remove</span>
           </button>
+          ` : ''}
           <button class="btn btn-sm btn-danger" onclick="deleteClient(${client.id})" title="Delete">
             <span class="material-symbols-outlined">delete</span>
           </button>
@@ -518,6 +540,9 @@ function renderClients(clients) {
       </tr>
     `;
   }).join('');
+
+  // Update statistics
+  updateClientStats();
 }
 
 async function removeCourseFromClient(clientId, clientName) {
@@ -1431,3 +1456,542 @@ async function toggleLessonFree(lessonId, currentIsFree) {
   }
 }
 
+// ========= PURCHASES MANAGEMENT =========
+
+// Global variable to store all purchases for filtering
+let allPurchasesData = [];
+
+// Search purchases
+function searchPurchases() {
+  const searchTerm = document.getElementById('purchaseSearch').value.toLowerCase();
+  const rows = document.querySelectorAll('#purchasesTableBody tr');
+
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+}
+
+// Export purchases to Excel (CSV format)
+function exportPurchases() {
+  const rows = document.querySelectorAll('#purchasesTableBody tr');
+
+  if (rows.length === 0 || (rows.length === 1 && rows[0].textContent.includes('No purchases'))) {
+    alert('No purchases to export');
+    return;
+  }
+
+  // Create CSV content
+  let csvContent = "data:text/csv;charset=utf-8,";
+
+  // Add headers
+  csvContent += "Purchase ID,Client Name,Course,Amount,Date,Status\n";
+
+  // Add data rows
+  rows.forEach(row => {
+    if (row.style.display !== 'none') {
+      const cells = row.querySelectorAll('td');
+      if (cells.length >= 6) {
+        const rowData = [
+          cells[0].textContent.trim(), // Purchase ID
+          cells[1].textContent.trim(), // Client Name
+          cells[2].textContent.trim(), // Course
+          cells[3].textContent.trim(), // Amount
+          cells[4].textContent.trim(), // Date
+          cells[5].textContent.trim()  // Status
+        ];
+        csvContent += rowData.map(cell => `"${cell}"`).join(',') + "\n";
+      }
+    }
+  });
+
+  // Create download link
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `purchases_${new Date().toISOString().split('T')[0]}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  alert('Purchases exported successfully!');
+}
+
+// View purchase details in modal
+async function viewPurchaseDetails(purchaseId, clientName, courseName, amount, date, status) {
+  const modalContent = `
+    <div style="padding: 20px;">
+      <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+        <h4 style="color: #2563eb; margin: 0 0 15px 0;">
+          <span class="material-symbols-outlined" style="vertical-align: middle;">receipt_long</span>
+          Purchase #${purchaseId}
+        </h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+          <div>
+            <p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase;">Client</p>
+            <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #1f2937;">${clientName}</p>
+          </div>
+          <div>
+            <p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase;">Course</p>
+            <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #1f2937;">${courseName}</p>
+          </div>
+          <div>
+            <p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase;">Amount</p>
+            <p style="margin: 5px 0 0 0; font-size: 20px; font-weight: 700; color: #10b981;">${amount}</p>
+          </div>
+          <div>
+            <p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase;">Date</p>
+            <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #1f2937;">${date}</p>
+          </div>
+          <div>
+            <p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: 600; text-transform: uppercase;">Status</p>
+            <p style="margin: 5px 0 0 0;">
+              <span class="badge ${status === 'Paid' ? 'badge-success' : 'badge-warning'}" style="font-size: 14px; padding: 6px 12px;">
+                ${status}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb;">
+        <h5 style="color: #1f2937; margin: 0 0 15px 0;">
+          <span class="material-symbols-outlined" style="vertical-align: middle; color: #2563eb;">info</span>
+          Additional Information
+        </h5>
+        <div style="display: grid; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; padding: 10px; background: #f9fafb; border-radius: 8px;">
+            <span style="color: #6b7280; font-weight: 600;">Purchase ID:</span>
+            <span style="color: #1f2937; font-weight: 600;">#${purchaseId}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px; background: #f9fafb; border-radius: 8px;">
+            <span style="color: #6b7280; font-weight: 600;">Payment Method:</span>
+            <span style="color: #1f2937;">Manual/Admin</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px; background: #f9fafb; border-radius: 8px;">
+            <span style="color: #6b7280; font-weight: 600;">Transaction Date:</span>
+            <span style="color: #1f2937;">${date}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('purchaseDetailsContent').innerHTML = modalContent;
+  const modal = new bootstrap.Modal(document.getElementById('purchaseDetailsModal'));
+  modal.show();
+}
+
+// Toggle purchase payment status
+async function togglePurchaseStatus(purchaseId, currentStatus) {
+  const newStatus = currentStatus === 1 ? 0 : 1;
+  const statusText = newStatus === 1 ? 'Paid' : 'Unpaid';
+
+  if (!confirm(`Are you sure you want to mark this purchase as ${statusText}?`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/admin/api/purchases/${purchaseId}/toggle-status`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ paid: newStatus })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert(`Purchase marked as ${statusText} successfully!`);
+      // Reload purchases
+      if (typeof loadPurchasesData === 'function') {
+        loadPurchasesData();
+      } else {
+        location.reload();
+      }
+    } else {
+      alert(result.message || 'Failed to update purchase status');
+    }
+  } catch (error) {
+    console.error('Error toggling purchase status:', error);
+    alert('Error connecting to the server.');
+  }
+}
+
+// Delete purchase
+async function deletePurchase(purchaseId) {
+  if (!confirm('Are you sure you want to delete this purchase? This action cannot be undone.')) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/admin/api/purchases/${purchaseId}`, {
+      method: 'DELETE'
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert('Purchase deleted successfully!');
+      // Reload purchases
+      if (typeof loadPurchasesData === 'function') {
+        loadPurchasesData();
+      } else {
+        location.reload();
+      }
+    } else {
+      alert(result.message || 'Failed to delete purchase');
+    }
+  } catch (error) {
+    console.error('Error deleting purchase:', error);
+    alert('Error connecting to the server.');
+  }
+}
+
+// Filter purchases by date range
+function filterPurchases(filterType) {
+  // Update active button
+  document.querySelectorAll('.btn-filter').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+
+  const rows = document.querySelectorAll('#purchasesTableBody tr');
+  const now = new Date();
+
+  rows.forEach(row => {
+    const dateCell = row.querySelector('td:nth-child(5)');
+    if (!dateCell) return;
+
+    const dateText = dateCell.textContent.trim();
+    const purchaseDate = new Date(dateText);
+
+    let showRow = false;
+
+    switch (filterType) {
+      case 'all':
+        showRow = true;
+        break;
+
+      case 'today':
+        showRow = purchaseDate.toDateString() === now.toDateString();
+        break;
+
+      case 'week':
+        const weekAgo = new Date(now);
+        weekAgo.setDate(now.getDate() - 7);
+        showRow = purchaseDate >= weekAgo;
+        break;
+
+      case 'month':
+        const monthAgo = new Date(now);
+        monthAgo.setMonth(now.getMonth() - 1);
+        showRow = purchaseDate >= monthAgo;
+        break;
+    }
+
+    row.style.display = showRow ? '' : 'none';
+  });
+
+  // Update counts after filtering
+  updatePurchaseStats();
+}
+
+// Update purchase statistics
+function updatePurchaseStats() {
+  const visibleRows = Array.from(document.querySelectorAll('#purchasesTableBody tr')).filter(
+    row => row.style.display !== 'none' && !row.textContent.includes('No purchases')
+  );
+
+  const totalCount = visibleRows.length;
+  let totalRevenue = 0;
+  let todayCount = 0;
+  const today = new Date().toDateString();
+
+  visibleRows.forEach(row => {
+    const amountCell = row.querySelector('td:nth-child(4)');
+    const dateCell = row.querySelector('td:nth-child(5)');
+
+    if (amountCell) {
+      const amount = parseFloat(amountCell.textContent.replace(/[^\d.]/g, ''));
+      if (!isNaN(amount)) {
+        totalRevenue += amount;
+      }
+    }
+
+    if (dateCell) {
+      const purchaseDate = new Date(dateCell.textContent.trim());
+      if (purchaseDate.toDateString() === today) {
+        todayCount++;
+      }
+    }
+  });
+
+  // Update UI
+  const totalPurchasesEl = document.getElementById('totalPurchasesCount');
+  const totalRevenueEl = document.getElementById('totalRevenueAmount');
+  const todayPurchasesEl = document.getElementById('todayPurchasesCount');
+
+  if (totalPurchasesEl) totalPurchasesEl.textContent = totalCount;
+  if (totalRevenueEl) totalRevenueEl.textContent = totalRevenue.toFixed(2) + ' DA';
+  if (todayPurchasesEl) todayPurchasesEl.textContent = todayCount;
+}
+
+// Load purchases data (to be called when Purchases section is shown)
+async function loadPurchasesData() {
+  try {
+    const response = await fetch('/admin/api/purchases');
+    const result = await response.json();
+
+    if (result.success) {
+      allPurchasesData = result.purchases || [];
+      renderPurchases(allPurchasesData);
+      updatePurchaseStats();
+    } else {
+      console.error('Failed to load purchases');
+    }
+  } catch (error) {
+    console.error('Error loading purchases:', error);
+  }
+}
+
+// Render purchases table
+function renderPurchases(purchases) {
+  const tbody = document.getElementById('purchasesTableBody');
+
+  if (!purchases || purchases.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No purchases found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = purchases.map(purchase => {
+    const statusBadge = purchase.paid === 1
+      ? '<span class="badge badge-success">Paid</span>'
+      : '<span class="badge badge-warning">Unpaid</span>';
+
+    const date = new Date(purchase.purchase_date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+
+    return `
+      <tr>
+        <td data-label="Purchase ID">#${purchase.id}</td>
+        <td data-label="Client Name"><strong>${purchase.client_name || 'N/A'}</strong></td>
+        <td data-label="Course">${purchase.course_title || 'N/A'}</td>
+        <td data-label="Amount"><strong>${purchase.price || 0} DA</strong></td>
+        <td data-label="Date">${date}</td>
+        <td data-label="Status">${statusBadge}</td>
+        <td data-label="Actions">
+          <button class="btn btn-sm btn-info" onclick="viewPurchaseDetails(${purchase.id}, '${(purchase.client_name || 'N/A').replace(/'/g, "\\'")}', '${(purchase.course_title || 'N/A').replace(/'/g, "\\'")}', '${purchase.price || 0} DA', '${date}', '${purchase.paid === 1 ? 'Paid' : 'Unpaid'}')" title="View Details">
+            <span class="material-symbols-outlined">visibility</span>
+          </button>
+          <button class="btn btn-sm ${purchase.paid === 1 ? 'btn-warning' : 'btn-success'}" onclick="togglePurchaseStatus(${purchase.id}, ${purchase.paid})" title="Toggle Status">
+            <span class="material-symbols-outlined">${purchase.paid === 1 ? 'cancel' : 'check_circle'}</span>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deletePurchase(${purchase.id})" title="Delete">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ========= CLIENT MANAGEMENT ENHANCEMENTS =========
+
+// Update client statistics
+function updateClientStats() {
+  const rows = Array.from(document.querySelectorAll('#clientsTableBody tr')).filter(
+    row => row.style.display !== 'none' && !row.textContent.includes('No clients')
+  );
+
+  const totalClients = rows.length;
+  const payingClients = rows.filter(row => row.getAttribute('data-client-type') === 'paying').length;
+  const freeClients = rows.filter(row => row.getAttribute('data-client-type') === 'free').length;
+  const activeClients = rows.filter(row => row.getAttribute('data-client-active') === 'true').length;
+
+  // Update UI
+  const totalEl = document.getElementById('totalClientsCount');
+  const payingEl = document.getElementById('payingClientsCount');
+  const freeEl = document.getElementById('freeClientsCount');
+  const activeEl = document.getElementById('activeClientsCount');
+
+  if (totalEl) totalEl.textContent = totalClients;
+  if (payingEl) payingEl.textContent = payingClients;
+  if (freeEl) freeEl.textContent = freeClients;
+  if (activeEl) activeEl.textContent = activeClients;
+}
+
+// Filter clients by type
+function filterClientsByType(type) {
+  // Update active button
+  document.querySelectorAll('.btn-filter').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+
+  const rows = document.querySelectorAll('#clientsTableBody tr');
+
+  rows.forEach(row => {
+    const clientType = row.getAttribute('data-client-type');
+    const isActive = row.getAttribute('data-client-active') === 'true';
+
+    let showRow = false;
+
+    switch (type) {
+      case 'all':
+        showRow = true;
+        break;
+      case 'paying':
+        showRow = clientType === 'paying';
+        break;
+      case 'free':
+        showRow = clientType === 'free';
+        break;
+      case 'active':
+        showRow = isActive;
+        break;
+    }
+
+    row.style.display = showRow ? '' : 'none';
+  });
+
+  updateClientStats();
+}
+
+// Export clients to CSV
+function exportClients() {
+  const rows = document.querySelectorAll('#clientsTableBody tr');
+
+  if (rows.length === 0 || (rows.length === 1 && rows[0].textContent.includes('No clients'))) {
+    alert('No clients to export');
+    return;
+  }
+
+  // Create CSV content
+  let csvContent = "data:text/csv;charset=utf-8,";
+
+  // Add headers
+  csvContent += "Name,Email,Type,Courses,Status\n";
+
+  // Add data rows
+  rows.forEach(row => {
+    if (row.style.display !== 'none') {
+      const cells = row.querySelectorAll('td');
+      if (cells.length >= 6) {
+        const name = cells[0].textContent.trim();
+        const email = cells[1].textContent.trim();
+        const type = cells[2].textContent.trim().replace(/[💳🆓]/g, '');
+        const courses = cells[3].textContent.trim();
+        const status = cells[5].textContent.trim().replace(/[🟢⚪]/g, '');
+
+        csvContent += `"${name}","${email}","${type}","${courses}","${status}"\n`;
+      }
+    }
+  });
+
+  // Create download link
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `clients_${new Date().toISOString().split('T')[0]}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  alert('Clients exported successfully!');
+}
+
+// View client details in modal
+function viewClientDetails(clientId, clientName, clientEmail, totalCourses, overallProgress) {
+  const clientType = totalCourses > 0 ? 'Paying Customer' : 'Free User';
+  const clientStatus = overallProgress > 0 ? 'Active Learner' : 'Inactive';
+
+  const modalContent = `
+    <div style="padding: 20px;">
+      <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; font-size: 36px; font-weight: 700;">
+            ${clientName.charAt(0).toUpperCase()}
+          </div>
+          <div style="flex: 1;">
+            <h3 style="margin: 0 0 5px 0; color: #1f2937;">${clientName}</h3>
+            <p style="margin: 0; color: #6b7280; font-size: 14px;">${clientEmail}</p>
+            <div style="margin-top: 10px; display: flex; gap: 10px;">
+              <span class="badge ${totalCourses > 0 ? 'badge-success' : 'badge-secondary'}" style="font-size: 12px;">
+                ${totalCourses > 0 ? '💳 Paying Customer' : '🆓 Free User'}
+              </span>
+              <span class="badge ${overallProgress > 0 ? 'badge-success' : 'badge-secondary'}" style="font-size: 12px;">
+                ${overallProgress > 0 ? '🟢 Active' : '⚪ Inactive'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+        <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span class="material-symbols-outlined" style="color: #3b82f6; font-size: 28px;">school</span>
+            <div>
+              <p style="margin: 0; color: #6b7280; font-size: 12px; font-weight: 600; text-transform: uppercase;">Total Courses</p>
+              <h4 style="margin: 5px 0 0 0; color: #1f2937; font-size: 24px;">${totalCourses}</h4>
+            </div>
+          </div>
+        </div>
+        
+        <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span class="material-symbols-outlined" style="color: #10b981; font-size: 28px;">trending_up</span>
+            <div>
+              <p style="margin: 0; color: #6b7280; font-size: 12px; font-weight: 600; text-transform: uppercase;">Progress</p>
+              <h4 style="margin: 5px 0 0 0; color: #1f2937; font-size: 24px;">${overallProgress}%</h4>
+            </div>
+          </div>
+        </div>
+        
+        <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span class="material-symbols-outlined" style="color: #f59e0b; font-size: 28px;">person</span>
+            <div>
+              <p style="margin: 0; color: #6b7280; font-size: 12px; font-weight: 600; text-transform: uppercase;">Status</p>
+              <h4 style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px;">${clientStatus}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb;">
+        <h5 style="color: #1f2937; margin: 0 0 15px 0;">
+          <span class="material-symbols-outlined" style="vertical-align: middle; color: #2563eb;">info</span>
+          Account Information
+        </h5>
+        <div style="display: grid; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; padding: 10px; background: #f9fafb; border-radius: 8px;">
+            <span style="color: #6b7280; font-weight: 600;">Client ID:</span>
+            <span style="color: #1f2937; font-weight: 600;">#${clientId}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px; background: #f9fafb; border-radius: 8px;">
+            <span style="color: #6b7280; font-weight: 600;">Email:</span>
+            <span style="color: #1f2937;">${clientEmail}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px; background: #f9fafb; border-radius: 8px;">
+            <span style="color: #6b7280; font-weight: 600;">Account Type:</span>
+            <span style="color: #1f2937;">${clientType}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px; background: #f9fafb; border-radius: 8px;">
+            <span style="color: #6b7280; font-weight: 600;">Learning Status:</span>
+            <span style="color: #1f2937;">${clientStatus}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('clientDetailsContent').innerHTML = modalContent;
+  const modal = new bootstrap.Modal(document.getElementById('clientDetailsModal'));
+  modal.show();
+}
