@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Course Landing Page - DevAcademy</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="pageDescription"
+        content="Transform your career with our comprehensive algorithm course. Join thousands of successful students.">
+    <meta property="og:title" id="ogTitle" content="Master Algorithms - DevAcademy">
+    <meta property="og:description" id="ogDescription"
+        content="Transform your career with our comprehensive algorithm course.">
+    <meta property="og:image" content="/images/logo.png">
+
+    <link rel="stylesheet" href="/landing.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+
+<body>
+    <!-- Sticky Header with CTA -->
+    <header class="sticky-header" id="stickyHeader">
+        <div class="header-container">
+            <div class="header-left">
+                <img src="/images/logo2-removebg-preview.png" alt="DevAcademy Logo" height="45">
+                <span class="course-title-header" id="headerCourseTitle">Loading...</span>
+            </div>
+            <div class="header-right">
+                <div class="price-badge" id="headerPrice">0 DA</div>
+                <button class="btn-cta-header" onclick="scrollToEnroll()">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    Enroll Now
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="material-symbols-outlined">verified</span>
+                        <span>Professional Certification Course</span>
+                    </div>
+
+                    <h1 class="hero-title" id="courseTitle">Loading Course...</h1>
+
+                    <p class="hero-description" id="courseDescription">
+                        Loading description...
+                    </p>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">groups</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="studentCount">500+</div>
+                                <div class="stat-label">Students Enrolled</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">star</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number">4.9/5</div>
+                                <div class="stat-label">Course Rating</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">workspace_premium</span>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="certificateCount">300+</div>
+                                <div class="stat-label">Certificates Issued</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-cta">
+                        <button class="btn-primary-cta" onclick="scrollToEnroll()">
+                            <span class="material-symbols-outlined">rocket_launch</span>
+                            Start Learning Today
+                        </button>
+                        <div class="trust-indicators">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            <span>30-Day Money Back Guarantee</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-video" id="heroVideoSection" style="display: none;">
+                    <div class="video-wrapper">
+                        <iframe id="heroVideoFrame" width="100%" height="400" frameborder="0" loading="lazy"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                        <div class="video-overlay">
+                            <span class="material-symbols-outlined">play_circle</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof Section -->
+        <section class="social-proof-section">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">sentiment_satisfied</span>
+                    What Our Students Say
+                </h2>
+
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="student-avatar">
+                                <span class="material-symbols-outlined">person</span>
+                            </div>
+                            <div class="student-info">
+                                <h4 class="student-name">Ahmed Benali</h4>
+                                <div class="student-rating">
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="testimonial-text">
+                            "This course completely transformed my understanding of algorithms. The instructor explains
+                            complex concepts in a simple way. I got a job at a tech company 2 months after completing
+                            the course!"
+                        </p>
+                        <div class="testimonial-footer">
+                            <span class="material-symbols-outlined">verified</span>
+                            <span>Verified Student</span>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card featured">
+                        <div class="testimonial-header">
+                            <div class="student-avatar">
+                                <span class="material-symbols-outlined">person</span>
+                            </div>
+                            <div class="student-info">
+                                <h4 class="student-name">Fatima Zohra</h4>
+                                <div class="student-rating">
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="testimonial-text">
+                            "Best investment I've made in my career! The course content is up-to-date and practical. I
+                            increased my salary by 40% after mastering these algorithms. Akram is an excellent teacher!"
+                        </p>
+                        <div class="testimonial-footer">
+                            <span class="material-symbols-outlined">verified</span>
+                            <span>Verified Student</span>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="student-avatar">
+                                <span class="material-symbols-outlined">person</span>
+                            </div>
+                            <div class="student-info">
+                                <h4 class="student-name">Yacine Meziane</h4>
+                                <div class="student-rating">
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                    <span class="material-symbols-outlined filled">star</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="testimonial-text">
+                            "I was struggling with technical interviews until I took this course. Now I can solve
+                            algorithm problems with confidence. Passed 3 interviews in a row! Thank you Akram!"
+                        </p>
+                        <div class="testimonial-footer">
+                            <span class="material-symbols-outlined">verified</span>
+                            <span>Verified Student</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Details Section -->
+        <section class="course-details-section">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">menu_book</span>
+                    What You'll Learn
+                </h2>
+
+                <div class="course-details-grid">
+                    <div class="curriculum-column">
+                        <div class="curriculum-card">
+                            <h3 class="curriculum-title">
+                                <span class="material-symbols-outlined">list_alt</span>
+                                Course Curriculum
+                            </h3>
+                            <div id="chaptersContainer" class="chapters-list">
+                                <!-- Chapters will be loaded here -->
+                                <div class="loading-state">
+                                    <span class="material-symbols-outlined rotating">progress_activity</span>
+                                    <p>Loading curriculum...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="benefits-column">
+                        <div class="benefits-card">
+                            <h3 class="benefits-title">
+                                <span class="material-symbols-outlined">emoji_events</span>
+                                Course Benefits
+                            </h3>
+                            <ul class="benefits-list">
+                                <li>
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <div>
+                                        <strong>Lifetime Access</strong>
+                                        <p>Learn at your own pace, forever</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <div>
+                                        <strong>Certificate of Completion</strong>
+                                        <p>Boost your resume and LinkedIn profile</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <div>
+                                        <strong>Expert Support</strong>
+                                        <p>Get help from instructor Akram Melihi</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <div>
+                                        <strong>Practical Projects</strong>
+                                        <p>Build real-world applications</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <div>
+                                        <strong>Mobile & Desktop Access</strong>
+                                        <p>Study anywhere, anytime</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <div>
+                                        <strong>Regular Updates</strong>
+                                        <p>Get new content as it's released</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="instructor-card">
+                            <h3 class="instructor-title">
+                                <span class="material-symbols-outlined">school</span>
+                                Your Instructor
+                            </h3>
+                            <div class="instructor-content">
+                                <div class="instructor-avatar">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                                <div class="instructor-info">
+                                    <h4>Akram Melihi</h4>
+                                    <p class="instructor-title-text">Senior Software Engineer & Educator</p>
+                                    <div class="instructor-stats">
+                                        <div class="instructor-stat">
+                                            <span class="material-symbols-outlined">groups</span>
+                                            <span>500+ Students</span>
+                                        </div>
+                                        <div class="instructor-stat">
+                                            <span class="material-symbols-outlined">star</span>
+                                            <span>4.9 Rating</span>
+                                        </div>
+                                    </div>
+                                    <p class="instructor-bio">
+                                        Expert in algorithms and data structures with years of industry experience.
+                                        Passionate about teaching and helping students achieve their career goals.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing & Enrollment Section -->
+        <section class="pricing-section" id="enrollSection">
+            <div class="container">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h2 class="pricing-title">Start Your Journey Today</h2>
+                        <p class="pricing-subtitle">Join hundreds of successful students</p>
+                    </div>
+
+                    <div class="pricing-content">
+                        <div class="pricing-left">
+                            <div class="price-display">
+                                <span class="price-label">One-time payment</span>
+                                <div class="price-amount">
+                                    <span class="price-value" id="coursePrice">0</span>
+                                    <span class="price-currency">DA</span>
+                                </div>
+                                <span class="price-note">No monthly fees • Lifetime access</span>
+                            </div>
+
+                            <div class="pricing-features">
+                                <div class="feature-item">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <span>Full course access (<span id="totalLessons">0</span> lessons)</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <span>Downloadable resources</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <span>Certificate of completion</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <span>Lifetime updates</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="material-symbols-outlined">check_circle</span>
+                                    <span>Direct instructor support</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pricing-right">
+                            <div class="enrollment-box">
+                                <h3>Ready to Enroll?</h3>
+                                <p>Click the button below to contact us on WhatsApp and complete your enrollment</p>
+
+                                <button class="btn-enroll-whatsapp" onclick="enrollCourse()">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                                    </svg>
+                                    Contact on WhatsApp to Enroll
+                                </button>
+
+                                <div class="guarantee-badge">
+                                    <span class="material-symbols-outlined">verified_user</span>
+                                    <div>
+                                        <strong>30-Day Money Back Guarantee</strong>
+                                        <p>Not satisfied? Get a full refund, no questions asked</p>
+                                    </div>
+                                </div>
+
+                                <div class="urgency-indicator">
+                                    <span class="material-symbols-outlined">schedule</span>
+                                    <span><strong>Limited Time:</strong> Special pricing available</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">help</span>
+                    Frequently Asked Questions
+                </h2>
+
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(0)">
+                            <h4>How do I enroll in the course?</h4>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Click the "Contact on WhatsApp" button and send us a message. We'll guide you through the
+                                simple enrollment process and payment options. Once payment is confirmed, you'll get
+                                instant access to the course.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(1)">
+                            <h4>What payment methods do you accept?</h4>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>We accept various payment methods including bank transfer, CCP, and other local payment
+                                options. Contact us on WhatsApp for detailed payment instructions.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(2)">
+                            <h4>How long do I have access to the course?</h4>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>You get lifetime access! Learn at your own pace and revisit the content whenever you
+                                need. Plus, you'll receive all future updates at no additional cost.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(3)">
+                            <h4>Is this course suitable for beginners?</h4>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes! The course is designed for all levels. We start with fundamentals and gradually
+                                progress to advanced topics. Even if you're new to algorithms, you'll be able to follow
+                                along.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(4)">
+                            <h4>Will I get a certificate?</h4>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Absolutely! Upon completing all lessons, you'll receive a professional certificate of
+                                completion that you can add to your resume and LinkedIn profile.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(5)">
+                            <h4>Can I get a refund if I'm not satisfied?</h4>
+                            <span class="material-symbols-outlined">expand_more</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes! We offer a 30-day money-back guarantee. If you're not satisfied with the course for
+                                any reason, contact us within 30 days for a full refund.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="final-cta-section">
+            <div class="container">
+                <div class="final-cta-card">
+                    <h2>Don't Miss This Opportunity</h2>
+                    <p>Join hundreds of students who have already transformed their careers</p>
+                    <button class="btn-final-cta" onclick="scrollToEnroll()">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                        Enroll Now & Start Learning
+                    </button>
+                    <div class="trust-badges">
+                        <div class="trust-badge">
+                            <span class="material-symbols-outlined">verified_user</span>
+                            <span>30-Day Guarantee</span>
+                        </div>
+                        <div class="trust-badge">
+                            <span class="material-symbols-outlined">workspace_premium</span>
+                            <span>Certificate Included</span>
+                        </div>
+                        <div class="trust-badge">
+                            <span class="material-symbols-outlined">all_inclusive</span>
+                            <span>Lifetime Access</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <div class="container">
+            <p>&copy; 2024 DevAcademy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/course">All Courses</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/landing.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

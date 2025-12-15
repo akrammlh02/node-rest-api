@@ -574,14 +574,15 @@
                 <div class="mb-3">
                   <input type="text" class="form-control mb-2" id="quickLessonTitle" placeholder="Lesson Title"
                     onkeypress="if(event.key === 'Enter') document.getElementById('quickLessonVideoUrl').focus()">
-                  <div class="input-group">
-                    <input type="url" class="form-control" id="quickLessonVideoUrl" placeholder="Video URL"
-                      onkeypress="if(event.key === 'Enter') quickAddLesson()">
-                    <button class="btn btn-primary" onclick="quickAddLesson()"
-                      style="background-color: #7b09cd; border: none;">
-                      <span class="material-symbols-outlined">add</span> Add
-                    </button>
-                  </div>
+                  <input type="url" class="form-control mb-2" id="quickLessonVideoUrl" placeholder="Video URL"
+                    onkeypress="if(event.key === 'Enter') document.getElementById('quickLessonResources').focus()">
+                  <textarea class="form-control mb-2" id="quickLessonResources" rows="2"
+                    placeholder="Resources (optional): One URL per line"
+                    onkeypress="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); quickAddLesson(); }"></textarea>
+                  <button class="btn btn-primary w-100" onclick="quickAddLesson()"
+                    style="background-color: #7b09cd; border: none;">
+                    <span class="material-symbols-outlined" style="vertical-align: middle;">add</span> Add Lesson
+                  </button>
                 </div>
               </div>
               <hr>
@@ -660,6 +661,19 @@
                   <input type="url" class="form-control" id="editLessonVideoUrl" required
                     placeholder="https://example.com/video.mp4">
                   <small class="form-text text-muted">Enter the full URL to the video</small>
+                </div>
+                <div class="mb-3">
+                  <label for="editLessonResources" class="form-label">
+                    <span class="material-symbols-outlined"
+                      style="vertical-align: middle; font-size: 18px;">folder_open</span>
+                    Downloadable Resources (Optional)
+                  </label>
+                  <textarea class="form-control" id="editLessonResources" rows="3"
+                    placeholder="Add resource links (one per line)&#10;Example:&#10;https://example.com/notes.pdf&#10;https://example.com/exercises.zip"></textarea>
+                  <small class="form-text text-muted">
+                    Add downloadable resources like PDFs, ZIP files, or links. One URL per line.
+                    Students will be able to download these materials.
+                  </small>
                 </div>
                 <div id="editLessonMessage" class="alert" style="display: none;"></div>
               </div>

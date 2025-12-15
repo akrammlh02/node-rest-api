@@ -90,6 +90,36 @@ router.get('/course-view/ar', (req, res) => {
     });
 });
 
+// Landing page route - optimized for conversions
+router.get('/landing', (req, res) => {
+    const courseId = req.query.id;
+
+    // If no course ID provided, redirect to courses page
+    if (!courseId) {
+        return res.redirect('/course');
+    }
+
+    res.render('landing.hbs', {
+        isLoggedIn: !!req.session.user,
+        courseId: courseId
+    });
+});
+
+// Arabic Landing page route - mobile-first, optimized for conversions
+router.get('/landing-ar', (req, res) => {
+    const courseId = req.query.id;
+
+    // If no course ID provided, redirect to courses page
+    if (!courseId) {
+        return res.redirect('/course');
+    }
+
+    res.render('landing-ar.hbs', {
+        isLoggedIn: !!req.session.user,
+        courseId: courseId
+    });
+});
+
 router.get('/tv', (req, res) => {
     const lessonId = req.query.lessonId;
     if (!lessonId) {

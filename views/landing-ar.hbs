@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title id="pageTitle">دورة تدريبية احترافية - DevAcademy</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" id="pageDescription"
+        content="غير مستقبلك المهني مع دورتنا الشاملة. انضم لآلاف الطلاب الناجحين">
+    <meta property="og:title" id="ogTitle" content="دورة احترافية - DevAcademy">
+    <meta property="og:description" id="ogDescription" content="غير مستقبلك المهني مع دورتنا الشاملة">
+    <meta property="og:image" content="/images/logo.png">
+
+    <link rel="stylesheet" href="/landing-ar.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+</head>
+
+<body>
+    <!-- Floating WhatsApp Button -->
+    <div class="whatsapp-float" onclick="enrollCourse()">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+            <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
+        <span>تواصل معنا</span>
+    </div>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header" id="stickyHeader">
+        <div class="header-container">
+            <button class="btn-cta-header" onclick="scrollToEnroll()">
+                سجل الآن
+            </button>
+            <div class="header-info">
+                <div class="price-badge" id="headerPrice">0 دج</div>
+                <span class="course-title-header" id="headerCourseTitle">جاري التحميل...</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <!-- Video Preview - FIRST -->
+                <div class="hero-video" id="heroVideoSection" style="display: none;">
+                    <div class="video-wrapper">
+                        <iframe id="heroVideoFrame" width="100%" height="220" frameborder="0" loading="lazy"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                        <div class="play-badge">
+                            <span class="material-symbols-outlined">play_circle</span>
+                            <span>شاهد معاينة الدورة</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-badge">
+                    <span class="material-symbols-outlined">verified</span>
+                    <span>دورة معتمدة مع شهادة</span>
+                </div>
+
+                <h1 class="hero-title" id="courseTitle">جاري تحميل الدورة...</h1>
+
+                <p class="hero-description" id="courseDescription">
+                    جاري تحميل الوصف...
+                </p>
+
+                <!-- Stats -->
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="studentCount">500+</div>
+                        <div class="stat-label">طالب مسجل</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4.9/5</div>
+                        <div class="stat-label">تقييم الدورة</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="certificateCount">300+</div>
+                        <div class="stat-label">شهادة صادرة</div>
+                    </div>
+                </div>
+
+                <!-- Main CTA -->
+                <button class="btn-primary-cta" onclick="enrollCourse()">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    سجل الآن عبر واتساب
+                </button>
+
+                <div class="trust-badge-hero">
+                    <span class="material-symbols-outlined">verified_user</span>
+                    <span>ضمان استرجاع المال لمدة 30 يوم</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof Section -->
+        <section class="testimonials-section">
+            <h2 class="section-title">
+                <span class="material-symbols-outlined">star</span>
+                ماذا يقول طلابنا
+            </h2>
+
+            <div class="testimonials-slider">
+                <div class="testimonial-card featured">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">
+                        الدورة غيرت فهمي تماماً للخوارزميات. الأستاذ يشرح المفاهيم المعقدة بطريقة بسيطة.
+                    </p>
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <div>
+                            <h4>أحمد بن علي</h4>
+                            <div class="rating">
+                                ⭐⭐⭐⭐⭐
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card featured">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">
+                        هذه الدورة ساعدتني كثيراً في فهم مادة الخوارزميات في الجامعة. الشرح واضح ومنظم،
+                        وساعدني على النجاح في الامتحانات وفهم الدروس بشكل أفضل.
+                    </p>
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">school</span>
+                        </div>
+                        <div>
+                            <h4>أحمد بن علي</h4>
+                            <small>طالب علوم الحاسوب – السنة الثانية</small>
+                            <div class="rating">
+                                ⭐⭐⭐⭐⭐
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="testimonial-card">
+                    <div class="quote-icon">"</div>
+                    <p class="testimonial-text">
+                        كنت أواجه صعوبة كبيرة في فهم الخوارزميات خلال المحاضرات،
+                        لكن هذه الدورة قدمت لي شرحاً مبسطاً مع أمثلة واضحة.
+                        أصبحت أفهم الحلول خطوة بخطوة دون تعقيد.
+                    </p>
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">school</span>
+                        </div>
+                        <div>
+                            <h4>ياسين مزيان</h4>
+                            <small>طالب إعلام آلي – السنة الأولى</small>
+                            <div class="rating">
+                                ⭐⭐⭐⭐⭐
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CTA After Testimonials -->
+            <div class="cta-section-inline">
+                <button class="btn-cta-inline" onclick="enrollCourse()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                    سجل الآن عبر واتساب
+                </button>
+                <p class="cta-note">انضم لـ <span id="studentCountInline">500+</span> طالب ناجح</p>
+            </div>
+        </section>
+
+        <!-- Why This Course Section - For ALL Students & Programmers -->
+        <section class="why-course-section">
+            <div class="container">
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    لماذا هذه الدورة مثالية لك؟
+                </h2>
+
+                <!-- Urgency Banner -->
+                <div class="urgency-banner">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <div class="urgency-text">
+                        <strong>⚡ عرض محدود:</strong> سجل اليوم واحصل على خصم 30% + مواد إضافية مجانية!
+                    </div>
+                </div>
+
+                <div class="target-audience-grid">
+                    <div class="audience-card">
+                        <div class="audience-icon">🎓</div>
+                        <h3>طلاب الجامعة (جميع التخصصات)</h3>
+                        <p>سواء كنت تدرس: علوم الحاسوب، هندسة، رياضيات، فيزياء، أو أي تخصص آخر!</p>
+                        <ul>
+                            <li>✅ فهم الخوارزميات بطريقة سهلة ومبسطة</li>
+                            <li>✅ النجاح في مواد البرمجة والحاسوب</li>
+                            <li>✅ تحسين معدلك الجامعي</li>
+                            <li>✅ التفوق على زملائك في المشاريع</li>
+                            <li>✅ الاستعداد المبكر لسوق العمل</li>
+                            <li>✅ مهارات تفيدك في أي تخصص</li>
+                        </ul>
+                    </div>
+
+                    <div class="audience-card featured-audience">
+                        <div class="audience-icon">💻</div>
+                        <h3>المبرمجون والمبتدئون</h3>
+                        <p>تريد تعلم البرمجة من الصفر؟ أو تطوير مهاراتك الحالية؟</p>
+                        <ul>
+                            <li>✅ ابدأ من الصفر - لا تحتاج خبرة سابقة</li>
+                            <li>✅ شرح بالعربية الجزائرية (دارجة)</li>
+                            <li>✅ أمثلة عملية من الواقع</li>
+                            <li>✅ مشاريع حقيقية لسيرتك الذاتية</li>
+                            <li>✅ دعم مباشر من الأستاذ</li>
+                            <li>✅ جاهز للعمل كمبرمج محترف</li>
+                        </ul>
+                    </div>
+
+                    <div class="audience-card">
+                        <div class="audience-icon">🚀</div>
+                        <h3>الباحثون عن فرص عمل</h3>
+                        <p>تستعد للتخرج أو تبحث عن وظيفة أفضل؟</p>
+                        <ul>
+                            <li>✅ اجتياز المقابلات التقنية بثقة</li>
+                            <li>✅ حل مسائل الخوارزميات بسهولة</li>
+                            <li>✅ شهادة معتمدة تضيفها لسيرتك</li>
+                            <li>✅ التميز عن آلاف المتقدمين</li>
+                            <li>✅ فرص عمل في الجزائر والخارج</li>
+                            <li>✅ راتب أعلى بـ 40% على الأقل</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Why Algerian Students Need This -->
+                <div class="algeria-specific">
+                    <h3 class="algeria-heading">
+                        <span class="algeria-flag">🇩🇿</span>
+                        لماذا الطلاب الجزائريون يحتاجون هذه الدورة؟
+                    </h3>
+                    <div class="algeria-reasons">
+                        <div class="reason-item">
+                            <span class="reason-icon">📚</span>
+                            <div class="reason-content">
+                                <h4>المناهج الجامعية صعبة</h4>
+                                <p>الأساتذة يشرحون بسرعة والمواد معقدة - نحن نبسطها لك</p>
+                            </div>
+                        </div>
+                        <div class="reason-item">
+                            <span class="reason-icon">🗣️</span>
+                            <div class="reason-content">
+                                <h4>شرح بالعربية والدارجة</h4>
+                                <p>فهم أسرع وأسهل بلغتك - بدون تعقيد</p>
+                            </div>
+                        </div>
+                        <div class="reason-item">
+                            <span class="reason-icon">💼</span>
+                            <div class="reason-content">
+                                <h4>سوق العمل تنافسي</h4>
+                                <p>آلاف الخريجين - تحتاج مهارات تميزك</p>
+                            </div>
+                        </div>
+                        <div class="reason-item">
+                            <span class="reason-icon">💰</span>
+                            <div class="reason-content">
+                                <h4>رواتب المبرمجين عالية</h4>
+                                <p>من 50,000 إلى 200,000 دج شهرياً - استثمر في مستقبلك</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Career Benefits -->
+                <div class="career-benefits">
+                    <h3 class="benefits-heading">
+                        <span class="material-symbols-outlined">trending_up</span>
+                        ماذا ستحقق بعد إتمام الدورة؟
+                    </h3>
+                    <div class="benefits-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-number">1</div>
+                            <div class="timeline-content">
+                                <h4>مهارات قوية</h4>
+                                <p>إتقان الخوارزميات وحل المشاكل البرمجية</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-number">2</div>
+                            <div class="timeline-content">
+                                <h4>شهادة معتمدة</h4>
+                                <p>أضفها لسيرتك الذاتية و LinkedIn</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-number">3</div>
+                            <div class="timeline-content">
+                                <h4>فرص وظيفية</h4>
+                                <p>جاهز للعمل في أفضل الشركات التقنية</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-number">4</div>
+                            <div class="timeline-content">
+                                <h4>دخل أعلى</h4>
+                                <p>المبرمجون المحترفون يحصلون على رواتب ممتازة</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Stats -->
+                <div class="success-stats">
+                    <div class="stat-box">
+                        <div class="stat-value">95%</div>
+                        <div class="stat-label">معدل إتمام الدورة</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4.9/5</div>
+                        <div class="stat-label">تقييم الطلاب</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">80%</div>
+                        <div class="stat-label">حصلوا على وظائف</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">40%</div>
+                        <div class="stat-label">زيادة في الراتب</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What You'll Learn -->
+        <section class="curriculum-section">
+            <h2 class="section-title">
+                <span class="material-symbols-outlined">menu_book</span>
+                محتوى الدورة
+            </h2>
+
+            <div id="chaptersContainer" class="chapters-list">
+                <div class="loading-state">
+                    <span class="material-symbols-outlined rotating">progress_activity</span>
+                    <p>جاري تحميل المحتوى...</p>
+                </div>
+            </div>
+
+            <!-- Benefits Grid -->
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <span class="material-symbols-outlined">all_inclusive</span>
+                    <h3>وصول مدى الحياة</h3>
+                    <p>تعلم بالسرعة التي تناسبك</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    <h3>شهادة إتمام</h3>
+                    <p>عزز سيرتك الذاتية</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="material-symbols-outlined">support_agent</span>
+                    <h3>دعم مباشر</h3>
+                    <p>احصل على مساعدة الأستاذ</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="material-symbols-outlined">phone_android</span>
+                    <h3>تعلم من أي مكان</h3>
+                    <p>على الهاتف أو الكمبيوتر</p>
+                </div>
+            </div>
+
+            <!-- CTA After Curriculum -->
+            <div class="cta-section-inline">
+                <button class="btn-cta-inline" onclick="enrollCourse()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                    ابدأ التعلم الآن
+                </button>
+                <p class="cta-note">💰 السعر: <span id="priceInline">0</span> دج فقط</p>
+            </div>
+        </section>
+
+        <!-- Instructor Section -->
+        <section class="instructor-section">
+            <div class="instructor-card">
+                <div class="instructor-avatar">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <div class="instructor-info">
+                    <h3>أكرم مليحي</h3>
+                    <p class="instructor-title">مهندس برمجيات ومدرب محترف</p>
+                    <div class="instructor-stats">
+                        <div class="stat">
+                            <span class="material-symbols-outlined">groups</span>
+                            <span>500+ طالب</span>
+                        </div>
+                        <div class="stat">
+                            <span class="material-symbols-outlined">star</span>
+                            <span>تقييم 4.9</span>
+                        </div>
+                    </div>
+                    <p class="instructor-bio">
+                        خبير في الخوارزميات وهياكل البيانات مع سنوات من الخبرة في الصناعة. شغوف بالتدريس ومساعدة الطلاب
+                        على تحقيق أهدافهم المهنية.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CTA After Instructor -->
+            <div class="cta-section-inline">
+                <button class="btn-cta-inline" onclick="enrollCourse()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                    تواصل معنا الآن
+                </button>
+                <p class="cta-note">🎓 احصل على شهادة معتمدة</p>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="pricing-section" id="enrollSection">
+            <div class="pricing-card">
+                <div class="pricing-badge">عرض خاص</div>
+
+                <h2 class="pricing-title">ابدأ رحلتك اليوم</h2>
+
+                <div class="price-display">
+                    <div class="price-amount">
+                        <span class="price-value" id="coursePrice">0</span>
+                        <span class="price-currency">دج</span>
+                    </div>
+                    <p class="price-note">دفعة واحدة • وصول مدى الحياة</p>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span>الوصول الكامل للدورة (<span id="totalLessons">0</span> درس)</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span>موارد قابلة للتحميل</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span>شهادة إتمام معتمدة</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span>تحديثات مجانية مدى الحياة</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span>دعم مباشر من الأستاذ</span>
+                    </div>
+                </div>
+
+                <button class="btn-enroll-whatsapp" onclick="enrollCourse()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                    تواصل عبر واتساب للتسجيل
+                </button>
+
+                <div class="guarantee-box">
+                    <span class="material-symbols-outlined">verified_user</span>
+                    <div>
+                        <strong>ضمان استرجاع المال لمدة 30 يوم</strong>
+                        <p>غير راضي؟ استرجع أموالك كاملة بدون أسئلة</p>
+                    </div>
+                </div>
+
+                <div class="urgency-box">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <span><strong>عرض محدود:</strong> سعر خاص متاح الآن</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2 class="section-title">
+                <span class="material-symbols-outlined">help</span>
+                الأسئلة الشائعة
+            </h2>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(0)">
+                        <h4>كيف أسجل في الدورة؟</h4>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>اضغط على زر "تواصل عبر واتساب" وأرسل لنا رسالة. سنرشدك خلال عملية التسجيل البسيطة وخيارات
+                            الدفع. بمجرد تأكيد الدفع، ستحصل على وصول فوري للدورة.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(1)">
+                        <h4>ما هي طرق الدفع المتاحة؟</h4>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نقبل طرق دفع متعددة بما في ذلك التحويل البنكي، CCP، وخيارات الدفع المحلية الأخرى. تواصل معنا
+                            عبر واتساب للحصول على تعليمات الدفع التفصيلية.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(2)">
+                        <h4>كم من الوقت لدي للوصول إلى الدورة؟</h4>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>تحصل على وصول مدى الحياة! تعلم بالسرعة التي تناسبك وراجع المحتوى متى احتجت. بالإضافة إلى ذلك،
+                            ستحصل على جميع التحديثات المستقبلية بدون تكلفة إضافية.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(3)">
+                        <h4>هل الدورة مناسبة للمبتدئين؟</h4>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نعم! الدورة مصممة لجميع المستويات. نبدأ بالأساسيات ونتقدم تدريجياً إلى المواضيع المتقدمة. حتى
+                            لو كنت جديداً على الخوارزميات، ستتمكن من المتابعة.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(4)">
+                        <h4>هل سأحصل على شهادة؟</h4>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>بالتأكيد! عند إكمال جميع الدروس، ستحصل على شهادة إتمام احترافية يمكنك إضافتها إلى سيرتك
+                            الذاتية وملفك الشخصي على LinkedIn.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(5)">
+                        <h4>هل يمكنني استرجاع أموالي إذا لم أكن راضياً؟</h4>
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نعم! نقدم ضمان استرجاع المال لمدة 30 يوماً. إذا لم تكن راضياً عن الدورة لأي سبب، تواصل معنا
+                            خلال 30 يوماً للحصول على استرداد كامل.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="final-cta-section">
+            <div class="final-cta-card">
+                <h2>لا تفوت هذه الفرصة</h2>
+                <p>انضم لمئات الطلاب الذين غيروا مسيرتهم المهنية</p>
+                <button class="btn-final-cta" onclick="scrollToEnroll()">
+                    <span class="material-symbols-outlined">rocket_launch</span>
+                    سجل الآن وابدأ التعلم
+                </button>
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        <span>ضمان 30 يوم</span>
+                    </div>
+                    <div class="trust-badge">
+                        <span class="material-symbols-outlined">workspace_premium</span>
+                        <span>شهادة معتمدة</span>
+                    </div>
+                    <div class="trust-badge">
+                        <span class="material-symbols-outlined">all_inclusive</span>
+                        <span>وصول مدى الحياة</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <p>&copy; 2024 DevAcademy. جميع الحقوق محفوظة</p>
+    </footer>
+
+    <script src="/landing-ar.js"></script>
+</body>
+
+</html>
