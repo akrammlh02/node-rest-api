@@ -224,12 +224,27 @@ function enrollCourse() {
         );
 
         const whatsappUrl = `https://wa.me/213540921726?text=${message}`;
+
+        // Track Facebook Pixel - Lead event
+        if (typeof fbq !== 'undefined') {
+            const priceValue = parseFloat(coursePrice.replace(/[^0-9]/g, '')) || 0;
+            fbq('track', 'Lead', {
+                content_name: courseTitle,
+                content_category: 'Course',
+                content_ids: [courseId],
+                value: priceValue,
+                currency: 'DZD'
+            });
+            console.log('Facebook Pixel: Lead event tracked -', courseTitle, priceValue, 'DZD');
+        }
+
+        // Open WhatsApp
         window.open(whatsappUrl, '_blank');
 
         // Track conversion
         console.log('تم بدء عملية التسجيل للدورة:', courseId);
 
-        // Optional: Send analytics event
+        // Optional: Send Google Analytics event
         if (typeof gtag !== 'undefined') {
             gtag('event', 'begin_checkout', {
                 'course_id': courseId,
