@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastery Paths | Interactive Code Learning | DevAcademy</title>
+    <meta name="description"
+        content="Master coding through execution with our interactive roadmaps. Learn Frontend, Backend, and Algorithms with real-time AI validation.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="/interactive-paths.css">
+</head>
+
+<body>
+    <!-- Immersive Background -->
+    <div class="space-gradient"></div>
+    <div class="nebula-1"></div>
+    <div class="nebula-2"></div>
+    <div class="grid-mesh"></div>
+
+    <!-- Navigation -->
+    <nav class="glass-nav sticky-top">
+        <div class="container nav-content">
+            <div class="brand-wrapper">
+                <a href="/dashboard" class="back-link">
+                    <span class="material-symbols-rounded">arrow_back</span>
+                </a>
+                <div>
+                    <h1 class="h6 mb-0 fw-bold text-white">DevAcademy</h1>
+                    <small class="text-white-50">Go to Dashboard</small>
+                </div>
+            </div>
+
+            <ul class="nav-links-center d-none d-lg-flex">
+                <li><a href="/">Home</a></li>
+                <li><a href="/course">Courses</a></li>
+                <li><a href="/quiz">Quiz</a></li>
+                <li><a href="/interactive/paths" class="active">Roadmaps</a></li>
+            </ul>
+
+            <div class="header-actions">
+                {{#if isLoggedIn}}
+                <div
+                    class="user-tier-badge {{#if (eq user.membershipTier 'VIP')}}vip{{else if (eq user.membershipTier 'Pro')}}pro {{else}}free{{/if}}">
+                    <span class="material-symbols-rounded">{{#if (eq user.membershipTier 'VIP')}}workspace_premium{{else
+                        if (eq user.membershipTier 'Pro')}}bolt{{else}}person{{/if}}</span>
+                    <span>{{user.membershipTier}}</span>
+                </div>
+                <a href="/logout" class="btn-outline-custom" style="width: auto; padding: 0 20px;">
+                    <span class="material-symbols-rounded">logout</span>
+                </a>
+                {{else}}
+                <a href="/login" class="btn-primary-custom" style="width: auto; padding: 0 20px;">Login</a>
+                {{/if}}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Mini Nav -->
+    <div class="mobile-nav-bar d-lg-none">
+        <div class="container mobile-nav-scroll">
+            <a href="/">Home</a>
+            <a href="/course">Courses</a>
+            <a href="/quiz">Quiz</a>
+            <a href="/interactive/paths" class="active">Roadmaps</a>
+        </div>
+    </div>
+
+    <main class="main-stage">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="pill-label">SKILL ACQUISITION ENGINE</div>
+                <h2 class="hero-title">Learn Code By <br>Coding</h2>
+                <p class="hero-subtitle">Adaptive learning trajectories designed for the modern engineer. Choose a
+                    discipline to begin your ascension.</p>
+
+                {{#if error}}
+                <div
+                    class="alert alert-danger rounded-4 mt-4 border-dabger-subtle bg-danger-subtle text-danger d-flex align-items-center gap-3">
+                    <span class="material-symbols-rounded">warning</span>
+                    <div>{{error}}</div>
+                    <a href="#pricing" class="btn btn-danger btn-sm rounded-pill ms-auto">Upgrade Now</a>
+                </div>
+                {{/if}}
+
+                <div class="search-container-main mt-5">
+                    <div class="search-box-modern big">
+                        <span class="material-symbols-rounded">search</span>
+                        <input type="text" id="pathSearch" placeholder="Search roadmaps by language or title...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grid -->
+            <div class="path-grid">
+                {{#each paths}}
+                <div class="path-container">
+                    <div class="modern-card {{#if this.isLocked}}locked-path{{/if}}">
+                        <div class="card-glow"></div>
+                        <div class="difficulty-indicator">{{this.difficulty_level}}</div>
+
+
+
+                        <div class="tier-card-badge {{this.required_tier}}">
+                            <span class="material-symbols-rounded">{{#if (eq this.required_tier
+                                'VIP')}}workspace_premium{{else if (eq this.required_tier
+                                'Pro')}}bolt{{else}}person{{/if}}</span>
+                            {{this.required_tier}}
+                        </div>
+
+                        <div class="icon-box">
+                            {{#if (eq this.programming_language 'html')}}
+                            <span class="material-symbols-rounded">html</span>
+                            {{else if (eq this.programming_language 'css')}}
+                            <span class="material-symbols-rounded">css</span>
+                            {{else if (eq this.programming_language 'javascript')}}
+                            <span class="material-symbols-rounded">javascript</span>
+                            {{else if (eq this.programming_language 'python')}}
+                            <span class="material-symbols-rounded">terminal</span>
+                            {{else}}
+                            <span class="material-symbols-rounded">developer_mode</span>
+                            {{/if}}
+                        </div>
+
+                        <h3 class="card-title">{{this.title}}</h3>
+                        <p class="card-desc">{{this.description}}</p>
+
+                        <div class="meta-info">
+                            <div class="meta-item">
+                                <span class="material-symbols-rounded">layers</span>
+                                <span>{{this.total_lessons}} Modules</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="material-symbols-rounded">schedule</span>
+                                <span>
+                                    {{#if (eq this.difficulty_level 'Beginner')}}2h+{{else if (eq this.difficulty_level
+                                    'Intermediate')}}5h+{{else}}12h+{{/if}}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="action-bar">
+                            {{#if this.isLocked}}
+                            <a href="#pricing" class="btn-primary-custom upgrade-btn">
+                                <span>Upgrade to Unlock</span>
+                                <span class="material-symbols-rounded">bolt</span>
+                            </a>
+                            {{else}}
+                            <a href="/interactive/path/{{this.id}}" class="btn-primary-custom">
+                                <span>Launch Roadmap</span>
+                                <span class="material-symbols-rounded">rocket_launch</span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <!-- New Section: The Methodology -->
+            <section class="protocol-section">
+                <div class="section-separator"></div>
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <div class="pill-label">THE LEARNING PROTOCOL</div>
+                        <h2 class="display-5 fw-bold mb-4">Mastery through <span class="gradient-text">Execution</span>
+                        </h2>
+                        <ul class="protocol-list">
+                            <li>
+                                <div class="step-num">01</div>
+                                <div class="step-content">
+                                    <h5>Select Your Discipline</h5>
+                                    <p>Choose from curated paths spanning Frontend, Backend, and Algorithms.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-num">02</div>
+                                <div class="step-content">
+                                    <h5>Interactive Sandboxing</h5>
+                                    <p>Our built-in IDE validates your code in milliseconds against rigorous tests.</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="step-num">03</div>
+                                <div class="step-content">
+                                    <h5>Synchronize Progress</h5>
+                                    <p>Earn XP and unlock advanced modules as you bridge the gap to professional
+                                        mastery.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="visual-placeholder">
+                            <div class="floating-code-card">
+                                <div class="card-header-dots">
+                                    <span></span><span></span><span></span>
+                                </div>
+                                <div class="code-line"><span class="c-1">function</span> <span
+                                        class="c-2">optimize</span>() {</div>
+                                <div class="code-line indent-1"><span class="c-3">return</span> <span
+                                        class="c-1">new</span> <span class="c-2">Career</span>();</div>
+                                <div class="code-line">}</div>
+                            </div>
+                            <div class="glow-sphere"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Section: Tier Explanation -->
+            <section class="tiers-preview pb-5">
+                <div class="text-center mb-5">
+                    <h2 class="h1 fw-bold">Knowledge <span class="gradient-text">Tiers</span></h2>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="tier-card">
+                            <div class="tier-icon beginner"><span class="material-symbols-rounded">child_care</span>
+                            </div>
+                            <h4>Beginner</h4>
+                            <p>Foundational logic, syntax basics, and DOM manipulation. No experience required.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="tier-card">
+                            <div class="tier-icon intermediate"><span
+                                    class="material-symbols-rounded">construction</span></div>
+                            <h4>Intermediate</h4>
+                            <p>Complex state management, API integration, and asynchronous flows.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="tier-card">
+                            <div class="tier-icon advanced"><span
+                                    class="material-symbols-rounded">shield_with_heart</span></div>
+                            <h4>Advanced</h4>
+                            <p>System architecture, performance optimization, and enterprise-grade patterns.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Section: Pricing / Membership -->
+            <section class="pricing-section pb-5" id="pricing">
+                <div class="section-separator"></div>
+                <div class="text-center mb-5">
+                    <div class="pill-label">UNLIMITED ACCESS</div>
+                    <h2 class="display-5 fw-bold mb-4">Choose Your <span class="gradient-text">Membership</span></h2>
+                    <p class="text-white-50">Join the elite circle of developers mastering their craft every day.</p>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    <!-- Free Tier -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3 class="h4">Free Starter</h3>
+                                <div class="price-display">
+                                    <span class="currency">DA</span>
+                                    <span class="amount">0</span>
+                                    <span class="period">/mo</span>
+                                </div>
+                            </div>
+
+                            <ul class="pricing-features">
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Access to Free Roadmaps</span>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Basic IDE Access</span>
+                                </li>
+                                <li class="muted">
+                                    <span class="material-symbols-rounded">cancel</span>
+                                    <span>Advanced Quizzes</span>
+                                </li>
+                                <li class="muted">
+                                    <span class="material-symbols-rounded">cancel</span>
+                                    <span>Achievement Badges</span>
+                                </li>
+                            </ul>
+
+                            {{#if isLoggedIn}}
+                            {{#if (eq userTier 'Free')}}
+                            <button class="btn-outline-custom w-100 mt-4" disabled
+                                style="opacity: 0.8; cursor: default;">
+                                <span>Current Plan</span>
+                                <span class="material-symbols-rounded">check_circle</span>
+                            </button>
+                            {{else}}
+                            <button class="btn-outline-custom w-100 mt-4" disabled style="opacity: 0.5;">
+                                <span>Included</span>
+                                <span class="material-symbols-rounded">check</span>
+                            </button>
+                            {{/if}}
+                            {{else}}
+                            <a href="/signup" class="btn-outline-custom w-100 mt-4">
+                                <span>Get Started</span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <!-- Pro Tier -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pricing-card premium-tier">
+                            <div class="tier-badge">Most Popular</div>
+                            <div class="pricing-header">
+                                <h3 class="h4">Pro Member</h3>
+                                <div class="price-display">
+                                    <span class="currency">DA</span>
+                                    <span class="amount">1100</span>
+                                    <span class="period">/mo</span>
+                                </div>
+                            </div>
+
+                            <ul class="pricing-features">
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>All Roadmap Access</span>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Full IDE Validation</span>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Interactive Quizzes</span>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Achievement Badges</span>
+                                </li>
+                            </ul>
+
+                            {{#if (eq userTier 'Pro')}}
+                            <button class="btn-primary-custom w-100 mt-4" disabled
+                                style="opacity: 0.8; cursor: default;">
+                                <span>Current Plan</span>
+                                <span class="material-symbols-rounded">check_circle</span>
+                            </button>
+                            {{else if (eq userTier 'VIP')}}
+                            <button class="btn-primary-custom w-100 mt-4" disabled
+                                style="opacity: 0.8; cursor: default;">
+                                <span>Included in VIP</span>
+                                <span class="material-symbols-rounded">check_circle</span>
+                            </button>
+                            {{else}}
+                            <a href="/payment/checkout?plan=monthly" class="btn-primary-custom w-100 mt-4">
+                                <span>Upgrade to Pro</span>
+                                <span class="material-symbols-rounded">bolt</span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                    <!-- VIP Tier -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="pricing-card vip-tier">
+                            <div class="tier-badge gold">Exclusive</div>
+                            <div class="pricing-header">
+                                <h3 class="h4">VIP Elite</h3>
+                                <div class="price-display">
+                                    <span class="currency">DA</span>
+                                    <span class="amount">2100</span>
+                                    <span class="period">/mo</span>
+                                </div>
+                            </div>
+
+                            <ul class="pricing-features">
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Everything in Pro</span>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Private Discord Access</span>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>1-on-1 Code Review</span>
+                                </li>
+                                <li>
+                                    <span class="material-symbols-rounded">check_circle</span>
+                                    <span>Beta Course Access</span>
+                                </li>
+                            </ul>
+
+                            {{#if (eq userTier 'VIP')}}
+                            <button class="btn-vip-custom w-100 mt-4" disabled style="opacity: 0.8; cursor: default;">
+                                <span>Current Plan</span>
+                                <span class="material-symbols-rounded">star</span>
+                            </button>
+                            {{else}}
+                            <a href="/payment/checkout?plan=vip" class="btn-vip-custom w-100 mt-4">
+                                <span>Become VIP</span>
+                                <span class="material-symbols-rounded">star</span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Section: FAQ -->
+            <section class="faq-modern-section pb-5" id="docs">
+                <div class="section-separator"></div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="pill-label">SUPPORT CENTER</div>
+                        <h2 class="display-6 fw-bold mb-4">Common <span class="gradient-text">Inquiries</span></h2>
+                        <p class="text-white-50">Everything you need to know about the mastery paths and your
+                            subscription.</p>
+
+                        <div class="search-box-modern mt-4">
+                            <span class="material-symbols-rounded">search</span>
+                            <input type="text" id="faqSearch" placeholder="Search inquiries...">
+                        </div>
+
+                        <div class="faq-tags mt-3">
+                            <span class="faq-tag" data-filter="Roadmaps">#Roadmaps</span>
+                            <span class="faq-tag" data-filter="Billing">#Billing</span>
+                            <span class="faq-tag" data-filter="IDE">#IDE</span>
+                        </div>
+
+                        <div class="support-card mt-4">
+                            <span class="material-symbols-rounded">chat</span>
+                            <h5>Need more help?</h5>
+                            <p class="small text-white-50">Our technical support is available 24/7 for members.</p>
+                            <a href="https://wa.me/213540921726"
+                                class="text-primary text-decoration-none fw-bold">Contact Support →</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="accordion accordion-flush custom-accordion" id="pathsFAQ">
+                            <div class="accordion-item" data-tags="Roadmaps">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#faq-1">
+                                        How do Interactive Roadmaps work?
+                                    </button>
+                                </h2>
+                                <div id="faq-1" class="accordion-collapse collapse" data-bs-parent="#pathsFAQ">
+                                    <div class="accordion-body">
+                                        Roadmaps are structured sequences of lessons. Unlike traditional videos, each
+                                        step requires you to write code in our integrated IDE. Your progress is only
+                                        unlocked once the AI-powered validator confirms your solution is correct.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item" data-tags="Billing">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#faq-2">
+                                        Can I cancel my membership at any time?
+                                    </button>
+                                </h2>
+                                <div id="faq-2" class="accordion-collapse collapse" data-bs-parent="#pathsFAQ">
+                                    <div class="accordion-body">
+                                        Yes, absolutely. You can manage your subscription directly from your dashboard.
+                                        If you cancel, you will maintain Pro/VIP access until the end of your current
+                                        billing cycle.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item" data-tags="Roadmaps">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#faq-3">
+                                        What happens after I complete a path?
+                                    </button>
+                                </h2>
+                                <div id="faq-3" class="accordion-collapse collapse" data-bs-parent="#pathsFAQ">
+                                    <div class="accordion-body">
+                                        Upon completion, you'll earn a digital certification of mastery and a unique
+                                        badge on your DevAcademy profile. VIP members also receive a personalized code
+                                        review of their final capstone project.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item" data-tags="IDE">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#faq-4">
+                                        Is the IDE compatible with mobile devices?
+                                    </button>
+                                </h2>
+                                <div id="faq-4" class="accordion-collapse collapse" data-bs-parent="#pathsFAQ">
+                                    <div class="accordion-body">
+                                        While our platform is responsive, we recommend using a desktop or tablet for the
+                                        best coding experience. The IDE is optimized for keyboard input to simulate
+                                        real-world professional environments.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="faqNoResults" class="text-center py-4 d-none">
+                            <span class="material-symbols-rounded display-4 opacity-25">search_off</span>
+                            <p class="text-white-50 mt-2">No matching inquiries found.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{#unless paths.length}}
+            <div class="text-center py-5">
+                <div class="modern-card" style="display: inline-block; padding: 60px;">
+                    <span class="material-symbols-rounded display-1 opacity-25">construction</span>
+                    <h4 class="mt-4">Synchronizing Missions...</h4>
+                    <p class="text-white-50">Advanced modules are currently being provisioned. Initializing soon.</p>
+                </div>
+            </div>
+            {{/unless}}
+        </div>
+    </main>
+
+    <!-- Compact Small Footer -->
+    <footer class="main-footer small-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <span class="material-symbols-outlined logo-icon">code_blocks</span>
+                        <span class="logo-text">DevAcademy</span>
+                    </div>
+                </div>
+
+                <div class="footer-center">
+                    <ul class="footer-compact-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/course">All Courses</a></li>
+                        <li><a href="tel:+213540921726" class="footer-phone-link">
+                                <span class="material-symbols-outlined">call</span>
+                                +213 540 921 726
+                            </a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-social-links">
+                        <a href="https://wa.me/213540921726" target="_blank" title="WhatsApp"><i
+                                class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/devacademy__/" target="_blank" title="Instagram"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://t.me/+uv8hLl55DdMzNTg0" target="_blank" title="Telegram"><i
+                                class="fab fa-telegram"></i></a>
+                        <a href="https://web.facebook.com/profile.php?id=61576897061264" target="_blank"
+                            title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                    <p class="copyright-text-compact">&copy; 2025 DevAcademy. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/interactive-paths.js"></script>
+</body>
+
+</html>

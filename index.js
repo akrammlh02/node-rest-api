@@ -44,6 +44,14 @@ hbs.registerHelper('json', function (context) {
   return JSON.stringify(context || []);
 });
 
+hbs.registerHelper('eq', function (a, b) {
+  return a === b;
+});
+
+hbs.registerHelper('gt', function (a, b) {
+  return Number(a) > Number(b);
+});
+
 //Cloudinary 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -60,6 +68,9 @@ app.use('/dashboard', require('./routes/dashboard'));
 app.use('/course', require('./routes/course'));
 app.use('/admin', require('./routes/admin'));
 app.use('/quiz', require('./routes/quiz'));
+app.use('/interactive', require('./routes/interactive'));
+app.use('/payment', require('./routes/payment'));
+app.use('/cart', require('./routes/cart'));
 
 
 // API endpoint to check if session is vali
@@ -101,7 +112,7 @@ app.get('/logout/ar', (req, res) => {
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:;"
+    "default-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;"
   );
   next();
 });

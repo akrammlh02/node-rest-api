@@ -2,226 +2,503 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevAcademy - Course View</title>
-  <link rel="stylesheet" href="/course-view.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link rel="icon" type="image/x-icon" href="/images/logo.png">
-  <style>
-    * {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevAcademy - Course View</title>
+    <link rel="stylesheet" href="/course-view.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
 </head>
 
 <body>
-  <header>
-    <nav>
-      <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
-      <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/course">Courses</a></li>
-        {{!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            English
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/ar">العربية</a></li>
-            <li><a class="dropdown-item" href="/">English</a></li>
-          </ul>
-        </li> --}}
-        {{#if isLoggedIn}}
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button></li>
-        {{else}}
-        <li><a href="/login">Login</a></li>
-        <li><button type="button" class="btn signup"><a href="/signup"> Sign up</a></button></li>
-        {{/if}}
-      </ul>
-      <div class="menu">
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight"><span class="material-symbols-outlined">menu</span></button>
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <a href="/">Home</a>
-            <a href="/course">Courses</a>
-            {{!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                English
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/ar">العربية</a></li>
-                <li><a class="dropdown-item" href="/">English</a></li>
-              </ul>
-            </li> --}}
-            {{#if isLoggedIn}}
-            <a href="/dashboard">Dashboard</a>
-            <div style="width: 50%;">
-              <button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button>
+    <header>
+        <nav>
+            <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/course">Courses</a></li>
+                {{!-- <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        English
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/ar">العربية</a></li>
+                        <li><a class="dropdown-item" href="/">English</a></li>
+                    </ul>
+                </li> --}}
+                <li><a href="/payment/checkout" class="cart-link" title="Checkout">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span class="cart-badge" id="cartBadgeNav" style="display: none;">0</span>
+                    </a></li>
+                {{#if isLoggedIn}}
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button></li>
+                {{else}}
+                <li><a href="/login">Login</a></li>
+                <li><button type="button" class="btn signup"><a href="/signup"> Sign up</a></button></li>
+                {{/if}}
+            </ul>
+            <div class="menu">
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><span
+                        class="material-symbols-outlined">menu</span></button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
+                    aria-labelledby="offcanvasRightLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <a href="/">Home</a>
+                        <a href="/course">Courses</a>
+                        {{!-- <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                English
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/ar">العربية</a></li>
+                                <li><a class="dropdown-item" href="/">English</a></li>
+                            </ul>
+                        </li> --}}
+                        {{#if isLoggedIn}}
+                        <a href="/dashboard">Dashboard</a>
+                        <div style="width: 50%;">
+                            <button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button>
 
-            </div>
-            {{else}}
-            <a href="/login">Login</a>
-            <div style="width: 50%;">
-              <button type="button" class="btn signup"><a href="/signup"> Sign up</a></button>
+                        </div>
+                        {{else}}
+                        <a href="/login">Login</a>
+                        <div style="width: 50%;">
+                            <button type="button" class="btn signup"><a href="/signup"> Sign up</a></button>
 
-            </div>
-            {{/if}}
-          </div>
-        </div>
-      </div>
-    </nav>
-  </header>
-
-  <main class="course-main">
-    <div class="course-container">
-
-      <!-- Preview Video Hero Section -->
-      <div class="preview-hero-section" id="previewVideoSection" style="display: none;">
-        <div class="video-container">
-          <iframe id="previewVideoFrame" width="100%" height="500" frameborder="0" loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
-          </iframe>
-        </div>
-      </div>
-
-      <!-- Course Info & CTA Section -->
-      <div class="course-info-section">
-        <div class="course-info-content">
-          <div class="course-category" id="courseCategory" style="display: none;"></div>
-          <h1 id="courseTitle" class="course-title">Loading...</h1>
-          <p id="courseDescription" class="course-description"></p>
-
-          <div class="course-highlights">
-            <div class="highlight-item">
-              <span class="material-symbols-outlined">person</span>
-              <div>
-                <span class="highlight-label">Instructor</span>
-                <span class="highlight-value">Akram Melihi</span>
-              </div>
-            </div>
-            <div class="highlight-item">
-              <span class="material-symbols-outlined">schedule</span>
-              <div>
-                <span class="highlight-label">Duration</span>
-                <span class="highlight-value" id="courseDuration">0 Hours</span>
-              </div>
-            </div>
-            <div class="highlight-item">
-              <span class="material-symbols-outlined">signal_cellular_alt</span>
-              <div>
-                <span class="highlight-label">Level</span>
-                <span class="highlight-value" id="courseLevel">All Levels</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="price-cta-section">
-            <div class="price-box">
-              <span class="price-label">Price</span>
-              <span id="coursePrice" class="price">0 DA</span>
-            </div>
-            <button class="btn-enroll-primary" onclick="enrollCourse()">
-              <span class="material-symbols-outlined">shopping_cart</span>
-              Enroll Now
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Course Content Section -->
-      <div class="course-content-section">
-        <h2 class="section-title">
-          <span class="material-symbols-outlined">menu_book</span>
-          What You'll Learn
-        </h2>
-        <div id="chaptersContainer" class="chapters-container">
-          <!-- Chapters will be dynamically added here -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Free Lesson Preview Modal -->
-    <div class="modal fade" id="freeLessonModal" tabindex="-1" aria-labelledby="freeLessonModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content free-lesson-modal-content">
-          <div class="modal-header free-lesson-modal-header">
-            <h3 class="modal-title" id="freeLessonModalLabel">
-              <span class="material-symbols-outlined">play_circle</span>
-              <span id="modalLessonTitle">Free Preview</span>
-            </h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body free-lesson-modal-body">
-            <div class="free-video-container">
-              <iframe id="modalVideoFrame" width="100%" height="500" frameborder="0" loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
-              </iframe>
-            </div>
-            <div class="free-lesson-description" id="modalLessonDescription">
-              <div class="description-icon">
-                <span class="material-symbols-outlined">info</span>
-              </div>
-              <div class="description-content">
-                <h4>About This Lesson</h4>
-                <p id="modalDescriptionText"></p>
-              </div>
-            </div>
-            <div class="motivation-section">
-              <div class="motivation-icon">
-                <span class="material-symbols-outlined">rocket_launch</span>
-              </div>
-              <div class="motivation-content">
-                <h4>🎯 Ready to Master This Course?</h4>
-                <p>This is just a taste of what you'll learn! Enroll now to unlock all lessons, downloadable resources,
-                  and earn your certificate of completion.</p>
-                <div class="motivation-benefits">
-                  <div class="benefit-item">
-                    <span class="material-symbols-outlined">check_circle</span>
-                    <span>Full Course Access</span>
-                  </div>
-                  <div class="benefit-item">
-                    <span class="material-symbols-outlined">check_circle</span>
-                    <span>Lifetime Updates</span>
-                  </div>
-                  <div class="benefit-item">
-                    <span class="material-symbols-outlined">check_circle</span>
-                    <span>Certificate of Completion</span>
-                  </div>
-                  <div class="benefit-item">
-                    <span class="material-symbols-outlined">check_circle</span>
-                    <span>Expert Support</span>
-                  </div>
+                        </div>
+                        {{/if}}
+                    </div>
                 </div>
-                <button class="btn-enroll-modal" onclick="enrollCourse()">
-                  <span class="material-symbols-outlined">shopping_cart</span>
-                  Enroll in This Course Now
-                </button>
-              </div>
             </div>
-          </div>
+        </nav>
+    </header>
+
+    <main class="course-main">
+        <!-- New Premium Course Hero -->
+        <section class="course-hero">
+            <div class="course-hero-content">
+                <div class="course-category-badge">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    <span id="courseLevelHeader">All Levels</span>
+                </div>
+                <h1 id="courseTitle" class="course-hero-title">Loading Course...</h1>
+                <div class="course-hero-meta">
+                    <div class="hero-rating">
+                        <div class="hero-stars">
+                            <span class="material-symbols-outlined">star</span>
+                            <span class="material-symbols-outlined">star</span>
+                            <span class="material-symbols-outlined">star</span>
+                            <span class="material-symbols-outlined">star</span>
+                            <span class="material-symbols-outlined">star</span>
+                        </div>
+                        <span class="rating-text">4.78/5</span>
+                        <span class="rating-count">56+ Ratings</span>
+                    </div>
+                    <div class="hero-author-info">
+                        <div>
+                            <span class="material-symbols-outlined">verified_user</span>
+                            By <span class="hero-author-name">Akram Melih</span>
+                        </div>
+                        <div>
+                            <span class="material-symbols-outlined">calendar_month</span>
+                            Last updated 14 Dec 2025
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="course-container">
+            <div class="course-details-grid">
+                <!-- Main Content Area (Left) -->
+                <div class="course-main-area">
+                    <!-- Preview Video -->
+                    <div class="preview-hero-section" id="previewVideoSection" style="display: none;">
+                        <div class="video-container">
+                            <iframe id="previewVideoFrame" width="100%" height="250" frameborder="0" loading="lazy"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
+                            </iframe>
+                        </div>
+                    </div>
+                    <!-- Tabbed Interface Section -->
+                    <div class="course-tabs-container">
+                        <div class="course-tabs-nav">
+                            <button class="tab-btn active" onclick="switchTab('about')">
+                                <span class="material-symbols-outlined">description</span>
+                                About Course
+                            </button>
+                            <button class="tab-btn" onclick="switchTab('ratings')">
+                                <span class="material-symbols-outlined">star</span>
+                                Ratings & Reviews
+                            </button>
+                        </div>
+
+                        <div class="tab-content">
+                            <!-- Tab 1: About & Content -->
+                            <div id="tab-about" class="tab-pane active">
+                                <div class="course-info-section">
+                                    <h3 class="pane-title">About Course</h3>
+                                    <div class="course-info-content">
+                                        <p id="courseDescription" class="course-description"></p>
+
+                                        <div class="course-highlights">
+                                            <div class="highlight-item">
+                                                <span class="material-symbols-outlined">schedule</span>
+                                                <div>
+                                                    <span class="highlight-label">Duration</span>
+                                                    <span class="highlight-value" id="courseDuration">0 Hours</span>
+                                                </div>
+                                            </div>
+                                            <div class="highlight-item">
+                                                <span class="material-symbols-outlined">signal_cellular_alt</span>
+                                                <div>
+                                                    <span class="highlight-label">Level</span>
+                                                    <span class="highlight-value" id="courseLevel">All Levels</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Course Content moved inside the first tab -->
+                                <div class="course-content-section">
+                                    <h3 class="pane-title">
+                                        <span class="material-symbols-outlined">menu_book</span>
+                                        Course Content
+                                    </h3>
+                                    <div id="chaptersContainer" class="chapters-container">
+                                        <!-- Chapters will be dynamically added here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 2: Ratings & Reviews -->
+                            <div id="tab-ratings" class="tab-pane">
+                                <div class="ratings-overview-section">
+                                    <h3 class="pane-title">Student Ratings</h3>
+                                    <div class="ratings-stats-container">
+                                        <div class="rating-average-box">
+                                            <span class="avg-score">4.78</span>
+                                            <div class="stars-display">
+                                                <span class="material-symbols-outlined">star</span>
+                                                <span class="material-symbols-outlined">star</span>
+                                                <span class="material-symbols-outlined">star</span>
+                                                <span class="material-symbols-outlined">star</span>
+                                                <span class="material-symbols-outlined">star</span>
+                                            </div>
+                                            <span class="total-reviews">56+ Ratings</span>
+                                        </div>
+                                        <div class="rating-bars-container">
+                                            <div class="rating-bar-item">
+                                                <span>5 stars</span>
+                                                <div class="progress-bar-bg">
+                                                    <div class="progress-fill" style="width: 85%;"></div>
+                                                </div>
+                                                <span>85%</span>
+                                            </div>
+                                            <div class="rating-bar-item">
+                                                <span>4 stars</span>
+                                                <div class="progress-bar-bg">
+                                                    <div class="progress-fill" style="width: 10%;"></div>
+                                                </div>
+                                                <span>10%</span>
+                                            </div>
+                                            <div class="rating-bar-item">
+                                                <span>3 stars</span>
+                                                <div class="progress-bar-bg">
+                                                    <div class="progress-fill" style="width: 4%;"></div>
+                                                </div>
+                                                <span>4%</span>
+                                            </div>
+                                            <div class="rating-bar-item">
+                                                <span>2 stars</span>
+                                                <div class="progress-bar-bg">
+                                                    <div class="progress-fill" style="width: 1%;"></div>
+                                                </div>
+                                                <span>1%</span>
+                                            </div>
+                                            <div class="rating-bar-item">
+                                                <span>1 star</span>
+                                                <div class="progress-bar-bg">
+                                                    <div class="progress-fill" style="width: 0%;"></div>
+                                                </div>
+                                                <span>0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="student-reviews-section">
+                                    <h3 class="pane-title">University Student Reviews</h3>
+                                    <div class="reviews-grid">
+                                        <div class="review-card">
+                                            <div class="review-header">
+                                                <div class="student-avatar">AB</div>
+                                                <div class="student-meta">
+                                                    <h4>Amine B.</h4>
+                                                    <span>Informatique, USTHB</span>
+                                                </div>
+                                                <div class="review-stars">
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                </div>
+                                            </div>
+                                            <p class="review-text">"Excellent course! The algorithms are explained in a
+                                                very clear way with concrete examples. Perfect for exam preparation."
+                                            </p>
+                                        </div>
+                                        <div class="review-card">
+                                            <div class="review-header">
+                                                <div class="student-avatar">SL</div>
+                                                <div class="student-meta">
+                                                    <h4>Sarah L.</h4>
+                                                    <span>ESI Alger</span>
+                                                </div>
+                                                <div class="review-stars">
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                </div>
+                                            </div>
+                                            <p class="review-text">"I finally understood algorithmic complexity. The
+                                                course structure is logical and progressive. Thanks Akram!"</p>
+                                        </div>
+                                        <div class="review-card">
+                                            <div class="review-header">
+                                                <div class="student-avatar">YK</div>
+                                                <div class="student-meta">
+                                                    <h4>Yacine K.</h4>
+                                                    <span>Université de Constantine</span>
+                                                </div>
+                                                <div class="review-stars">
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star</span>
+                                                    <span class="material-symbols-outlined">star_half</span>
+                                                </div>
+                                            </div>
+                                            <p class="review-text">"Rich and well-presented content. The exercises
+                                                helped me a lot in data structures lab."</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar (Right) -->
+                <aside class="course-sidebar">
+                    <div class="sidebar-sticky-content">
+
+                        <!-- Pricing & CTA -->
+                        <div class="price-cta-section sidebar-box">
+                            <div class="price-box">
+                                <span class="price-label">Course Price</span>
+                                <span id="coursePrice" class="price">0 DA</span>
+                            </div>
+                            <div class="cta-actions">
+                                <button class="btn-enroll-primary w-100" onclick="buyNow()">
+                                    <span class="material-symbols-outlined">bolt</span>
+                                    Join Now
+                                </button>
+                                <button class="btn-add-to-cart-small w-100 mt-2" onclick="addToCheckout()">
+                                    <span class="material-symbols-outlined">shopping_cart</span>
+                                    Add to cart
+                                </button>
+                            </div>
+
+                            <div class="course-guarantees mt-4">
+                                <div class="guarantee-item">
+                                    <span class="material-symbols-outlined guarantee-icon">verified_user</span>
+                                    <span>Lifetime access</span>
+                                </div>
+                                <div class="guarantee-item">
+                                    <span class="material-symbols-outlined guarantee-icon">workspace_premium</span>
+                                    <span>Certificate included</span>
+                                </div>
+                                <div class="guarantee-item">
+                                    <span class="material-symbols-outlined guarantee-icon">devices</span>
+                                    <span>Access on mobile and PC</span>
+                                </div>
+                            </div>
+                            <div class="certificate-preview-box sidebar-box mt-4">
+                                <h3 class="box-title">
+                                    <span class="material-symbols-outlined">workspace_premium</span>
+                                    Certificate of Completion
+                                </h3>
+                                <div class="cert-image-container">
+                                    <img src="/images/certificate-sample.png" alt="DevAcademy Certificate"
+                                        class="cert-preview-img"
+                                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/2912/2912761.png'; this.style.opacity='0.5';">
+                                    <div class="cert-overlay">
+                                        <span class="material-symbols-outlined">zoom_in</span>
+                                    </div>
+                                </div>
+                                <p class="cert-text">
+                                    <strong>Get a certificate:</strong> Add this certificate to your CV to demonstrate
+                                    your skills and increase your chances of being noticed.
+                                </p>
+                            </div>
+
+                        </div>
+                </aside>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
 
-  <script src="/course-view.js"></script>
+        <!-- Free Lesson Preview Modal -->
+        <div class="modal fade" id="freeLessonModal" tabindex="-1" aria-labelledby="freeLessonModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content free-lesson-modal-content">
+                    <div class="modal-header free-lesson-modal-header">
+                        <h3 class="modal-title" id="freeLessonModalLabel">
+                            <span class="material-symbols-outlined">play_circle</span>
+                            <span id="modalLessonTitle">Free Preview</span>
+                        </h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body free-lesson-modal-body">
+                        <div class="free-video-container">
+                            <iframe id="modalVideoFrame" width="100%" height="500" frameborder="0" loading="lazy"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen referrerpolicy="strict-origin-when-cross-origin">
+                            </iframe>
+                        </div>
+                        <div class="free-lesson-description" id="modalLessonDescription">
+                            <div class="description-icon">
+                                <span class="material-symbols-outlined">info</span>
+                            </div>
+                            <div class="description-content">
+                                <h4>About This Lesson</h4>
+                                <p id="modalDescriptionText"></p>
+                            </div>
+                        </div>
+                        <div class="motivation-section">
+                            <div class="motivation-icon">
+                                <span class="material-symbols-outlined">rocket_launch</span>
+                            </div>
+                            <div class="motivation-content">
+                                <h4>🎯 Ready to Master This Course?</h4>
+                                <p>This is just a taste of what you'll learn! Enroll now to unlock all lessons,
+                                    downloadable resources,
+                                    and earn your certificate of completion.</p>
+                                <div class="motivation-benefits">
+                                    <div class="benefit-item">
+                                        <span class="material-symbols-outlined">check_circle</span>
+                                        <span>Full Course Access</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="material-symbols-outlined">check_circle</span>
+                                        <span>Lifetime Updates</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="material-symbols-outlined">check_circle</span>
+                                        <span>Certificate of Completion</span>
+                                    </div>
+                                    <div class="benefit-item">
+                                        <span class="material-symbols-outlined">check_circle</span>
+                                        <span>Expert Support</span>
+                                    </div>
+                                </div>
+                                <button class="btn-enroll-modal" onclick="enrollCourse()">
+                                    <span class="material-symbols-outlined">shopping_bag</span>
+                                    Enroll in This Course Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
+    <!-- Compact Small Footer -->
+    <footer class="main-footer small-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <span class="material-symbols-outlined logo-icon">code_blocks</span>
+                        <span class="logo-text">DevAcademy</span>
+                    </div>
+                </div>
+
+                <div class="footer-center">
+                    <ul class="footer-compact-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/course">All Courses</a></li>
+                        <li><a href="tel:+213540921726" class="footer-phone-link">
+                                <span class="material-symbols-outlined">call</span>
+                                +213 540 921 726
+                            </a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-right">
+                    <div class="footer-social-links">
+                        <a href="https://wa.me/213540921726" target="_blank" title="WhatsApp"><i
+                                class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/devacademy__/" target="_blank" title="Instagram"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://t.me/+uv8hLl55DdMzNTg0" target="_blank" title="Telegram"><i
+                                class="fab fa-telegram"></i></a>
+                        <a href="https://web.facebook.com/profile.php?id=61576897061264" target="_blank"
+                            title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                    <p class="copyright-text-compact">&copy; 2025 DevAcademy. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating 'Join Now' CTA Button -->
+    <a href="javascript:void(0)" class="floating-join-cta" onclick="buyNow()">
+        <span class="material-symbols-outlined">bolt</span>
+        <span class="join-text">Join Now</span>
+    </a>
+
+    <a href="/payment/checkout" class="floating-checkout-btn" title="Go to Checkout">
+        <span class="material-symbols-outlined">shopping_cart_checkout</span>
+        <span class="cart-badge" id="cartBadgeFloat" style="display: none;">0</span>
+    </a>
+
+    <script src="/js/cart-utils.js"></script>
+    <script src="/course-view.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -13,9 +13,11 @@
   <link rel="icon" type="image/x-icon" href="/images/logo.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <style>
     * {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Outfit', sans-serif;
     }
   </style>
 </head>
@@ -26,8 +28,11 @@
       <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
-        <li><a href="/course">Courses</a></li>
         <li><a href="/quiz">Quiz</a></li>
+        <li><a href="/payment/checkout" class="cart-link" title="Checkout">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            <span class="cart-badge" id="cartBadgeNav" style="display: none;">0</span>
+          </a></li>
         {{!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             English
@@ -59,7 +64,7 @@
           <div class="offcanvas-body">
 
             <a href="/">Home</a>
-            <a href="/course">Courses</a>
+
             <a href="/quiz">Quiz</a>
             {{!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -117,6 +122,9 @@
       <div class="course" data-course-id="{{course_id}}">
         <a href="/course/course-view?id={{course_id}}" class="course-card-link">
           <div class="image-box">
+            <button class="add-cart-btn" onclick="addToCart(event, '{{course_id}}')" title="Add to Checkout">
+              <span class="material-symbols-outlined">shopping_cart</span>
+            </button>
             <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
             <div class="price-badge">{{price}} DA</div>
           </div>
@@ -165,6 +173,7 @@
     <p>All rights reserved © 2025 DevAcademy</p>
   </section>
 
+  <script src="/js/cart-utils.js"></script>
   <script src="/course.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

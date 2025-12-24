@@ -1,0 +1,384 @@
+/* Payment Modal Styles */
+
+#paymentModal .modal-content {
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#paymentModal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+#paymentModal .modal-title {
+  color: white;
+}
+
+#paymentModal .btn-close {
+  filter: invert(1);
+}
+
+#paymentModal .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.payment-course-info {
+  background: linear-gradient(135deg, #7b09cd 0%, #9d4edd 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+
+.payment-course-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.payment-amount {
+  text-align: right;
+}
+
+.amount-label {
+  display: block;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.amount-value {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+/* Payment Methods List - Vertical Stack */
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payment-method-card {
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 80px;
+}
+
+.payment-method-card:hover {
+  border-color: rgba(123, 9, 205, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 9, 205, 0.2);
+}
+
+.payment-method-card:has(input[type="radio"]:checked) {
+  border-color: #9d4edd;
+  background: linear-gradient(135deg, rgba(157, 78, 221, 0.15) 0%, rgba(123, 9, 205, 0.15) 100%);
+  box-shadow: 0 4px 20px rgba(157, 78, 221, 0.3);
+}
+
+.whatsapp-card:has(input[type="radio"]:checked) {
+  border-color: #25D366;
+  background: linear-gradient(135deg, rgba(37, 211, 102, 0.15) 0%, rgba(18, 140, 126, 0.15) 100%);
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+}
+
+/* Radio Button Styling */
+.method-radio {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.method-radio input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: transparent;
+  position: relative;
+}
+
+.method-radio input[type="radio"]:checked {
+  border-color: #9d4edd;
+  background: #9d4edd;
+}
+
+.method-radio input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.whatsapp-card .method-radio input[type="radio"]:checked {
+  border-color: #25D366;
+  background: #25D366;
+}
+
+.method-radio label {
+  display: none;
+}
+
+/* Method Icon */
+.method-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7b09cd 0%, #9d4edd 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.whatsapp-icon {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+.flexy-icon {
+  background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
+}
+
+/* Method Content */
+.method-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.method-title {
+  font-weight: 600;
+  color: white;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.method-gateway {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  margin-left: 0.5rem;
+  display: inline-block;
+}
+
+.method-gateway span {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+/* Payment Tooltip */
+.payment-tooltip {
+  position: relative;
+}
+
+.payment-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.payment-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.payment-tooltip:hover::after,
+.payment-tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Legacy support - keep for backward compatibility */
+.method-info h6 {
+  margin: 0;
+  font-weight: 600;
+  color: white;
+}
+
+.method-info p {
+  margin: 0.25rem 0 0 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Payment Info Display */
+.payment-info-display {
+  background: #f8f9fa;
+  border-left: 4px solid #7b09cd;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.payment-info-display h6 {
+  color: #7b09cd;
+  margin-bottom: 0.5rem;
+}
+
+.payment-info-display ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.payment-info-display li {
+  padding: 0.25rem 0;
+}
+
+/* Proof Upload Section */
+.proof-upload-section {
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+}
+
+.proof-upload-section h6 {
+  color: #9d4edd;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.proof-upload-section .form-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.proof-upload-section .form-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.proof-upload-section .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.proof-upload-section .form-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#paymentModal .alert {
+  background: rgba(123, 9, 205, 0.1);
+  border: 1px solid rgba(123, 9, 205, 0.3);
+  color: white;
+}
+
+#paymentModal .alert-danger {
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  color: #ff6b6b;
+}
+
+#proofPreviewImg {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+/* Nav Pills Customization */
+.nav-pills .nav-link {
+  color: #666;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: rgba(123, 9, 205, 0.1);
+  color: #7b09cd;
+}
+
+.nav-pills .nav-link.active {
+  background: linear-gradient(135deg, #7b09cd 0%, #9d4edd 100%);
+  color: white;
+}
+
+.nav-pills .nav-link .material-symbols-outlined {
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .payment-methods-list {
+    gap: 0.75rem;
+  }
+  
+  .payment-method-card {
+    padding: 1rem;
+    min-height: 70px;
+  }
+  
+  .method-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .method-title {
+    font-size: 0.9rem;
+  }
+  
+  .method-gateway {
+    margin-left: 0;
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .method-gateway span {
+    font-size: 0.75rem;
+  }
+  
+  .payment-course-info .d-flex {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .payment-amount {
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
+

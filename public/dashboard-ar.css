@@ -347,6 +347,15 @@ nav ul li a:hover {
   margin-bottom: 30px;
 }
 
+/* ========= My Orders section ========== */
+.myOrders {
+  width: 100%;
+  padding: 20px;
+  text-align: right;
+  direction: rtl;
+}
+
+
 .container {
   display: flex;
   flex-direction: row;
@@ -400,7 +409,8 @@ nav ul li a:hover {
   .first-section {
     padding: 10px;
   }
-  .welcome-div{
+
+  .welcome-div {
     margin-top: 20px;
     margin-bottom: 30px !important;
   }
@@ -411,34 +421,102 @@ nav ul li a:hover {
     gap: 10px;
     margin-bottom: 40px !important;
   }
-  .statistic .card{
+
+  .statistic .card {
     margin-bottom: 5px !important;
     width: 180px !important;
   }
-  .recent-course{
+
+  .recent-course {
     margin-bottom: 10px !important;
   }
-  .recent-course .top-content{
+
+  .recent-course .top-content {
     margin-bottom: 10px;
   }
-  .myCourse .courses{
+
+  .myCourse .courses {
     height: 30vh;
     padding: 10px;
   }
 
-  .profile .container{
+  .profile .container {
     display: flex;
     flex-direction: column;
     width: 100%;
     padding: 0;
   }
-  .profile .information-div{
-    width: 100%;
-    margin-bottom: 20px !important;
-  }
-  .profile .password-div{
+
+  .profile .information-div {
     width: 100%;
     margin-bottom: 20px !important;
   }
 
+  .profile .password-div {
+    width: 100%;
+    margin-bottom: 20px !important;
+  }
+
+}
+
+/* Cart Badge & Link Styles */
+.cart-link {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: black;
+  text-decoration: none;
+}
+
+.cart-link:hover {
+  color: #7b09cd;
+  transform: translateY(-2px);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ef4444;
+  /* danger color */
+  color: white;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border: 1.5px solid white;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.badge-pulse {
+  animation: badge-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes badge-pop {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links .cart-link {
+    margin-left: 15px;
+  }
 }

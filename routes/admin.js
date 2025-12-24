@@ -3,13 +3,14 @@ const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const conn = require('../config/db');
+const youtubeService = require('../services/youtubeService');
 
 // Multer setup to store file in memory (better for Cloudinary)
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   limits: {
-    fileSize: 5 * 1024 * 1024 // 5MB limit
+    fileSize: 5 * 1024 * 1024 // 5MB limit for images
   },
   fileFilter: (req, file, cb) => {
     // Accept only image files
@@ -17,6 +18,23 @@ const upload = multer({
       cb(null, true);
     } else {
       cb(new Error('Only image files are allowed!'), false);
+    }
+  }
+});
+
+// Multer setup for video uploads (larger file size limit)
+const videoStorage = multer.memoryStorage();
+const uploadVideo = multer({
+  storage: videoStorage,
+  limits: {
+    fileSize: 2 * 1024 * 1024 * 1024 // 2GB limit for videos
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept video files
+    if (file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only video files are allowed!'), false);
     }
   }
 });
@@ -376,8 +394,10 @@ router.post('/api/chapters/:chapterId/lessons', (req, res) => {
 
     const newOrder = (result[0]?.maxOrder || 0) + 1;
     const created_at = new Date();
-    const insertSql = 'INSERT INTO lessons (chapitre_id, title, content_type, content_url, text_content, duration_minutes, order_number, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-    conn.query(insertSql, [chapterId, title.trim(), 'video', videoUrl.trim(), '', '0', newOrder, created_at], (err, result) => {
+    const isFreeValue = req.body.isFree === true || req.body.isFree === 'true' || req.body.isFree === 1 || req.body.isFree === '1' ? 1 : 0;
+
+    const insertSql = 'INSERT INTO lessons (chapitre_id, title, content_type, content_url, text_content, duration_minutes, order_number, created_at, is_free) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    conn.query(insertSql, [chapterId, title.trim(), 'video', videoUrl.trim(), '', '0', newOrder, created_at, isFreeValue], (err, result) => {
       if (err) {
         console.error(err);
         return res.status(500).json({ success: false, message: 'Server error' });
@@ -453,7 +473,7 @@ router.put('/api/lessons/:lessonId/order', (req, res) => {
 // API: Update lesson title and video URL
 router.put('/api/lessons/:lessonId', (req, res) => {
   const lessonId = req.params.lessonId;
-  const { title, videoUrl } = req.body;
+  const { title, videoUrl, isFree } = req.body;
 
   if (!title || !title.trim()) {
     return res.json({ success: false, message: 'Lesson title is required' });
@@ -463,8 +483,10 @@ router.put('/api/lessons/:lessonId', (req, res) => {
     return res.json({ success: false, message: 'Video URL is required' });
   }
 
-  const sql = 'UPDATE lessons SET title = ?, content_url = ? WHERE lesson_id = ?';
-  conn.query(sql, [title.trim(), videoUrl.trim(), lessonId], (err, result) => {
+  const isFreeValue = isFree === true || isFree === 'true' || isFree === 1 || isFree === '1' ? 1 : 0;
+
+  const sql = 'UPDATE lessons SET title = ?, content_url = ?, is_free = ? WHERE lesson_id = ?';
+  conn.query(sql, [title.trim(), videoUrl.trim(), isFreeValue, lessonId], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ success: false, message: 'Server error' });
@@ -480,7 +502,7 @@ router.put('/api/lessons/:lessonId', (req, res) => {
 
 // API: Get all clients
 router.get('/api/clients', (req, res) => {
-  const sql = 'SELECT id, fullname, email FROM client ORDER BY id DESC';
+  const sql = 'SELECT id, fullname, email, membership_tier, membership_expiry, membership_status FROM client ORDER BY id DESC';
   conn.query(sql, (err, result) => {
     if (err) {
       console.error(err);
@@ -601,6 +623,84 @@ router.post('/api/clients/add-course', (req, res) => {
         res.json({ success: true, message: 'Course added to client successfully' });
       });
     }
+  });
+});
+
+// API: Manually give membership to client
+router.post('/api/clients/give-membership', (req, res) => {
+  const { clientId, tier, duration } = req.body;
+
+  if (!clientId || !tier) {
+    return res.json({ success: false, message: 'Client ID and Tier are required' });
+  }
+
+  // Calculate expiry date
+  let expiryDate = null;
+  if (duration === 'infinite') {
+    expiryDate = new Date();
+    expiryDate.setFullYear(expiryDate.getFullYear() + 100);
+  } else if (duration) {
+    expiryDate = new Date();
+    expiryDate.setMonth(expiryDate.getMonth() + parseInt(duration));
+  }
+
+  // 1. Update client table
+  const updateClientSql = `
+    UPDATE client 
+    SET membership_tier = ?, 
+        membership_expiry = ?, 
+        membership_status = 'active' 
+    WHERE id = ?
+  `;
+
+  conn.query(updateClientSql, [tier, expiryDate, clientId], (err) => {
+    if (err) {
+      console.error('Error updating client membership:', err);
+      return res.status(500).json({ success: false, message: 'Server error updating client' });
+    }
+
+    // 2. Log in payments table for tracking
+    const amount = tier === 'Pro' ? 2900 : tier === 'VIP' ? 5900 : 0;
+    const insertPaymentSql = `
+      INSERT INTO payments 
+      (client_id, amount, payment_method, status, created_at, completed_at, payment_type, membership_plan) 
+      VALUES (?, ?, 'manual_admin', 'completed', NOW(), NOW(), 'membership', ?)
+    `;
+
+    conn.query(insertPaymentSql, [clientId, amount, tier], (err) => {
+      if (err) {
+        console.error('Error logging membership payment:', err);
+      }
+      res.json({
+        success: true,
+        message: `Membership ${tier} assigned successfully until ${expiryDate ? expiryDate.toLocaleDateString() : 'N/A'}`
+      });
+    });
+  });
+});
+
+// API: Manually remove/revoke membership from client
+router.post('/api/clients/remove-membership', (req, res) => {
+  const { clientId } = req.body;
+
+  if (!clientId) {
+    return res.json({ success: false, message: 'Client ID is required' });
+  }
+
+  const updateSql = `
+    UPDATE client 
+    SET membership_tier = 'Free', 
+        membership_expiry = NULL, 
+        membership_status = 'none' 
+    WHERE id = ?
+  `;
+
+  conn.query(updateSql, [clientId], (err) => {
+    if (err) {
+      console.error('Error removing membership:', err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, message: 'Membership revoked successfully. User is now back to Free tier.' });
   });
 });
 
@@ -777,6 +877,36 @@ router.get('/api/purchases', (req, res) => {
     res.json({ success: true, purchases: result });
   });
 });
+
+// API: Toggle purchase payment status
+router.put('/api/purchases/:id/toggle-status', (req, res) => {
+  const purchaseId = req.params.id;
+  const { paid } = req.body;
+
+  const sql = 'UPDATE purchases SET paid = ? WHERE id = ?';
+  conn.query(sql, [paid, purchaseId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, message: 'Status updated successfully' });
+  });
+});
+
+// API: Delete purchase
+router.delete('/api/purchases/:id', (req, res) => {
+  const purchaseId = req.params.id;
+
+  const sql = 'DELETE FROM purchases WHERE id = ?';
+  conn.query(sql, [purchaseId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, message: 'Purchase deleted successfully' });
+  });
+});
+
 
 // API: Get dashboard statistics
 router.get('/api/stats', (req, res) => {
@@ -1307,6 +1437,820 @@ router.get('/api/ad-campaigns/monthly-breakdown', (req, res) => {
       return res.status(500).json({ success: false, message: 'Server error' });
     }
     res.json({ success: true, monthlyBreakdown: result });
+  });
+});
+
+// ==========================================
+// Interactive Learning ADMIN Routes
+// ==========================================
+
+// Get all interactive paths
+router.get('/api/interactive/paths', (req, res) => {
+  const sql = 'SELECT * FROM learning_paths ORDER BY created_at DESC';
+  conn.query(sql, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, paths: result });
+  });
+});
+
+// Get single Learning Path
+router.get('/api/interactive/paths/:pathId', (req, res) => {
+  const pathId = req.params.pathId;
+  const sql = 'SELECT * FROM learning_paths WHERE id = ?';
+  conn.query(sql, [pathId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    if (result.length === 0) {
+      return res.json({ success: false, message: 'Path not found' });
+    }
+    res.json({ success: true, path: result[0] });
+  });
+});
+
+// Create new Learning Path
+router.post('/api/interactive/paths', (req, res) => {
+  const { title, description, language } = req.body;
+
+  if (!title || !language) {
+    return res.json({ success: false, message: 'Title and Language are required' });
+  }
+
+  const sql = 'INSERT INTO learning_paths (title, description, programming_language) VALUES (?, ?, ?)';
+  conn.query(sql, [title, description || '', language], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: 'Database error: ' + err.message });
+    }
+    res.json({ success: true, message: 'Roadmap created successfully', pathId: result.insertId });
+  });
+});
+
+// Update Learning Path
+router.put('/api/interactive/paths/:pathId', (req, res) => {
+  const pathId = req.params.pathId;
+  const { title, description, language } = req.body;
+
+  if (!title || !language) {
+    return res.json({ success: false, message: 'Title and Language are required' });
+  }
+
+  const sql = 'UPDATE learning_paths SET title = ?, description = ?, programming_language = ? WHERE id = ?';
+  conn.query(sql, [title, description || '', language, pathId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Database error: ' + err.message });
+    }
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Path not found' });
+    }
+    res.json({ success: true, message: 'Roadmap updated successfully' });
+  });
+});
+
+// Delete Learning Path
+router.delete('/api/interactive/paths/:pathId', (req, res) => {
+  const pathId = req.params.pathId;
+
+  // First, delete all lessons linked to this path
+  const deletePathLessonsSql = 'DELETE FROM path_lessons WHERE path_id = ?';
+  conn.query(deletePathLessonsSql, [pathId], (err) => {
+    if (err) {
+      console.error('Error deleting path lessons:', err);
+      return res.status(500).json({ success: false, message: 'Error deleting path lessons' });
+    }
+
+    // Then delete the path itself
+    const deletePathSql = 'DELETE FROM learning_paths WHERE id = ?';
+    conn.query(deletePathSql, [pathId], (err, result) => {
+      if (err) {
+        console.error('Error deleting path:', err);
+        return res.status(500).json({ success: false, message: 'Database error: ' + err.message });
+      }
+      if (result.affectedRows === 0) {
+        return res.json({ success: false, message: 'Path not found' });
+      }
+      res.json({ success: true, message: 'Roadmap deleted successfully' });
+    });
+  });
+});
+
+// Get lessons for a path
+router.get('/api/interactive/paths/:pathId/lessons', (req, res) => {
+  const pathId = req.params.pathId;
+  const sql = `
+        SELECT l.*, pl.order_number 
+        FROM path_lessons pl
+        JOIN lessons l ON pl.lesson_id = l.lesson_id
+        WHERE pl.path_id = ?
+        ORDER BY pl.order_number ASC
+    `;
+  conn.query(sql, [pathId], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    res.json({ success: true, lessons: result });
+  });
+});
+
+// Create Interactive Lesson
+router.post('/api/interactive/lesson', (req, res) => {
+  const {
+    pathId,
+    title,
+    description, // code_challenge
+    starterCode,
+    solutionCode,
+    expectedOutput,
+    validationType, // regex_match, output_match, etc.
+    hints, // Array of strings or JSON string
+    language,
+    orderNumber,
+    isFree
+  } = req.body;
+
+  if (!title || !pathId) {
+    return res.json({ success: false, message: 'Title and Path are required' });
+  }
+
+  // Default chapter ID (assuming 1 exists as catch-all)
+  const chapitreId = 1;
+
+  // Handle hints input (could be array or string)
+  let hintsJson = '[]';
+  try {
+    if (Array.isArray(hints)) {
+      hintsJson = JSON.stringify(hints);
+    } else if (typeof hints === 'string') {
+      // Check if it's strictly a JSON string or comma-separated
+      if (hints.trim().startsWith('[')) {
+        hintsJson = hints;
+      } else {
+        hintsJson = JSON.stringify(hints.split('\n').filter(h => h.trim()));
+      }
+    }
+  } catch (e) {
+    hintsJson = '[]';
+  }
+
+  const isFreeValue = (isFree === true || isFree === 'true' || isFree === 1) ? 1 : 0;
+
+  const insertLessonSql = `
+        INSERT INTO lessons (
+            chapitre_id, title, lesson_type, content_type, 
+            code_challenge, starter_code, solution_code, 
+            expected_output, validation_type, hints, 
+            programming_language, created_at, text_content, duration_minutes, order_number, is_free, content_url
+        ) VALUES (?, ?, 'interactive_code', 'text', ?, ?, ?, ?, ?, ?, ?, NOW(), '', 15, ?, ?, '')
+    `;
+
+  conn.query(insertLessonSql, [
+    chapitreId, title, description, starterCode, solutionCode,
+    expectedOutput, validationType || 'output_match', hintsJson,
+    language || 'javascript', orderNumber || 0, isFreeValue
+  ], (err, result) => {
+    if (err) {
+      console.error('Error inserting lesson:', err);
+      return res.status(500).json({ success: false, message: 'Error creating lesson: ' + err.message });
+    }
+
+    const lessonId = result.insertId;
+
+    // Link to Path
+    const linkSql = 'INSERT INTO path_lessons (path_id, lesson_id, order_number) VALUES (?, ?, ?)';
+    conn.query(linkSql, [pathId, lessonId, orderNumber || 0], (err) => {
+      if (err) {
+        console.error('Error linking path:', err);
+        return res.status(500).json({ success: false, message: 'Lesson created but failed to link into path' });
+      }
+      res.json({ success: true, message: 'Lesson created successfully', lessonId });
+    });
+  });
+});
+
+// Get single Interactive Lesson
+router.get('/api/interactive/lesson/:lessonId', (req, res) => {
+  const lessonId = req.params.lessonId;
+  const sql = 'SELECT * FROM lessons WHERE lesson_id = ? AND lesson_type = "interactive_code"';
+  conn.query(sql, [lessonId], (err, result) => {
+    if (err) {
+      console.error('Error fetching lesson:', err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+    if (result.length === 0) {
+      return res.json({ success: false, message: 'Lesson not found' });
+    }
+
+    // Parse hints if it's a JSON string
+    const lesson = result[0];
+    if (lesson.hints && typeof lesson.hints === 'string') {
+      try {
+        lesson.hints = JSON.parse(lesson.hints);
+      } catch (e) {
+        lesson.hints = [];
+      }
+    }
+
+    res.json({ success: true, lesson });
+  });
+});
+
+// Update Interactive Lesson
+router.put('/api/interactive/lesson/:lessonId', (req, res) => {
+  const lessonId = req.params.lessonId;
+  const {
+    title,
+    description,
+    starterCode,
+    solutionCode,
+    expectedOutput,
+    validationType,
+    hints,
+    orderNumber,
+    isFree
+  } = req.body;
+
+  if (!title) {
+    return res.json({ success: false, message: 'Title is required' });
+  }
+
+  // Handle hints input
+  let hintsJson = '[]';
+  try {
+    if (Array.isArray(hints)) {
+      hintsJson = JSON.stringify(hints);
+    } else if (typeof hints === 'string') {
+      if (hints.trim().startsWith('[')) {
+        hintsJson = hints;
+      } else {
+        hintsJson = JSON.stringify(hints.split('\n').filter(h => h.trim()));
+      }
+    }
+  } catch (e) {
+    hintsJson = '[]';
+  }
+
+  const isFreeValue = (isFree === true || isFree === 'true' || isFree === 1) ? 1 : 0;
+
+  const updateSql = `
+    UPDATE lessons SET 
+      title = ?,
+      code_challenge = ?,
+      starter_code = ?,
+      solution_code = ?,
+      expected_output = ?,
+      validation_type = ?,
+      hints = ?,
+      order_number = ?,
+      is_free = ?
+    WHERE lesson_id = ? AND lesson_type = 'interactive_code'
+  `;
+
+  conn.query(updateSql, [
+    title,
+    description || '',
+    starterCode || '',
+    solutionCode || '',
+    expectedOutput || '',
+    validationType || 'output_match',
+    hintsJson,
+    orderNumber || 0,
+    isFreeValue,
+    lessonId
+  ], (err, result) => {
+    if (err) {
+      console.error('Error updating lesson:', err);
+      return res.status(500).json({ success: false, message: 'Database error: ' + err.message });
+    }
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Lesson not found' });
+    }
+
+    // Also update order_number in path_lessons if orderNumber changed
+    if (orderNumber !== undefined) {
+      const updatePathLessonSql = 'UPDATE path_lessons SET order_number = ? WHERE lesson_id = ?';
+      conn.query(updatePathLessonSql, [orderNumber, lessonId], (err2) => {
+        if (err2) console.error('Error updating path_lessons order:', err2);
+      });
+    }
+
+    res.json({ success: true, message: 'Lesson updated successfully' });
+  });
+});
+
+// Duplicate Interactive Lesson
+router.post('/api/interactive/lesson/:lessonId/duplicate', (req, res) => {
+  const lessonId = req.params.lessonId;
+
+  // Get the original lesson
+  const getLessonSql = 'SELECT * FROM lessons WHERE lesson_id = ? AND lesson_type = "interactive_code"';
+  conn.query(getLessonSql, [lessonId], (err, result) => {
+    if (err || result.length === 0) {
+      return res.status(500).json({ success: false, message: 'Lesson not found' });
+    }
+
+    const originalLesson = result[0];
+
+    // Get path_id from path_lessons
+    const getPathSql = 'SELECT path_id, order_number FROM path_lessons WHERE lesson_id = ?';
+    conn.query(getPathSql, [lessonId], (err2, pathResult) => {
+      if (err2 || pathResult.length === 0) {
+        return res.status(500).json({ success: false, message: 'Path not found for this lesson' });
+      }
+
+      const { path_id, order_number } = pathResult[0];
+      const chapitreId = originalLesson.chapitre_id || 1;
+
+      // Insert duplicated lesson
+      const insertLessonSql = `
+        INSERT INTO lessons (
+          chapitre_id, title, lesson_type, content_type, 
+          code_challenge, starter_code, solution_code, 
+          expected_output, validation_type, hints, 
+          programming_language, created_at, text_content, duration_minutes, order_number, is_free, content_url
+        ) VALUES (?, ?, 'interactive_code', 'text', ?, ?, ?, ?, ?, ?, ?, NOW(), '', 15, ?, ?, ?)
+      `;
+
+      const newTitle = originalLesson.title + ' (Copy)';
+      const newOrderNumber = (order_number || 0) + 1;
+
+      conn.query(insertLessonSql, [
+        chapitreId,
+        newTitle,
+        originalLesson.code_challenge || '',
+        originalLesson.starter_code || '',
+        originalLesson.solution_code || '',
+        originalLesson.expected_output || '',
+        originalLesson.validation_type || 'output_match',
+        originalLesson.hints || '[]',
+        originalLesson.programming_language || 'javascript',
+        newOrderNumber,
+        originalLesson.is_free || 0,
+        originalLesson.content_url || ''
+      ], (err3, insertResult) => {
+        if (err3) {
+          console.error('Error duplicating lesson:', err3);
+          return res.status(500).json({ success: false, message: 'Error duplicating lesson' });
+        }
+
+        const newLessonId = insertResult.insertId;
+
+        // Link to path
+        const linkSql = 'INSERT INTO path_lessons (path_id, lesson_id, order_number) VALUES (?, ?, ?)';
+        conn.query(linkSql, [path_id, newLessonId, newOrderNumber], (err4) => {
+          if (err4) {
+            console.error('Error linking duplicated lesson:', err4);
+            return res.status(500).json({ success: false, message: 'Lesson duplicated but failed to link to path' });
+          }
+          res.json({ success: true, message: 'Lesson duplicated successfully', lessonId: newLessonId });
+        });
+      });
+    });
+  });
+});
+
+// Delete Interactive Lesson
+router.delete('/api/interactive/lesson/:lessonId', (req, res) => {
+  const lessonId = req.params.lessonId;
+
+  // First delete from path_lessons junction table
+  const deletePathLessonSql = 'DELETE FROM path_lessons WHERE lesson_id = ?';
+  conn.query(deletePathLessonSql, [lessonId], (err) => {
+    if (err) {
+      console.error('Error deleting from path_lessons:', err);
+      return res.status(500).json({ success: false, message: 'Error deleting lesson link' });
+    }
+
+    // Then delete the lesson itself
+    const deleteLessonSql = 'DELETE FROM lessons WHERE lesson_id = ?';
+    conn.query(deleteLessonSql, [lessonId], (err2, result) => {
+      if (err2) {
+        console.error('Error deleting lesson:', err2);
+        return res.status(500).json({ success: false, message: 'Server error' });
+      }
+      if (result.affectedRows === 0) {
+        return res.json({ success: false, message: 'Lesson not found' });
+      }
+      res.json({ success: true, message: 'Lesson deleted successfully' });
+    });
+  });
+});
+
+// Bulk Delete Interactive Lessons
+router.delete('/api/interactive/lessons/bulk', (req, res) => {
+  const { lessonIds } = req.body;
+
+  if (!lessonIds || !Array.isArray(lessonIds) || lessonIds.length === 0) {
+    return res.status(400).json({ success: false, message: 'No lessons selected' });
+  }
+
+  // Create placeholders for SQL IN clause
+  const placeholders = lessonIds.map(() => '?').join(',');
+
+  // First delete from path_lessons junction table
+  const deletePathLessonsSql = `DELETE FROM path_lessons WHERE lesson_id IN (${placeholders})`;
+  conn.query(deletePathLessonsSql, lessonIds, (err1) => {
+    if (err1) {
+      console.error('Error deleting path_lessons:', err1);
+      return res.status(500).json({ success: false, message: 'Error deleting lesson links' });
+    }
+
+    // Then delete the lessons themselves
+    const sql = `DELETE FROM lessons WHERE lesson_id IN (${placeholders})`;
+    conn.query(sql, lessonIds, (err, result) => {
+      if (err) {
+        console.error('Error bulk deleting lessons:', err);
+        return res.status(500).json({ success: false, message: 'Server error' });
+      }
+
+      res.json({
+        success: true,
+        message: `${result.affectedRows} lesson(s) deleted successfully`,
+        deletedCount: result.affectedRows
+      });
+    });
+  });
+});
+
+// Toggle Learning Path Required Tier
+router.put('/api/interactive/paths/:pathId/toggle-tier', (req, res) => {
+  const pathId = req.params.pathId;
+  const { requiredTier } = req.body;
+
+  // Validate tier
+  const validTiers = ['Free', 'Pro', 'VIP'];
+  if (!validTiers.includes(requiredTier)) {
+    return res.json({ success: false, message: 'Invalid tier. Must be Free, Pro, or VIP' });
+  }
+
+  const sql = 'UPDATE learning_paths SET required_tier = ? WHERE id = ?';
+  conn.query(sql, [requiredTier, pathId], (err, result) => {
+    if (err) {
+      console.error('Error updating path tier:', err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Path not found' });
+    }
+
+    res.json({
+      success: true,
+      message: `Roadmap tier updated to ${requiredTier}`,
+      requiredTier
+    });
+  });
+});
+
+// Toggle Individual Lesson Free Status (Quick Toggle)
+router.put('/api/interactive/lesson/:lessonId/toggle-free', (req, res) => {
+  const lessonId = req.params.lessonId;
+  const { isFree } = req.body;
+
+  const isFreeValue = (isFree === true || isFree === 'true' || isFree === 1) ? 1 : 0;
+
+  const sql = 'UPDATE lessons SET is_free = ? WHERE lesson_id = ?';
+  conn.query(sql, [isFreeValue, lessonId], (err, result) => {
+    if (err) {
+      console.error('Error updating lesson free status:', err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.json({ success: false, message: 'Lesson not found' });
+    }
+
+    res.json({
+      success: true,
+      message: `Lesson ${isFreeValue ? 'set to free' : 'set to paid'}`,
+      isFree: isFreeValue
+    });
+  });
+});
+
+// YouTube OAuth and Upload Endpoints
+
+// Get YouTube OAuth URL
+router.get('/youtube/auth-url', (req, res) => {
+  if (!req.session.user) {
+    return res.json({ success: false, message: 'Unauthorized' });
+  }
+
+  try {
+    // Debug logging
+    console.log('YouTube Service:', typeof youtubeService);
+    if (youtubeService) {
+      console.log('Available functions:', Object.keys(youtubeService));
+    }
+
+    if (!process.env.YOUTUBE_CLIENT_ID || !process.env.YOUTUBE_CLIENT_SECRET) {
+      return res.json({
+        success: false,
+        message: 'YouTube API credentials not configured. Please set YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET in your .env file.'
+      });
+    }
+
+    const redirectUri = `${req.protocol}://${req.get('host')}/admin/youtube/callback`;
+
+    if (typeof youtubeService.getAuthUrl !== 'function') {
+      console.error('youtubeService.getAuthUrl is not a function. Current keys:', Object.keys(youtubeService));
+      throw new Error('youtubeService.getAuthUrl is not a function. Please restart the server.');
+    }
+
+    const authUrl = youtubeService.getAuthUrl(redirectUri);
+    res.json({ success: true, authUrl });
+  } catch (error) {
+    console.error('Error generating auth URL:', error);
+    res.json({ success: false, message: 'Failed to generate auth URL: ' + error.message });
+  }
+});
+
+// YouTube OAuth callback (Admin only - stores tokens in database)
+router.get('/youtube/callback', async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  const { code } = req.query;
+  if (!code) {
+    return res.redirect('/admin?error=youtube_auth_failed');
+  }
+
+  try {
+    const redirectUri = `${req.protocol}://${req.get('host')}/admin/youtube/callback`;
+    const tokens = await youtubeService.getTokensFromCode(code, redirectUri);
+
+    // Calculate expiry date (tokens typically expire in 1 hour)
+    const expiryDate = new Date();
+    expiryDate.setHours(expiryDate.getHours() + 1);
+
+    // Store tokens in database (replace any existing tokens)
+    const deleteSql = 'DELETE FROM youtube_tokens';
+    conn.query(deleteSql, async (err) => {
+      if (err) {
+        console.error('Error deleting old tokens:', err);
+      }
+
+      const insertSql = `
+        INSERT INTO youtube_tokens (access_token, refresh_token, expiry_date) 
+        VALUES (?, ?, ?)
+      `;
+      conn.query(insertSql, [tokens.access_token, tokens.refresh_token, expiryDate], (err) => {
+        if (err) {
+          console.error('Error storing tokens:', err);
+          return res.redirect('/admin?error=youtube_auth_failed');
+        }
+
+        // Also store in session for immediate use
+        req.session.youtubeTokens = tokens;
+        res.redirect('/admin?youtube_auth=success');
+      });
+    });
+  } catch (error) {
+    console.error('Error exchanging code for tokens:', error);
+    res.redirect('/admin?error=youtube_auth_failed');
+  }
+});
+
+// Upload video to YouTube (Uses admin's stored credentials - works for any authenticated user)
+router.post('/youtube/upload', uploadVideo.single('video'), async (req, res) => {
+  // Allow any authenticated user to upload (video goes to admin's YouTube channel)
+  if (!req.session.user) {
+    return res.json({ success: false, message: 'Unauthorized' });
+  }
+
+  if (!req.file) {
+    return res.json({ success: false, message: 'No video file provided' });
+  }
+
+  const { title, description } = req.body;
+
+  try {
+    // Get tokens from database (admin's credentials)
+    const getTokensSql = 'SELECT * FROM youtube_tokens ORDER BY id DESC LIMIT 1';
+    conn.query(getTokensSql, async (err, results) => {
+      if (err) {
+        console.error('Error fetching tokens:', err);
+        return res.json({
+          success: false,
+          message: 'Database error',
+          needsAuth: true
+        });
+      }
+
+      if (!results || results.length === 0) {
+        return res.json({
+          success: false,
+          message: 'Video upload service is not configured. Please contact administrator.',
+          needsAuth: true
+        });
+      }
+
+      const tokenData = results[0];
+      let accessToken = tokenData.access_token;
+      const refreshToken = tokenData.refresh_token;
+      const expiryDate = new Date(tokenData.expiry_date);
+
+      // Check if token is expired or about to expire (within 5 minutes)
+      const now = new Date();
+      const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60 * 1000);
+
+      if (expiryDate < fiveMinutesFromNow && refreshToken) {
+        try {
+          // Refresh the token
+          accessToken = await youtubeService.refreshAccessToken(refreshToken);
+
+          // Update token in database
+          const newExpiryDate = new Date();
+          newExpiryDate.setHours(newExpiryDate.getHours() + 1);
+          const updateSql = 'UPDATE youtube_tokens SET access_token = ?, expiry_date = ? WHERE id = ?';
+          conn.query(updateSql, [accessToken, newExpiryDate, tokenData.id], (err) => {
+            if (err) {
+              console.error('Error updating token:', err);
+            }
+          });
+        } catch (refreshError) {
+          console.error('Error refreshing token:', refreshError);
+          return res.json({
+            success: false,
+            message: 'Video upload service unavailable. Please contact administrator.',
+            needsAuth: true
+          });
+        }
+      }
+
+      // Upload video to YouTube using admin's credentials
+      try {
+        const result = await youtubeService.uploadVideoToYouTube(
+          req.file.buffer,
+          title || 'Untitled Video',
+          description || '',
+          accessToken
+        );
+
+        res.json({
+          success: true,
+          videoUrl: result.embedUrl,
+          videoId: result.videoId,
+          watchUrl: result.watchUrl,
+          message: 'Video uploaded successfully to YouTube as unlisted'
+        });
+      } catch (uploadError) {
+        console.error('YouTube upload error:', uploadError);
+
+        // Check if it's an auth error
+        if (uploadError.message && (uploadError.message.includes('Invalid Credentials') || uploadError.message.includes('401'))) {
+          return res.json({
+            success: false,
+            message: 'Video upload service unavailable. Please contact administrator.',
+            needsAuth: true
+          });
+        }
+
+        res.json({
+          success: false,
+          message: uploadError.message || 'Failed to upload video to YouTube'
+        });
+      }
+    });
+  } catch (error) {
+    console.error('YouTube upload error:', error);
+    res.json({
+      success: false,
+      message: error.message || 'Failed to upload video to YouTube'
+    });
+  }
+});
+
+// Check YouTube auth status (checks database for admin's credentials)
+router.get('/youtube/auth-status', (req, res) => {
+  if (!req.session.user) {
+    return res.json({ success: false, authenticated: false, message: 'Not logged in' });
+  }
+
+  // Check database for stored tokens
+  const getTokensSql = 'SELECT * FROM youtube_tokens ORDER BY id DESC LIMIT 1';
+  conn.query(getTokensSql, (err, results) => {
+    if (err) {
+      console.error('Error fetching tokens:', err);
+      return res.json({
+        success: false,
+        authenticated: false,
+        message: 'Database error: ' + err.message
+      });
+    }
+
+    const isAuthenticated = results && results.length > 0;
+    res.json({
+      success: true,
+      authenticated: isAuthenticated,
+      message: isAuthenticated ? 'YouTube connected' : 'YouTube not connected'
+    });
+  });
+});
+
+// GET all payments with proofs
+router.get('/api/payments', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+  const status = req.query.status || 'all';
+  let sql = `
+      SELECT 
+          p.*, 
+          c.fullname as client_name, 
+          c.email as client_email,
+          co.title as course_title, 
+          pr.file_url as proof_url
+      FROM payments p
+      LEFT JOIN client c ON p.client_id = c.id
+      LEFT JOIN courses co ON p.course_id = co.course_id
+      LEFT JOIN payment_proofs pr ON p.id = pr.payment_id
+  `;
+
+  if (status !== 'all') {
+    sql += ` WHERE p.status = ${conn.escape(status)}`;
+  }
+
+  sql += ` ORDER BY p.created_at DESC`;
+
+  conn.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error fetching payments:', err);
+      return res.json({ success: false, message: 'Database error' });
+    }
+    res.json({ success: true, payments: results });
+  });
+});
+
+// Approve a payment
+router.post('/api/payments/approve/:id', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+  const paymentId = req.params.id;
+
+  // 1. Get payment details
+  conn.query('SELECT * FROM payments WHERE id = ?', [paymentId], (err, payments) => {
+    if (err || payments.length === 0) {
+      return res.json({ success: false, message: 'Payment not found' });
+    }
+
+    const payment = payments[0];
+
+    // 2. Update payment status
+    conn.query('UPDATE payments SET status = "completed", completed_at = NOW() WHERE id = ?', [paymentId], (err) => {
+      if (err) return res.json({ success: false, message: 'Failed to update payment' });
+
+      // 3. Create/Update purchase record
+      conn.query('SELECT * FROM purchases WHERE client_id = ? AND course_id = ?',
+        [payment.client_id, payment.course_id], (err, purchases) => {
+
+          if (purchases && purchases.length > 0) {
+            // Update existing
+            conn.query('UPDATE purchases SET paid = 1 WHERE id = ?', [purchases[0].id], (err) => {
+              if (err) return res.json({ success: false, message: 'Failed to update purchase' });
+              res.json({ success: true, message: 'Payment approved successfully' });
+            });
+          } else {
+            // Create new
+            conn.query('INSERT INTO purchases (client_id, course_id, purchase_date, paid) VALUES (?, ?, NOW(), 1)',
+              [payment.client_id, payment.course_id], (err) => {
+                if (err) return res.json({ success: false, message: 'Failed to create purchase' });
+                res.json({ success: true, message: 'Payment approved successfully' });
+              });
+          }
+        });
+    });
+  });
+});
+
+// Reject a payment
+router.post('/api/payments/reject/:id', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+  const paymentId = req.params.id;
+  conn.query('UPDATE payments SET status = "failed" WHERE id = ?', [paymentId], (err) => {
+    if (err) return res.json({ success: false, message: 'Failed to reject payment' });
+    res.json({ success: true, message: 'Payment rejected' });
+  });
+});
+
+// Delete a payment record
+router.delete('/api/payments/delete/:id', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+  const paymentId = req.params.id;
+
+  // Also delete associated proof from DB (Cloudinary stays for now as archival)
+  conn.query('DELETE FROM payment_proofs WHERE payment_id = ?', [paymentId], (err) => {
+    conn.query('DELETE FROM payments WHERE id = ?', [paymentId], (err) => {
+      if (err) return res.json({ success: false, message: 'Failed to delete payment record' });
+      res.json({ success: true, message: 'Payment record deleted' });
+    });
   });
 });
 

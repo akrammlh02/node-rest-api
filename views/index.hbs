@@ -3,31 +3,83 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta property="og:title" content="DevAcademy" />
-  <meta property="og:description" content="The best E-learning platforme " />
+  <meta property="og:title" content="DevAcademy - Master Coding Skills" />
+  <meta property="og:description"
+    content="Transform your career with expert-led programming courses. Learn from industry professionals and build real-world projects." />
   <meta property="og:image" content="https://devacademy.up.railway.app/images/Untitled-design.png" />
   <meta property="og:url" content="https://devacademy.up.railway.app/" />
   <meta property="og:type" content="website" />
-
   <meta name="twitter:card" content="summary_large_image">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevAcademy - Premium E-Learning Plateform</title>
+  <meta name="description"
+    content="DevAcademy - Premium E-Learning Platform for Web Development. Master Frontend, Backend, and Full-Stack Development with hands-on projects.">
+  <title>DevAcademy - Master Coding Skills | Premium E-Learning Platform</title>
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link rel="icon" type="image/x-icon" href="/images/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
   <style>
     * {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Loading animation */
+    .page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .page-loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- From Uiverse.io by vinodjangid07 -->
-  <button class="whatsapp" onclick="window.open('https://wa.me/213540921726')">
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Social Media Floating Buttons -->
+  <button class="whatsapp" onclick="window.open('https://wa.me/213540921726')" aria-label="Contact us on WhatsApp">
     <span class="svgContainer">
       <svg viewBox="0 0 448 512" fill="white" height="1.6em" xmlns="http://www.w3.org/2000/svg">
         <path
@@ -37,79 +89,60 @@
     </span>
     <span class="BG"></span>
   </button>
-  <!-- From Uiverse.io by vinodjangid07 -->
-  <button class="telegram" onclick="window.open('https://t.me/+uv8hLl55DdMzNTg0')">
+
+  <button class="telegram" onclick="window.open('https://t.me/+uv8hLl55DdMzNTg0')"
+    aria-label="Join our Telegram channel">
     <span class="svgContainer">
       <svg viewBox="0 0 496 512" height="1.6em" xmlns="http://www.w3.org/2000/svg" fill="white">
         <path
-          d="M248 8C111 8 0 119 0 256S111 504 248 504 496 393 496 256 385 8 248 8zM363 176.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7 .2-.7 .3-3.1-1.2-4.4s-3.6-.8-5.1-.5q-3.3 .7-104.6 69.1-14.8 10.2-26.9 9.9c-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3q.8-6.7 18.5-13.7 108.4-47.2 144.6-62.3c68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6 .5 9.6 2.9a10.5 10.5 0 0 1 3.5 6.7A43.8 43.8 0 0 1 363 176.7z"
+          d="M248 8C111 8 0 119 0 256S111 504 248 504 496 393 496 256 385 8 248 8zM363 176.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7 .2-.7 .3-3.1-1.2-4.4s-3.6-.8-5.1-.5q-3.3 .7-104.6 69.1-q-14.8 10.2-26.9 9.9c-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3q.8-6.7 18.5-13.7 108.4-47.2 144.6-62.3c68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6 .5 9.6 2.9a10.5 10.5 0 0 1 3.5 6.7A43.8 43.8 0 0 1 363 176.7z"
           fill="white"></path>
       </svg>
     </span>
     <span class="BG"></span>
   </button>
 
-  <!-- From Uiverse.io by vinodjangid07 -->
-  <!-- Instagram Button -->
-  <button class="instagram" onclick="window.open('https://www.instagram.com/a.4dou/')">
+  <button class="instagram" onclick="window.open('https://www.instagram.com/a.4dou/')"
+    aria-label="Follow us on Instagram">
     <span class="svgContainer">
       <svg viewBox="0 0 496 512" fill="white" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(40 50) scale(2.5)">
-          <path d="M122.406,0H46.654C20.929,0,0,20.93,0,46.655v75.752c0,25.726,20.929,46.655,46.654,46.655h75.752
-                      c25.727,0,46.656-20.93,46.656-46.655V46.655C169.063,20.93,148.133,0,122.406,0z M154.063,122.407
-                      c0,17.455-14.201,31.655-31.656,31.655H46.654C29.2,154.063,15,139.862,15,122.407V46.655C15,29.201,29.2,15,46.654,15h75.752
-                      c17.455,0,31.656,14.201,31.656,31.655V122.407z" fill="white" />
           <path
-            d="M84.531,40.97c-24.021,0-43.563,19.542-43.563,43.563c0,24.02,19.542,43.561,43.563,43.561s43.563-19.541,43.563-43.561
-                      C128.094,60.512,108.552,40.97,84.531,40.97z M84.531,113.093c-15.749,0-28.563-12.812-28.563-28.561
-                      c0-15.75,12.813-28.563,28.563-28.563s28.563,12.813,28.563,28.563C113.094,100.281,100.28,113.093,84.531,113.093z"
+            d="M122.406,0H46.654C20.929,0,0,20.93,0,46.655v75.752c0,25.726,20.929,46.655,46.654,46.655h75.752 c25.727,0,46.656-20.93,46.656-46.655V46.655C169.063,20.93,148.133,0,122.406,0z M154.063,122.407 c0,17.455-14.201,31.655-31.656,31.655H46.654C29.2,154.063,15,139.862,15,122.407V46.655C15,29.201,29.2,15,46.654,15h75.752 c17.455,0,31.656,14.201,31.656,31.655V122.407z"
             fill="white" />
-          <path d="M129.921,28.251c-2.89,0-5.729,1.17-7.77,3.22c-2.051,2.04-3.23,4.88-3.23,7.78c0,2.891,1.18,5.73,3.23,7.78
-                      c2.04,2.04,4.88,3.22,7.77,3.22c2.9,0,5.73-1.18,7.78-3.22c2.05-2.05,3.22-4.89,3.22-7.78c0-2.9-1.17-5.74-3.22-7.78
-                      C135.661,29.421,132.821,28.251,129.921,28.251z" fill="white" />
+          <path
+            d="M84.531,40.97c-24.021,0-43.563,19.542-43.563,43.563c0,24.02,19.542,43.561,43.563,43.561s43.563-19.541,43.563-43.561 C128.094,60.512,108.552,40.97,84.531,40.97z M84.531,113.093c-15.749,0-28.563-12.812-28.563-28.561 c0-15.75,12.813-28.563,28.563-28.563s28.563,12.813,28.563,28.563C113.094,100.281,100.28,113.093,84.531,113.093z"
+            fill="white" />
+          <path
+            d="M129.921,28.251c-2.89,0-5.729,1.17-7.77,3.22c-2.051,2.04-3.23,4.88-3.23,7.78c0,2.891,1.18,5.73,3.23,7.78 c2.04,2.04,4.88,3.22,7.77,3.22c2.9,0,5.73-1.18,7.78-3.22c2.05-2.05,3.22-4.89,3.22-7.78c0-2.9-1.17-5.74-3.22-7.78 C135.661,29.421,132.821,28.251,129.921,28.251z"
+            fill="white" />
         </g>
       </svg>
     </span>
     <span class="BG"></span>
   </button>
 
-
-
-
-
-
-
-
-
+  <!-- Navigation Header -->
   <header>
     <nav>
-      <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
+      <a href="/" aria-label="DevAcademy Home">
+        <img src="/images/logo2-removebg-preview.png" alt="DevAcademy Logo" height="55em">
+      </a>
       <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/course">Courses</a></li>
-        <li><a href="/quiz">Quiz</a></li>
-        {{!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            English
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/ar">العربية</a></li>
-            <li><a class="dropdown-item" href="/">English</a></li>
-          </ul>
-        </li> --}}
+
         {{#if isLoggedIn}}
         <li><a href="/dashboard">Dashboard</a></li>
-        <li><button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button></li>
+        <li><button type="button" class="btn btn-danger"><a href="/logout">Logout</a></button></li>
         {{else}}
         <li><a href="/login">Login</a></li>
-        <li><button type="button" class="btn signup"><a href="/signup"> Sign up</a></button></li>
+        <li><button type="button" class="btn signup"><a href="/signup">Sign Up</a></button></li>
         {{/if}}
       </ul>
       <div class="menu">
-
         <button class="btn btn-primary menu-button" type="button" data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><span
-            class="material-symbols-outlined">menu</span></button>
+          data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" aria-label="Open menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div class="offcanvas-header">
@@ -117,83 +150,69 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div class="offcanvas-body">
-
             <a href="/">Home</a>
             <a href="/course">Courses</a>
             <a href="/quiz">Quiz</a>
-            {{!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                English
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/ar">العربية</a></li>
-                <li><a class="dropdown-item" href="/">English</a></li>
-              </ul>
-            </li> --}}
             {{#if isLoggedIn}}
             <a href="/dashboard">Dashboard</a>
             <div style="width: 50%;">
-              <button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button>
+              <button type="button" class="btn btn-danger"><a href="/logout">Logout</a></button>
             </div>
             {{else}}
             <a href="/login">Login</a>
             <div style="width: 50%;">
-              <button type="button" class="btn signup"><a href="/signup"> Sign up</a></button>
-
+              <button type="button" class="btn signup"><a href="/signup">Sign Up</a></button>
             </div>
             {{/if}}
-            </ul>
           </div>
         </div>
       </div>
     </nav>
   </header>
 
-  <section class="first-section">
-    <div class="first-text"> <span class="material-symbols-outlined">bolt</span> Master Coding Skills.</div>
-    <div>
-      <h1 id="animated-h1"></h1>
+  <!-- Hero Section -->
+  <section class="first-section" id="hero">
+    <div class="first-text">
+      <span class="material-symbols-outlined">bolt</span>
+      Master Coding Skills
     </div>
     <div>
-      <p> Discover a world of knowledge with top instructors and specialized courses</p>
+      <h1 id="animated-h1" aria-live="polite"></h1>
+    </div>
+    <div>
+      <p>Transform your career with expert-led programming courses. Learn from industry professionals and build
+        real-world projects that matter.</p>
     </div>
     <div class="d-grid gap-2 d-md-block">
-      {{!-- <button class="btn learn-more-btn" type="button"> <a href="/course">See Our Courses <span
-            class="material-symbols-outlined">arrow_forward_ios</span> </a></button> --}}
-      <!-- From Uiverse.io by gharsh11032000 -->
-      <!-- From Uiverse.io by BHARGAVPATEL1244 -->
-      <!-- From Uiverse.io by cssbuttons-io -->
-      <!-- From Uiverse.io by adeladel522 -->
-      <button class="home-btn" onclick="window.location.href = '/course'">
-        See Our Courses
+      <button class="home-btn" onclick="window.location.href = '/course'" aria-label="Browse our courses">
+        Explore Courses
         <svg fill="currentColor" viewBox="0 0 24 24" class="icon">
           <path clip-rule="evenodd"
             d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
             fill-rule="evenodd"></path>
         </svg>
       </button>
-
-
     </div>
-
   </section>
+
+  <!-- Wave Separator -->
   <div class="wave-container">
-    <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
       <path fill="#ffffff"
         d="M0,64L48,53.3C96,43,192,21,288,21.3C384,21,480,43,576,64C672,85,768,107,864,106.7C960,107,1056,85,1152,80C1248,75,1344,85,1392,90.7L1440,96L1440,120L0,120Z">
       </path>
     </svg>
   </div>
-  <!--===================Second section================-->
-  <section class="second-section">
+
+  <!-- Statistics Section -->
+  <section class="second-section" aria-label="Platform Statistics">
     <div class="stat-card">
       <div class="icon-wrapper student-icon">
         <span class="material-symbols-outlined">school</span>
       </div>
       <div class="stat-content">
         <h2>+99</h2>
-        <p>Registered Students</p>
+        <p>Active Students</p>
       </div>
     </div>
     <div class="stat-card">
@@ -210,8 +229,8 @@
         <span class="material-symbols-outlined">book</span>
       </div>
       <div class="stat-content">
-        <h2>2</h2>
-        <p>Training Courses</p>
+        <h2>2+</h2>
+        <p>Comprehensive Courses</p>
       </div>
     </div>
     <div class="stat-card">
@@ -225,125 +244,236 @@
     </div>
   </section>
 
-  <!-- ======= 4eme Section ======= -->
-  <section class="five-section">
-    <h1>Most Popular Courses</h1>
-    <p>Discover the courses chosen by thousands of students</p>
-    <div class="courses">
-      {{#if courses}}
-      {{#each courses}}
-      <div class="course">
-        <a href="/course/course-view?id={{course_id}}" class="course-card-link">
+  <!-- Popular Courses Section -->
+  <section class="five-section" id="courses" aria-label="Popular Courses">
+    <div class="container">
+      <h1>Featured Courses</h1>
+      <p>Hand-picked courses designed to take you from beginner to professional</p>
+      <div class="courses">
+        {{#if courses}}
+        {{#each courses}}
+        <article class="course">
+          <a href="/course/course-view?id={{course_id}}" class="course-card-link" aria-label="View {{title}} course">
+            <div class="image-box">
+              <img src="{{thumbnail_url}}" alt="{{title}} course thumbnail" width="100%" loading="lazy"
+                onerror="this.src='/images/front-end-1.jpg'">
+              <span class="price">{{price}} DA</span>
+            </div>
+            <p class="category">{{#if level}}{{level}}{{else}}COURSE{{/if}}</p>
+            <div style="width: 100%;display: flex; justify-content: center;">
+              <hr>
+            </div>
+            <h5>{{title}}</h5>
+            {{#if skills}}
+            <div class="skills-container"
+              style="display: flex;text-align: start; flex-direction: column;padding-left: 20px;gap: 4px; margin: 0px -5px; font-size: 0.9rem;">
+              {{#each (split skills ",")}}
+              <span style="color: #0e1af8;">
+                <span class="material-symbols-outlined"
+                  style="font-size: 16px; vertical-align: middle; margin-right: 4px;">check_circle</span>
+                {{trim this}}
+              </span>
+              {{/each}}
+            </div>
+            {{else}}
+            <p class="description">{{description}}</p>
+            {{/if}}
+            <p class="powered">
+              <span class="material-symbols-outlined"
+                style="font-size: 18px; vertical-align: middle; margin-right: 5px;">person</span>
+              By Akram Melihi
+            </p>
+            <div style="width: 100%;display: flex; justify-content: center;margin:0;margin-top: -40px;">
+              <hr>
+            </div>
+            <div class="information">
+              <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
+              <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
+            </div>
+          </a>
+          <button class="btn btn-primary course-button"
+            style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;"
+            onclick="window.location.href='/course/course-view?id={{course_id}}'"
+            aria-label="Learn more about {{title}}">
+            Learn More
+          </button>
+        </article>
+        {{/each}}
+        {{else}}
+        <article class="course">
           <div class="image-box">
-            <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
-            <span class="price">{{price}} DA</span>
+            <img src="/images/front-end-1.jpg" alt="Frontend Development Course" width="100%" loading="lazy">
+            <span class="price">5200 DA</span>
           </div>
-          <p class="category">{{#if level}}{{level}}{{else}}COURSE{{/if}}</p>
+          <p class="category">ADVANCED PROGRAMMING</p>
           <div style="width: 100%;display: flex; justify-content: center;">
             <hr>
           </div>
-          <h5>{{title}}</h5>
-          {{#if skills}}
-          <div class="skills-container"
-            style="display: flex;text-align: start; flex-direction: column;padding-left: 20px;gap: 4px; margin: 0px -5px; font-size: 0.9rem;">
-            {{#each (split skills ",")}}
-            <span style="color: #0e1af8;">
-              <span class="material-symbols-outlined"
-                style="font-size: 16px; vertical-align: middle; margin-right: 4px;">check_circle</span>
-              {{trim this}}
-            </span>
-            {{/each}}
-          </div>
-          {{else}}
-          <p class="description">{{description}}</p>
-          {{/if}}
-          <p class="powered"><span class="material-symbols-outlined"
-              style="font-size: 18px; vertical-align: middle; margin-right: 5px;">person</span>By Akram Melihi</p>
-          <div style="width: 100%;display: flex; justify-content: center;margin:0;margin-top: -40px;">
+          <h5>Frontend Development Course</h5>
+          <p class="description">Master modern web development with HTML, CSS, JavaScript, and React. Build responsive,
+            interactive websites from scratch!</p>
+          <p class="powered">By Akram Melihi</p>
+          <div style="width: 100%;display: flex; justify-content: center;">
             <hr>
           </div>
           <div class="information">
-            <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
-            <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
+            <p><span class="material-symbols-outlined">alarm</span> 8 hours 19 min</p>
+            <p><span class="material-symbols-outlined">book_ribbon</span> 38 Lessons</p>
           </div>
-        </a>
-        <button class="btn btn-primary course-button"
-          style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;">
-          <a href="/course/course-view?id={{course_id}}" style="color: white; text-decoration: none;">Learn More</a>
-        </button>
+          <button class="btn btn-primary" style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;"
+            onclick="window.location.href='/course'">
+            Browse Courses
+          </button>
+        </article>
+        {{/if}}
       </div>
-      {{/each}}
-      {{else}}
-      <div class="course">
-        <div class="image-box">
-          <img src="/images/front-end-1.jpg" width="100%">
-          <span class="price">5200 DA</span>
-        </div>
-        <p class="category">ADVANCED PROGRAMMING</p>
-        <div style="width: 100%;display: flex; justify-content: center;">
-          <hr>
-        </div>
-        <h5>Frontend Course</h5>
-        <p class="description">Learn how to build modern, responsive, and interactive websites from scratch!
-          This complete Front-End Development Course takes you from beginner to professional</p>
-        <p class="powered">By Akram Melihi</p>
-        <div style="width: 100%;display: flex; justify-content: center;">
-          <hr>
-        </div>
-        <div class="information">
-          <p><span class="material-symbols-outlined">alarm</span> 8 hours 19 min</p>
-          <p><span class="material-symbols-outlined">book_ribbon</span> 38 Lessons</p>
-        </div>
-        <button class="btn btn-primary" style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;">
-          <a href="/course" style="color: white; text-decoration: none;">Browse Courses</a>
-        </button>
+      {{#if courses}}
+      <div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+        <a href="/course" class="btn btn-primary" aria-label="Discover all available courses"
+          style="padding: 12px 40px; font-size: 18px; font-weight: 700; border-radius: 50px; box-shadow: 0 10px 30px rgba(123, 9, 205, 0.3); text-decoration: none; color: white;">
+          Discover All Courses
+          <span class="material-symbols-outlined" style="vertical-align: middle; margin-left: 5px;">arrow_forward</span>
+        </a>
       </div>
       {{/if}}
     </div>
-
   </section>
 
-  <!-- =========Third Section========= -->
-  <section class="third-section">
+  <!-- Interactive Learning Section -->
+  <section class="interactive-section" id="interactive" aria-label="Interactive Learning Platform">
+    <div class="interactive-content">
+      <div class="interactive-badge">
+        <span class="material-symbols-outlined">code</span>
+        New Feature
+      </div>
+      <h2 class="interactive-title">Learn by Doing</h2>
+      <p class="interactive-subtitle">
+        Experience our interactive coding platform! Write code, get instant feedback, and master programming through
+        hands-on practice.
+      </p>
 
-    <h1>Why you should choose <span class="DevAcademy">DevAcademy ?</span></h1>
-    <p>We offer you an exceptional learning experience</p>
+      <div class="interactive-features">
+        <div class="interactive-feature">
+          <div class="feature-icon-wrapper">
+            <span class="material-symbols-outlined">terminal</span>
+          </div>
+          <h3>Professional Code Editor</h3>
+          <p>Write code in a professional environment with syntax highlighting, auto-completion, and real-time error
+            detection.</p>
+        </div>
+
+        <div class="interactive-feature">
+          <div class="feature-icon-wrapper">
+            <span class="material-symbols-outlined">alt_route</span>
+          </div>
+          <h3>Structured Learning Paths</h3>
+          <p>Follow carefully designed learning paths that take you from fundamentals to advanced concepts step by step.
+          </p>
+        </div>
+
+        <div class="interactive-feature">
+          <div class="feature-icon-wrapper">
+            <span class="material-symbols-outlined">check_circle</span>
+          </div>
+          <h3>Instant Validation</h3>
+          <p>Get immediate feedback on your code with helpful hints and explanations to guide your learning journey.</p>
+        </div>
+      </div>
+
+      <a href="/interactive/paths" class="interactive-cta" aria-label="Start interactive learning">
+        Start Interactive Learning
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Quiz System Section -->
+  <section class="quiz-section" id="quiz-system" aria-label="Professional Quiz System">
+    <div class="quiz-container">
+      <div class="quiz-badge">
+        <span class="material-symbols-outlined">quiz</span>
+        Knowledge Check
+      </div>
+      <h2 class="quiz-title">Challenge Your Knowledge</h2>
+      <p class="quiz-subtitle">
+        Validate your skills with our professional quiz system. Track your progress and push your limits with
+        carefully curated questions.
+      </p>
+
+      <div class="quiz-grid">
+        <div class="quiz-card">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">bolt</span>
+          </div>
+          <h3>Instant Feedback</h3>
+          <p>Get immediate results and explanations for every question to help you learn faster.</p>
+        </div>
+
+        <div class="quiz-card">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">trending_up</span>
+          </div>
+          <h3>Track Progress</h3>
+          <p>Monitor your performance across different categories and see your technical growth over time.</p>
+        </div>
+
+        <div class="quiz-card">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">military_tech</span>
+          </div>
+          <h3>Earn Badges</h3>
+          <p>Collect achievements and badges as you master new topics and complete challenging quiz tiers.</p>
+        </div>
+      </div>
+
+      <div class="quiz-action">
+        <a href="/quiz" class="quiz-btn" aria-label="Go to quiz system">
+          Take a Quiz Now
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose DevAcademy Section -->
+  <section style="padding-top: 50px; padding-bottom: 50px;" class="third-section" id="why-us"
+    aria-label="Why Choose DevAcademy">
+    <h1>Why Choose <span class="DevAcademy">DevAcademy</span>?</h1>
+    <p>We provide an exceptional learning experience designed for your success</p>
     <div class="cards">
       <div class="card">
         <span class="material-symbols-outlined card2">diamond_shine</span>
         <h4>High-Quality Content</h4>
-        <p>Courses carefully designed by experts in their fields</p>
+        <p>Courses carefully crafted by industry experts with real-world experience and best practices.</p>
       </div>
       <div class="card">
-        <span style="padding: 10px;" class="material-symbols-outlined">nest_clock_farsight_analog</span>
+        <span class="material-symbols-outlined" style="padding: 10px;">nest_clock_farsight_analog</span>
         <h4>Flexible Learning</h4>
-        <p>Learn anytime and anywhere according to your schedule</p>
+        <p>Learn at your own pace, anytime and anywhere. Fit learning into your busy schedule.</p>
       </div>
       <div class="card">
-        <span style="padding: 10px;" class="material-symbols-outlined">support_agent</span>
+        <span class="material-symbols-outlined" style="padding: 10px;">support_agent</span>
         <h4>Continuous Support</h4>
-        <p>A dedicated support team to assist you</p>
+        <p>Get help when you need it. Our dedicated support team is here to assist you throughout your journey.</p>
       </div>
-
     </div>
-
   </section>
 
-  <!-- ========section FAQ======= -->
-  <section class="faq-section">
+  <!-- FAQ Section -->
+  <section class="faq-section" id="faq" aria-label="Frequently Asked Questions">
     <h4>FAQ</h4>
-    <h1>Our Answers</h1>
+    <h1>Common Questions</h1>
 
     <div class="faq-item">
       <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false"
         aria-controls="faq1">
-        <span>Do I need experience to start?</span>
+        <span>Do I need prior experience to start?</span>
         <i class="arrow"></i>
       </button>
       <div class="collapse" id="faq1">
         <div class="faq-answer">
-          Not at all! All our courses are built for beginners. You'll start with the basics and move step-by-step toward
-          real-world projects.
+          Not at all! Our courses are designed for beginners. You'll start with the fundamentals and progress
+          step-by-step toward building real-world projects.
         </div>
       </div>
     </div>
@@ -356,8 +486,8 @@
       </button>
       <div class="collapse" id="faq2">
         <div class="faq-answer">
-          You’ll get lifetime access! Once you purchase the course, you can watch it anytime, anywhere, as often as you
-          want.
+          You'll get lifetime access! Once you purchase a course, you can watch it anytime, anywhere, as often as you
+          want. Learn at your own pace without any time restrictions.
         </div>
       </div>
     </div>
@@ -365,13 +495,13 @@
     <div class="faq-item">
       <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false"
         aria-controls="faq3">
-        <span>Will I get a certificate after finishing?</span>
+        <span>Will I receive a certificate after completion?</span>
         <i class="arrow"></i>
       </button>
       <div class="collapse" id="faq3">
         <div class="faq-answer">
-          Yes! After finishing the course, you’ll receive a certificate of completion that you can add to your resume or
-          LinkedIn.
+          Yes! After completing a course, you'll receive a certificate of completion that you can add to your resume,
+          LinkedIn profile, or portfolio to showcase your skills.
         </div>
       </div>
     </div>
@@ -385,6 +515,7 @@
       <div class="collapse" id="faq4">
         <div class="faq-answer">
           Absolutely! You can contact us directly on WhatsApp or through the course platform whenever you need help.
+          We're here to support your learning journey.
         </div>
       </div>
     </div>
@@ -397,44 +528,51 @@
       </button>
       <div class="collapse" id="faq5">
         <div class="faq-answer">
-          We offer several secure and easy payment options:<br><br>
-          <b>BaridiMob</b> – Fast and safe mobile payment.<br>
-          <b>CCP (Algérie Poste)</b> – Pay directly through your CCP account.<br>
-          <b>Binance (USDT)</b> – Pay with cryptocurrency using Binance.<br>
-          <b>RedotPay</b> – Instant online payment for international users.<br><br>
-          After completing your payment, just send us a screenshot on <b>WhatsApp</b> to confirm, and we’ll activate
-          your access instantly ⚡
+          We offer several secure payment options:<br><br>
+          <strong>BaridiMob</strong> – Fast and secure mobile payment.<br>
+          <strong>CCP (Algérie Poste)</strong> – Pay directly through your CCP account.<br>
+          <strong>Binance (USDT)</strong> – Pay with cryptocurrency using Binance.<br>
+          <strong>RedotPay</strong> – Instant online payment for international users.<br><br>
+          After completing your payment, send us a screenshot on <strong>WhatsApp</strong> to confirm, and we'll
+          activate your access instantly ⚡
         </div>
       </div>
     </div>
-
   </section>
 
-
-
-
-
-  <section class="fourth-section">
+  <!-- Call to Action Section -->
+  <section class="fourth-section" id="cta" aria-label="Start Your Learning Journey">
     <h2>Start Your Learning Journey Today</h2>
-    <p>Join thousands of students learning with us</p>
-    <a href="/signup" class="cta-signup-btn">
+    <p>Join hundreds of students building their future with DevAcademy</p>
+    <a href="/signup" class="cta-signup-btn" aria-label="Sign up for DevAcademy">
       <span class="btn-text">Sign Up Now</span>
       <span class="btn-arrow">→</span>
     </a>
   </section>
 
-  <section class="copyright">
-    <p>All rights reserved © 2025 DevAcademy</p>
+  <!-- Footer -->
+  <footer class="copyright" role="contentinfo">
+    <p>&copy; 2025 DevAcademy. All rights reserved.</p>
+  </footer>
 
-  </section>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+  <!-- Scripts -->
+  <script src="/js/cart-utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+
   <script>
+    // Page loader
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('pageLoader');
+      setTimeout(() => {
+        loader.classList.add('hidden');
+      }, 500);
+    });
+
+    // Typing animation for hero section
     const phrases = [
-      "Learn programming from real-world developers.",
+      "Learn programming from industry experts.",
       "Master the latest web technologies.",
       "Build your future with DevAcademy."
     ];
@@ -445,44 +583,86 @@
     let typeSpeed = 100;
 
     function typeEffect() {
+      if (!h1) return;
+
       const currentPhrase = phrases[phraseIndex];
 
       if (isDeleting) {
         h1.textContent = currentPhrase.substring(0, charIndex - 1);
         charIndex--;
-        typeSpeed = 30; // Faster when deleting
+        typeSpeed = 30;
       } else {
         h1.textContent = currentPhrase.substring(0, charIndex + 1);
         charIndex++;
-        typeSpeed = 70; // Normal typing speed
+        typeSpeed = 70;
       }
 
       if (!isDeleting && charIndex === currentPhrase.length) {
         isDeleting = true;
-        typeSpeed = 2000; // Pause at end of phrase
+        typeSpeed = 2000;
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         phraseIndex = (phraseIndex + 1) % phrases.length;
-        typeSpeed = 500; // Pause before typing next phrase
+        typeSpeed = 500;
       }
 
       setTimeout(typeEffect, typeSpeed);
     }
 
-    // Start the animation
-    document.addEventListener('DOMContentLoaded', typeEffect);
-  </script>
+    // Start typing animation when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      typeEffect();
+    });
 
-  {{!-- <div class="lang-switch">
-    <a href="/" class="lang-btn" title="Switch to English">
-      <img src="https://flagcdn.com/w40/gb.png" alt="English">
-      <span>English</span>
-    </a>
-    <a href="/ar" class="lang-btn" title="التبديل إلى العربية">
-      <img src="https://flagcdn.com/w40/sa.png" alt="Arabic">
-      <span>العربية</span>
-    </a>
-  </div> --}}
+    // Scroll animation observer
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, observerOptions);
+
+    // Observe sections for scroll animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.second-section, .third-section, .five-section, .faq-section, .fourth-section, .interactive-section, .quiz-section');
+      sections.forEach(section => {
+        section.classList.add('scroll-animate');
+        observer.observe(section);
+      });
+
+      // Stagger animation for stat cards
+      const secondSection = document.querySelector('.second-section');
+      if (secondSection) {
+        secondSection.classList.add('scroll-animate-stagger');
+      }
+
+      // Stagger animation for feature cards
+      const thirdSection = document.querySelector('.third-section .cards');
+      if (thirdSection) {
+        thirdSection.classList.add('scroll-animate-stagger');
+        observer.observe(thirdSection);
+      }
+
+      // Stagger animation for course cards
+      const coursesContainer = document.querySelector('.five-section .courses');
+      if (coursesContainer) {
+        coursesContainer.classList.add('scroll-animate-stagger');
+        observer.observe(coursesContainer);
+      }
+
+      // Stagger animation for FAQ items
+      const faqSection = document.querySelector('.faq-section');
+      if (faqSection) {
+        faqSection.classList.add('scroll-animate-stagger');
+      }
+    });
+  </script>
 
   <style>
     /* Scroll Animation Styles */
@@ -532,59 +712,21 @@
     .scroll-animate-stagger.animate-in>*:nth-child(6) {
       transition-delay: 0.6s;
     }
+
+    /* Accessibility improvements */
+    .course-card-link:focus,
+    .home-btn:focus,
+    .interactive-cta:focus,
+    .cta-signup-btn:focus {
+      outline: 3px solid #667eea;
+      outline-offset: 2px;
+    }
+
+    /* Smooth transitions */
+    * {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
   </style>
-
-  <script>
-    // Scroll Animation Observer
-    document.addEventListener('DOMContentLoaded', function () {
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
-
-      const observer = new IntersectionObserver(function (entries) {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-            // Optional: stop observing after animation
-            // observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      // Observe all sections
-      document.querySelectorAll('.second-section, .third-section, .five-section, .faq-section, .fourth-section').forEach(section => {
-        section.classList.add('scroll-animate');
-        observer.observe(section);
-      });
-
-      // Observe stat cards with stagger
-      const secondSection = document.querySelector('.second-section');
-      if (secondSection) {
-        secondSection.classList.add('scroll-animate-stagger');
-      }
-
-      // Observe feature cards with stagger
-      const thirdSection = document.querySelector('.third-section .cards');
-      if (thirdSection) {
-        thirdSection.classList.add('scroll-animate-stagger');
-        observer.observe(thirdSection);
-      }
-
-      // Observe course cards with stagger
-      const coursesContainer = document.querySelector('.five-section .courses');
-      if (coursesContainer) {
-        coursesContainer.classList.add('scroll-animate-stagger');
-        observer.observe(coursesContainer);
-      }
-
-      // Observe FAQ items with stagger
-      const faqSection = document.querySelector('.faq-section');
-      if (faqSection) {
-        faqSection.classList.add('scroll-animate-stagger');
-      }
-    });
-  </script>
 
 </body>
 

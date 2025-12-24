@@ -249,18 +249,111 @@ async function loadLessons(chapterId) {
   }
 }
 
+async function uploadVideoToYouTube(videoFile, title, description, progressBar) {
+  const formData = new FormData();
+  formData.append('video', videoFile);
+  formData.append('title', title || 'Untitled Video');
+  formData.append('description', description || '');
+
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    // Track upload progress
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable && progressBar) {
+        const percentComplete = (e.loaded / e.total) * 100;
+        progressBar.style.width = percentComplete + '%';
+        progressBar.textContent = Math.round(percentComplete) + '%';
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        try {
+          const result = JSON.parse(xhr.responseText);
+          if (result.success) {
+            resolve(result.videoUrl);
+          } else {
+            if (result.needsAuth) {
+              // Get auth URL and redirect
+              fetch('/admin/youtube/auth-url')
+                .then(res => res.json())
+                .then(authResult => {
+                  if (authResult.success) {
+                    window.location.href = authResult.authUrl;
+                  } else {
+                    reject(new Error(authResult.message || 'Failed to get YouTube auth URL'));
+                  }
+                })
+                .catch(err => {
+                  reject(new Error('Failed to get YouTube auth URL'));
+                });
+              reject(new Error('YouTube authentication required'));
+            } else {
+              reject(new Error(result.message || 'Upload failed'));
+            }
+          }
+        } catch (e) {
+          reject(new Error('Invalid response from server'));
+        }
+      } else {
+        reject(new Error('Upload failed with status: ' + xhr.status));
+      }
+    });
+
+    xhr.addEventListener('error', () => {
+      reject(new Error('Network error during upload'));
+    });
+
+    xhr.open('POST', '/admin/youtube/upload');
+    xhr.send(formData);
+  });
+}
+
 async function quickAddLesson() {
   const title = document.getElementById('quickLessonTitle').value.trim();
-  const videoUrl = document.getElementById('quickLessonVideoUrl').value.trim();
 
   if (!title) {
     alert('Please enter a lesson title');
     return;
   }
 
-  if (!videoUrl) {
-    alert('Please enter a video URL');
-    return;
+  let videoUrl = '';
+  const lessonVideoType = document.querySelector('input[name="lessonVideoType"]:checked')?.value;
+
+  // Handle video upload or URL
+  if (lessonVideoType === 'upload') {
+    const videoFile = document.getElementById('quickLessonVideoFile');
+    if (!videoFile || !videoFile.files[0]) {
+      alert('Please select a video file to upload');
+      return;
+    }
+
+    const progressBar = document.querySelector('#lessonVideoProgress .progress-bar');
+    const progressContainer = document.getElementById('lessonVideoProgress');
+    progressContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+    progressBar.textContent = '0%';
+
+    try {
+      videoUrl = await uploadVideoToYouTube(
+        videoFile.files[0],
+        title,
+        '',
+        progressBar
+      );
+      progressContainer.style.display = 'none';
+    } catch (error) {
+      progressContainer.style.display = 'none';
+      alert(error.message || 'Failed to upload video to YouTube');
+      return;
+    }
+  } else {
+    videoUrl = document.getElementById('quickLessonVideoUrl').value.trim();
+    if (!videoUrl) {
+      alert('Please enter a video URL');
+      return;
+    }
   }
 
   try {
@@ -277,6 +370,8 @@ async function quickAddLesson() {
     if (result.success) {
       document.getElementById('quickLessonTitle').value = '';
       document.getElementById('quickLessonVideoUrl').value = '';
+      const videoFileInput = document.getElementById('quickLessonVideoFile');
+      if (videoFileInput) videoFileInput.value = '';
       await loadLessons(currentChapterId);
       await loadLessonCount(currentChapterId); // Update lesson count in chapter table
     } else {
@@ -510,6 +605,27 @@ function renderClients(clients) {
       ? '<span class="badge badge-success">🟢 Active</span>'
       : '<span class="badge" style="background: #9ca3af; color: white;">⚪ Inactive</span>';
 
+    // Membership display
+    const membershipTier = client.membership_tier || 'Free';
+    const membershipExpiry = client.membership_expiry ? new Date(client.membership_expiry).toLocaleDateString() : 'Never';
+    const isPremium = membershipTier === 'Pro' || membershipTier === 'VIP';
+
+    let membershipBadge = '';
+    if (membershipTier === 'VIP') {
+      membershipBadge = '<span class="badge bg-warning text-dark">👑 VIP</span>';
+    } else if (membershipTier === 'Pro') {
+      membershipBadge = '<span class="badge bg-primary">💎 PRO</span>';
+    } else {
+      membershipBadge = '<span class="badge bg-secondary">🌱 Free</span>';
+    }
+
+    const membershipHTML = `
+      <div class="small">
+        <div class="mb-1">${membershipBadge}</div>
+        ${isPremium ? `<div class="text-muted" style="font-size: 10px;">Expires: ${membershipExpiry}</div>` : ''}
+      </div>
+    `;
+
     return `
       <tr data-client-type="${clientType}" data-client-active="${isActive}">
         <td data-label="Name"><strong>${client.fullname}</strong></td>
@@ -517,19 +633,23 @@ function renderClients(clients) {
         <td data-label="Type">${typeBadge}</td>
         <td data-label="Courses">${coursesHTML}</td>
         <td data-label="Progress">${progressHTML}</td>
+        <td data-label="Membership">${membershipHTML}</td>
         <td data-label="Status">${statusBadge}</td>
         <td data-label="Actions">
-          <button class="btn btn-sm btn-info" onclick="viewClientDetails(${client.id}, '${client.fullname.replace(/'/g, "\\'")}', '${client.email.replace(/'/g, "\\'")}', ${totalCourses}, ${overallProgress})" title="View Details">
+          <button class="btn btn-sm btn-info" onclick="viewClientDetails(${client.id}, '${client.fullname.replace(/'/g, "\\'")}', '${client.email.replace(/'/g, "\\'")}', ${totalCourses}, ${overallProgress}, '${membershipTier}', '${membershipExpiry}')" title="View Details">
             <span class="material-symbols-outlined">visibility</span>
           </button>
           <button class="btn btn-sm btn-primary" onclick="viewClientProgress(${client.id}, '${client.fullname.replace(/'/g, "\\'")}', '${client.email.replace(/'/g, "\\'")}')\" title="View Progress">
             <span class="material-symbols-outlined">analytics</span>
           </button>
-          <button class="btn btn-sm btn-success" onclick="addCourseToClient(${client.id}, '${client.fullname.replace(/'/g, "\\'")}')\" title="Add Course">
+          <button class="btn btn-sm btn-success" onclick="addCourseToClient(${client.id}, '${client.fullname.replace(/'/g, "\\'")}')" title="Add Course">
             <span class="material-symbols-outlined">add</span>
           </button>
+          <button class="btn btn-sm btn-warning" onclick="openGiveMembershipModal(${client.id}, '${client.fullname.replace(/'/g, "\\'")}')" title="Give Membership" style="background-color: #7b09cd; border-color: #7b09cd; color: white;">
+            <span class="material-symbols-outlined">workspace_premium</span>
+          </button>
           ${totalCourses > 0 ? `
-          <button class="btn btn-sm btn-warning" onclick="removeCourseFromClient(${client.id}, '${client.fullname.replace(/'/g, "\\'")}')\" title="Remove Course">
+          <button class="btn btn-sm btn-outline-warning" onclick="removeCourseFromClient(${client.id}, '${client.fullname.replace(/'/g, "\\'")}')" title="Remove Course">
             <span class="material-symbols-outlined">remove</span>
           </button>
           ` : ''}
@@ -543,6 +663,91 @@ function renderClients(clients) {
 
   // Update statistics
   updateClientStats();
+}
+
+function openGiveMembershipModal(clientId, clientName) {
+  document.getElementById('membershipClientId').value = clientId;
+  document.getElementById('membershipClientName').textContent = clientName;
+  document.getElementById('membershipMessage').style.display = 'none';
+
+  const modal = new bootstrap.Modal(document.getElementById('giveMembershipModal'));
+  modal.show();
+
+  // Handle Revoke
+  document.getElementById('revokeMembershipBtn').onclick = async () => {
+    if (!confirm('Are you sure you want to revoke this user\'s premium access?')) return;
+
+    const message = document.getElementById('membershipMessage');
+    try {
+      const response = await fetch('/admin/api/clients/remove-membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId })
+      });
+      const result = await response.json();
+      if (result.success) {
+        message.className = 'alert alert-success mt-3 py-2 small';
+        message.textContent = result.message;
+        message.style.display = 'block';
+        setTimeout(() => { modal.hide(); loadClients(); }, 1500);
+      } else {
+        message.className = 'alert alert-danger mt-3 py-2 small';
+        message.textContent = result.message;
+        message.style.display = 'block';
+      }
+    } catch (e) {
+      console.error(e);
+      message.className = 'alert alert-danger mt-3 py-2 small';
+      message.textContent = 'Error revoking membership';
+      message.style.display = 'block';
+    }
+  };
+
+  // Handle form submission
+  const form = document.getElementById('giveMembershipForm');
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+
+    const tier = form.elements['membershipTier'].value;
+    const duration = document.getElementById('membershipDuration').value;
+    const message = document.getElementById('membershipMessage');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activating...';
+
+    try {
+      const response = await fetch('/admin/api/clients/give-membership', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, tier, duration })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        message.className = 'alert alert-success mt-3 py-2 small';
+        message.textContent = result.message;
+        message.style.display = 'block';
+        setTimeout(() => {
+          modal.hide();
+          loadClients(); // Refresh to show new stats if any
+        }, 1500);
+      } else {
+        message.className = 'alert alert-danger mt-3 py-2 small';
+        message.textContent = result.message || 'Failed to assign membership';
+        message.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error giving membership:', error);
+      message.className = 'alert alert-danger mt-3 py-2 small';
+      message.textContent = 'Error connecting to server';
+      message.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Activate Membership';
+    }
+  };
 }
 
 async function removeCourseFromClient(clientId, clientName) {
@@ -838,93 +1043,8 @@ async function deleteClient(clientId) {
   }
 }
 
-// Purchases Management
-async function loadPurchases() {
-  try {
-    const response = await fetch('/admin/api/purchases');
-    const result = await response.json();
+// (Redundant block removed)
 
-    if (result.success) {
-      renderPurchases(result.purchases);
-    } else {
-      console.error('Failed to load purchases');
-    }
-  } catch (error) {
-    console.error('Error loading purchases:', error);
-  }
-}
-
-function renderPurchases(purchases) {
-  const tbody = document.getElementById('purchasesTableBody');
-
-  if (!purchases || purchases.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No purchases yet.</td></tr>';
-    document.getElementById('totalPurchases').textContent = '0';
-    document.getElementById('totalRevenue').textContent = '0 DA';
-    document.getElementById('todayPurchases').textContent = '0';
-    return;
-  }
-
-  const totalPurchases = purchases.length;
-  const totalRevenue = purchases
-    .filter(p => p.paid === 1)
-    .reduce((sum, p) => sum + parseFloat(p.price || 0), 0);
-  const today = new Date().toISOString().split('T')[0];
-  const todayPurchases = purchases.filter(p => p.purchase_date === today).length;
-
-  document.getElementById('totalPurchases').textContent = totalPurchases;
-  document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2) + ' DA';
-  document.getElementById('todayPurchases').textContent = todayPurchases;
-
-  tbody.innerHTML = purchases.map(purchase => `
-    <tr>
-      <td><strong>#${purchase.id}</strong></td>
-      <td>${purchase.client_name || 'Unknown'}</td>
-      <td>${purchase.course_title || 'Unknown Course'}</td>
-      <td><strong>${purchase.price || 0} DA</strong></td>
-      <td>${new Date(purchase.purchase_date).toLocaleDateString()}</td>
-      <td><span class="badge ${purchase.paid === 1 ? 'badge-success' : 'badge-warning'}">${purchase.paid === 1 ? 'Paid' : 'Pending'}</span></td>
-      <td>
-        <button class="btn btn-sm btn-primary" onclick="viewPurchase(${purchase.id}, '${purchase.client_name || 'Unknown'}', '${purchase.course_title || 'Unknown'}', '${purchase.price || 0}', '${purchase.purchase_date}')" title="View Details">
-          <span class="material-symbols-outlined">visibility</span>
-        </button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function filterPurchases(filter) {
-  document.querySelectorAll('.btn-filter').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-
-  const tbody = document.getElementById('purchasesTableBody');
-  const rows = tbody.querySelectorAll('tr');
-  const now = new Date();
-
-  rows.forEach(row => {
-    const dateText = row.cells[4]?.textContent;
-    if (!dateText) return;
-
-    const purchaseDate = new Date(dateText);
-    let show = true;
-
-    if (filter === 'today') {
-      show = purchaseDate.toDateString() === now.toDateString();
-    } else if (filter === 'week') {
-      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      show = purchaseDate >= weekAgo;
-    } else if (filter === 'month') {
-      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      show = purchaseDate >= monthAgo;
-    }
-
-    row.style.display = show ? '' : 'none';
-  });
-}
-
-function viewPurchase(purchaseId, clientName, courseTitle, amount, date) {
-  alert(`Purchase Details:\n\nID: #${purchaseId}\nClient: ${clientName}\nCourse: ${courseTitle}\nAmount: ${amount} DA\nDate: ${new Date(date).toLocaleDateString()}`);
-}
 
 // Dashboard Stats
 async function loadDashboardStats() {
@@ -1605,8 +1725,8 @@ async function togglePurchaseStatus(purchaseId, currentStatus) {
     if (result.success) {
       alert(`Purchase marked as ${statusText} successfully!`);
       // Reload purchases
-      if (typeof loadPurchasesData === 'function') {
-        loadPurchasesData();
+      if (typeof loadPurchases === 'function') {
+        loadPurchases();
       } else {
         location.reload();
       }
@@ -1635,8 +1755,8 @@ async function deletePurchase(purchaseId) {
     if (result.success) {
       alert('Purchase deleted successfully!');
       // Reload purchases
-      if (typeof loadPurchasesData === 'function') {
-        loadPurchasesData();
+      if (typeof loadPurchases === 'function') {
+        loadPurchases();
       } else {
         location.reload();
       }
@@ -1739,7 +1859,7 @@ function updatePurchaseStats() {
 }
 
 // Load purchases data (to be called when Purchases section is shown)
-async function loadPurchasesData() {
+async function loadPurchases() {
   try {
     const response = await fetch('/admin/api/purchases');
     const result = await response.json();
@@ -1906,9 +2026,12 @@ function exportClients() {
 }
 
 // View client details in modal
-function viewClientDetails(clientId, clientName, clientEmail, totalCourses, overallProgress) {
+function viewClientDetails(clientId, clientName, clientEmail, totalCourses, overallProgress, membershipTier, membershipExpiry) {
   const clientType = totalCourses > 0 ? 'Paying Customer' : 'Free User';
   const clientStatus = overallProgress > 0 ? 'Active Learner' : 'Inactive';
+
+  const membershipBadgeText = membershipTier === 'VIP' ? '👑 VIP' : (membershipTier === 'Pro' ? '💎 PRO' : '🌱 Free');
+  const membershipClass = membershipTier === 'VIP' ? 'bg-warning text-dark' : (membershipTier === 'Pro' ? 'bg-primary' : 'bg-secondary');
 
   const modalContent = `
     <div style="padding: 20px;">
@@ -1949,6 +2072,19 @@ function viewClientDetails(clientId, clientName, clientEmail, totalCourses, over
             <div>
               <p style="margin: 0; color: #6b7280; font-size: 12px; font-weight: 600; text-transform: uppercase;">Progress</p>
               <h4 style="margin: 5px 0 0 0; color: #1f2937; font-size: 24px;">${overallProgress}%</h4>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span class="material-symbols-outlined" style="color: #7b09cd; font-size: 28px;">workspace_premium</span>
+            <div>
+              <p style="margin: 0; color: #6b7280; font-size: 12px; font-weight: 600; text-transform: uppercase;">Membership</p>
+              <h4 style="margin: 5px 0 0 0; color: #1f2937; font-size: 18px;">
+                <span class="badge ${membershipClass}">${membershipBadgeText}</span>
+              </h4>
+              ${membershipExpiry !== 'Never' ? `<p style="margin: 5px 0 0 0; font-size: 10px; color: #6b7280;">Expires: ${membershipExpiry}</p>` : ''}
             </div>
           </div>
         </div>

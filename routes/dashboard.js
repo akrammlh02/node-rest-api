@@ -34,12 +34,29 @@ router.get('/', (req, res) => {
     // Get statistics
     const enrolledCount = purchasedCourses.length;
 
-    res.render('dashboard.hbs', {
-      fullName: req.session.user.fullName,
-      email: req.session.user.email,
-      id: req.session.user.id,
-      purchasedCourses: purchasedCourses || [],
-      enrolledCount: enrolledCount
+    // Get recent orders/payments status
+    const ordersSql = `
+      SELECT p.*, c.title as course_title, pr.file_url as proof_url
+      FROM payments p
+      LEFT JOIN courses c ON p.course_id = c.course_id
+      LEFT JOIN payment_proofs pr ON p.id = pr.payment_id
+      WHERE p.client_id = ?
+      ORDER BY p.created_at DESC
+      LIMIT 10
+    `;
+
+    conn.query(ordersSql, [clientId], (err, recentOrders) => {
+      res.render('dashboard.hbs', {
+        fullName: req.session.user.fullName,
+        email: req.session.user.email,
+        id: req.session.user.id,
+        membershipTier: req.session.user.membershipTier || 'Free',
+        membershipStatus: req.session.user.membershipStatus || 'none',
+        membershipExpiry: req.session.user.membershipExpiry,
+        purchasedCourses: purchasedCourses || [],
+        enrolledCount: enrolledCount,
+        recentOrders: recentOrders || []
+      });
     });
   });
 })
@@ -67,21 +84,34 @@ router.get('/ar', (req, res) => {
     ORDER BY p.purchase_date DESC
   `;
 
+  // SQL for orders (reusable)
+  const ordersSql = `
+    SELECT p.*, c.title as course_title, pr.file_url as proof_url
+    FROM payments p
+    LEFT JOIN courses c ON p.course_id = c.course_id
+    LEFT JOIN payment_proofs pr ON p.id = pr.payment_id
+    WHERE p.client_id = ?
+    ORDER BY p.created_at DESC
+    LIMIT 10
+  `;
+
   conn.query(sql, [clientId], (err, purchasedCourses) => {
     if (err) {
       console.error(err);
       purchasedCourses = [];
     }
 
-    // Get statistics
     const enrolledCount = purchasedCourses.length;
 
-    res.render('dashboard-ar.hbs', {
-      fullName: req.session.user.fullName,
-      email: req.session.user.email,
-      id: req.session.user.id,
-      purchasedCourses: purchasedCourses || [],
-      enrolledCount: enrolledCount
+    conn.query(ordersSql, [clientId], (err, recentOrders) => {
+      res.render('dashboard-ar.hbs', {
+        fullName: req.session.user.fullName,
+        email: req.session.user.email,
+        id: req.session.user.id,
+        purchasedCourses: purchasedCourses || [],
+        enrolledCount: enrolledCount,
+        recentOrders: recentOrders || []
+      });
     });
   });
 })

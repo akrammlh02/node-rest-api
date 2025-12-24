@@ -21,7 +21,98 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isLoggedIn) {
         checkResumeOpportunities();
     }
+
+    // Assign icons to language cards
+    document.querySelectorAll('.language-card').forEach(card => {
+        const lang = card.getAttribute('data-language');
+        const iconDiv = card.querySelector('.language-icon-emoji');
+        if (iconDiv) {
+            const iconClass = languageIcons[lang] || languageIcons['default'];
+            iconDiv.innerHTML = `<i class="${iconClass}"></i>`;
+        }
+    });
+
+    // Set initial category counts if needed or just show all
+    filterByCategory('all');
 });
+
+// Category categorization logic
+const categories = {
+    'JavaScript': 'web',
+    'HTML': 'web',
+    'CSS': 'web',
+    'React': 'web',
+    'Vue': 'web',
+    'Angular': 'web',
+    'Node.js': 'backend',
+    'Python': 'backend',
+    'PHP': 'backend',
+    'Java': 'backend',
+    'SQL': 'backend',
+    'PostgreSQL': 'backend',
+    'Swift': 'mobile',
+    'Kotlin': 'mobile',
+    'React Native': 'mobile',
+    'Flutter': 'mobile'
+};
+
+const languageIcons = {
+    'JavaScript': 'devicon-javascript-plain colored',
+    'Python': 'devicon-python-plain colored',
+    'HTML': 'devicon-html5-plain colored',
+    'CSS': 'devicon-css3-plain colored',
+    'Java': 'devicon-java-plain colored',
+    'PHP': 'devicon-php-plain colored',
+    'C++': 'devicon-cplusplus-plain colored',
+    'SQL': 'devicon-mysql-plain colored',
+    'React': 'devicon-react-original colored',
+    'Node.js': 'devicon-nodejs-plain colored',
+    'Swift': 'devicon-swift-plain colored',
+    'Rust': 'devicon-rust-plain colored',
+    'Go': 'devicon-go-original-wordmark colored',
+    'TypeScript': 'devicon-typescript-plain colored',
+    'Angular': 'devicon-angularjs-plain colored',
+    'Vue': 'devicon-vuejs-plain colored',
+    'Docker': 'devicon-docker-plain colored',
+    'Git': 'devicon-git-plain colored',
+    'default': 'devicon-code-plain'
+};
+
+function filterLanguages() {
+    const searchTerm = document.getElementById('langSearch').value.toLowerCase();
+    const cards = document.querySelectorAll('.language-card');
+
+    cards.forEach(card => {
+        const lang = card.getAttribute('data-language').toLowerCase();
+        if (lang.includes(searchTerm)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function filterByCategory(category) {
+    // Update UI
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.toLowerCase() === category) {
+            btn.classList.add('active');
+        }
+    });
+
+    const cards = document.querySelectorAll('.language-card');
+    cards.forEach(card => {
+        const lang = card.getAttribute('data-language');
+        const langCat = categories[lang] || 'other';
+
+        if (category === 'all' || langCat === category) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
 
 async function checkResumeOpportunities() {
     if (!languages || languages.length === 0) return;
@@ -132,34 +223,34 @@ function displayQuestion(question, sessionData) {
     document.getElementById('progressBar').style.width = `${progress}%`;
 
     wrapper.innerHTML = `
-    <div class="question-number">Question ${currentIndex} of ${total}</div>
+    <div class="question-number">Challenge ${currentIndex} of ${total}</div>
     <div class="question-text">${question.question}</div>
     
     <div class="options-grid">
       <button class="option-button" onclick="selectOption('A')">
         <span class="option-letter">A</span>
-        <span>${question.option_a}</span>
+        <span class="option-text">${question.option_a}</span>
       </button>
       <button class="option-button" onclick="selectOption('B')">
         <span class="option-letter">B</span>
-        <span>${question.option_b}</span>
+        <span class="option-text">${question.option_b}</span>
       </button>
       <button class="option-button" onclick="selectOption('C')">
         <span class="option-letter">C</span>
-        <span>${question.option_c}</span>
+        <span class="option-text">${question.option_c}</span>
       </button>
       <button class="option-button" onclick="selectOption('D')">
         <span class="option-letter">D</span>
-        <span>${question.option_d}</span>
+        <span class="option-text">${question.option_d}</span>
       </button>
     </div>
 
-    <div class="feedback-message" id="feedbackMessage"></div>
+    <div class="feedback-message mt-4" id="feedbackMessage"></div>
 
-    <div class="action-buttons">
+    <div class="d-flex justify-content-end mt-4">
       <button class="btn-primary-custom" id="nextBtn" onclick="loadNextQuestion()" style="display: none;">
+        Next Challenge
         <span class="material-symbols-outlined">arrow_forward</span>
-        Next Question
       </button>
     </div>
   `;
@@ -288,25 +379,14 @@ async function showResults() {
             const stats = data.stats;
             const timeSpent = quizStartTime ? Math.round((new Date() - quizStartTime) / 1000 / 60) : 0;
 
-            document.getElementById('resultsLanguage').textContent = `${currentSession.language} Quiz Results`;
+            document.getElementById('resultsLanguage').textContent = `${currentSession.language} Assessment`;
             document.getElementById('finalScore').textContent = `${Math.round(stats.score)}%`;
-            document.getElementById('totalAnswered').textContent = stats.answered;
             document.getElementById('correctAnswers').textContent = stats.correct;
             document.getElementById('incorrectAnswers').textContent = stats.incorrect;
 
-            // Add additional stats
-            const additionalStats = document.getElementById('additionalStats');
-            if (additionalStats) {
-                additionalStats.innerHTML = `
-          <div class="stat-box">
-            <div class="stat-number" style="color: #ff6b6b;">🔥 ${maxStreak}</div>
-            <div class="stat-label">Best Streak</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-number" style="color: #667eea;">⏱️ ${timeSpent}</div>
-            <div class="stat-label">Minutes</div>
-          </div>
-        `;
+            const timeEl = document.getElementById('statsTime');
+            if (timeEl) {
+                timeEl.textContent = `${timeSpent}m`;
             }
 
             hideLoading();

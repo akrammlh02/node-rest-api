@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart - DevAcademy</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="icon" type="image/x-icon" href="/images/logo.png">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .cart-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .cart-header {
+      margin-bottom: 2rem;
+    }
+
+    .cart-header h1 {
+      color: #333;
+      font-weight: 700;
+    }
+
+    .cart-item {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .cart-item-image {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-item-meta {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .cart-item-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #7b09cd;
+    }
+
+    .remove-item-btn {
+      background: none;
+      border: none;
+      color: #dc3545;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    .remove-item-btn:hover {
+      background: rgba(220, 53, 69, 0.1);
+    }
+
+    .cart-summary {
+      background: linear-gradient(135deg, #7b09cd 0%, #9d4edd 100%);
+      color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .cart-summary h3 {
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .summary-total {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .empty-cart-icon {
+      font-size: 5rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .btn-checkout {
+      background: white;
+      color: #7b09cd;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 1.5rem;
+      transition: transform 0.2s;
+    }
+
+    .btn-checkout:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .cart-item-image {
+        width: 100%;
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/course">Courses</a></li>
+        {{#if isLoggedIn}}
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button></li>
+        {{else}}
+        <li><a href="/login">Login</a></li>
+        <li><button type="button" class="btn signup"><a href="/signup"> Sign up</a></button></li>
+        {{/if}}
+        <li>
+          <a href="/cart/view" class="cart-link">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            <span class="cart-badge" id="cartBadge">0</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="cart-container">
+      <div class="cart-header">
+        <h1>
+          <span class="material-symbols-outlined">shopping_cart</span>
+          Shopping Cart
+        </h1>
+        <p class="text-muted">Review your selected courses</p>
+      </div>
+
+      {{#if (eq itemCount 0)}}
+      <div class="empty-cart">
+        <div class="empty-cart-icon">
+          <span class="material-symbols-outlined">shopping_cart</span>
+        </div>
+        <h2>Your cart is empty</h2>
+        <p class="text-muted">Add some courses to get started!</p>
+        <a href="/course" class="btn btn-primary mt-3">
+          <span class="material-symbols-outlined">store</span>
+          Browse Courses
+        </a>
+      </div>
+      {{else}}
+      <div class="row">
+        <div class="col-lg-8">
+          <div id="cartItems">
+            {{#each cart}}
+            <div class="cart-item" data-course-id="{{course.course_id}}">
+              <img src="{{course.thumbnail_url}}" alt="{{course.title}}" class="cart-item-image">
+              <div class="cart-item-info">
+                <div class="cart-item-title">{{course.title}}</div>
+                <div class="cart-item-meta">
+                  <span>{{course.level}}</span> • <span>{{course.duration_hours}} hours</span>
+                </div>
+              </div>
+              <div class="cart-item-price">{{course.price}} DA</div>
+              <button class="remove-item-btn" onclick="removeFromCart({{course.course_id}})" title="Remove">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+              <span>Items ({{itemCount}})</span>
+              <span>{{total}} DA</span>
+            </div>
+            <div class="summary-total">
+              <div class="summary-row" style="border-bottom: none; padding-bottom: 0;">
+                <span>Total</span>
+                <span>{{total}} DA</span>
+              </div>
+            </div>
+            {{#if isLoggedIn}}
+            <button class="btn-checkout" onclick="proceedToCheckout()">
+              <span class="material-symbols-outlined">payment</span>
+              Proceed to Checkout
+            </button>
+            {{else}}
+            <a href="/login?redirect=/cart/view" class="btn-checkout text-decoration-none">
+              <span class="material-symbols-outlined">login</span>
+              Login to Checkout
+            </a>
+            {{/if}}
+            <a href="/course" class="btn btn-outline-light w-100 mt-2">
+              <span class="material-symbols-outlined">arrow_back</span>
+              Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/cart-utils.js"></script>
+  <script src="/cart.js"></script>
+</body>
+
+</html>

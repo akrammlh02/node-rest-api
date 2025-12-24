@@ -34,12 +34,28 @@ async function loadCourse() {
     document.getElementById('courseDescription').textContent = course.description || 'No description available.';
     document.getElementById('coursePrice').textContent = course.price + ' DA';
 
+    // Update sticky cta content
+    const stickyTitle = document.getElementById('stickyCourseTitle');
+    const stickyPrice = document.getElementById('stickyCoursePrice');
+    if (stickyTitle) stickyTitle.textContent = course.title;
+    if (stickyPrice) stickyPrice.textContent = course.price + ' DA';
+
+    // Update author name if element exists
+    const authorEl = document.querySelector('.hero-author-name');
+    if (authorEl && course.author) {
+      authorEl.textContent = course.author;
+    }
+
     // Update category badge
     if (course.level) {
       const categoryEl = document.getElementById('courseCategory');
+      const headerLevelEl = document.getElementById('courseLevelHeader');
       if (categoryEl) {
         categoryEl.textContent = course.level;
         categoryEl.style.display = 'inline-block';
+      }
+      if (headerLevelEl) {
+        headerLevelEl.textContent = course.level;
       }
     }
 
@@ -59,7 +75,7 @@ async function loadCourse() {
         // Add YouTube autoplay parameters (mute required for autoplay)
         if (videoUrl.includes('youtube.com/embed/')) {
           const separator = videoUrl.includes('?') ? '&' : '?';
-          videoUrl += `${separator}autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1`;
+          videoUrl += `${separator}autoplay=1&mute=0&rel=0&modestbranding=1&playsinline=1`;
         }
 
         previewFrame.src = videoUrl;
@@ -329,65 +345,170 @@ function toggleChapter(index) {
   }
 }
 
-function enrollCourse() {
+// Buy Now - Add to cart and go directly to checkout
+async function buyNow() {
   const courseId = getCourseIdFromUrl();
-  if (courseId) {
-    const whatsappUrl = `https://wa.me/213540921726?text=Salam%20Akram%2C%20ana%20mhtam%20bdwrat%20ID:${courseId}`;
-    window.open(whatsappUrl, '_blank');
+  if (!courseId) {
+    return;
   }
+
+  // Visual feedback on all buttons
+  const buttons = document.querySelectorAll('.btn-enroll-primary, .floating-join-cta, .btn-enroll-modal');
+  buttons.forEach(btn => {
+    if (btn.tagName === 'BUTTON' || btn.tagName === 'A') {
+      const originalHtml = btn.innerHTML;
+      btn.setAttribute('data-original', originalHtml);
+      btn.innerHTML = '<span class="material-symbols-outlined">sync</span> Chargement...';
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.8';
+    }
+  });
+
+  try {
+    // Add to cart officially before redirecting
+    await fetch('/cart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ courseId })
+    });
+
+    // Short delay for visual polish
+    setTimeout(() => {
+      window.location.href = '/payment/checkout';
+    }, 400);
+
+  } catch (error) {
+    console.error('Error during Buy Now:', error);
+    // Fallback: direct redirect
+    window.location.href = `/payment/checkout?courseId=${courseId}`;
+  }
+}
+
+// Legacy function name for backward compatibility
+function enrollCourse() {
+  buyNow();
+}
+
+// Add to Checkout - add to cart/checkout session and stay on page
+function addToCheckout() {
+  const courseId = getCourseIdFromUrl();
+  if (!courseId) {
+    return;
+  }
+
+  // Use AJAX to add to cart/checkout
+  fetch('/cart/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ courseId })
+  })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) {
+        // Show success notification
+        const notification = document.createElement('div');
+        notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: opacity 0.5s ease;';
+        notification.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span class="material-symbols-outlined">check_circle</span> Course added to checkout!</div>';
+        document.body.appendChild(notification);
+
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          setTimeout(() => notification.remove(), 500);
+        }, 3000);
+
+        // Update cart badge
+        if (result.cartCount !== undefined) {
+          updateCartBadge(result.cartCount);
+        } else {
+          updateCartBadge();
+        }
+
+        // Update button state visually to indicate success
+        const btn = document.querySelector('.btn-add-to-cart-small');
+        if (btn) {
+          const originalContent = btn.innerHTML;
+          btn.innerHTML = '<span class="material-symbols-outlined">check</span>';
+          btn.style.backgroundColor = '#28a745';
+          btn.style.borderColor = '#28a745';
+          btn.style.color = 'white';
+
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.style.backgroundColor = '';
+            btn.style.borderColor = '';
+            btn.style.color = '';
+          }, 2000);
+        }
+      } else {
+        if (result.message && result.message.includes('already')) {
+          const notification = document.createElement('div');
+          notification.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #17a2b8; color: white; padding: 1rem 1.5rem; border-radius: 8px; z-index: 9999;';
+          notification.innerHTML = '<div style="display: flex; align-items: center; gap: 10px;"><span class="material-symbols-outlined">info</span> Already in checkout</div>';
+          document.body.appendChild(notification);
+          setTimeout(() => notification.remove(), 3000);
+        } else {
+          alert(result.message || 'Failed to add to checkout');
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Failed to process request. Please try again.');
+    });
 }
 
 // Function to open free lesson modal
 function openFreeLessonModal(lessonId, title, videoUrl, description) {
-  // Set modal content
   document.getElementById('modalLessonTitle').textContent = title;
-
-  // Format video URL for proper embedding (especially for YouTube)
   let formattedVideoUrl = videoUrl;
-
-  // If it's a YouTube URL, ensure it's in embed format with proper parameters
   if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
-    // Convert various YouTube URL formats to embed format
     let videoId = '';
-
-    if (videoUrl.includes('youtube.com/watch?v=')) {
-      videoId = videoUrl.split('v=')[1];
-      const ampersandPosition = videoId.indexOf('&');
-      if (ampersandPosition !== -1) {
-        videoId = videoId.substring(0, ampersandPosition);
-      }
-    } else if (videoUrl.includes('youtube.com/embed/')) {
-      videoId = videoUrl.split('embed/')[1].split('?')[0];
-    } else if (videoUrl.includes('youtu.be/')) {
-      videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
-    }
-
-    if (videoId) {
-      // Create embed URL with parameters that allow embedding
-      formattedVideoUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-    }
+    if (videoUrl.includes('watch?v=')) videoId = videoUrl.split('v=')[1].split('&')[0];
+    else if (videoUrl.includes('embed/')) videoId = videoUrl.split('embed/')[1].split('?')[0];
+    else if (videoUrl.includes('youtu.be/')) videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+    if (videoId) formattedVideoUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
   }
-
   document.getElementById('modalVideoFrame').src = formattedVideoUrl;
-
-  // Set description or default message
-  const descriptionText = description && description.trim() !== ''
-    ? description
-    : 'This free lesson gives you a preview of the teaching style and content quality you can expect from this course. Discover the fundamentals and see how our expert instruction can help you achieve your learning goals.';
-
+  const descriptionText = description && description.trim() !== '' ? description : 'This free lesson gives you a preview...';
   document.getElementById('modalDescriptionText').textContent = descriptionText;
-
-  // Show the modal using Bootstrap
   const modal = new bootstrap.Modal(document.getElementById('freeLessonModal'));
   modal.show();
-
-  // Clear video when modal is closed
   document.getElementById('freeLessonModal').addEventListener('hidden.bs.modal', function () {
     document.getElementById('modalVideoFrame').src = '';
-  }, { once: true }); // Use once: true to prevent multiple event listeners
+  }, { once: true });
+}
+
+// Function to switch between tabs
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+  const clickedBtn = document.querySelector(`.tab-btn[onclick="switchTab('${tabId}')"]`);
+  const targetPane = document.getElementById(`tab-${tabId}`);
+  if (clickedBtn) clickedBtn.classList.add('active');
+  if (targetPane) targetPane.classList.add('active');
+}
+
+// Stick Bottom CTA logic
+function handleStickyCta() {
+  const stickyBar = document.getElementById('stickyCtaBar');
+  if (!stickyBar) return;
+  const mainCta = document.querySelector('.btn-enroll-primary');
+  if (!mainCta) return;
+  const scrollPosition = window.scrollY;
+  const ctaPosition = mainCta.getBoundingClientRect().top + window.scrollY;
+  if (scrollPosition > ctaPosition + 100) stickyBar.classList.add('visible');
+  else stickyBar.classList.remove('visible');
 }
 
 // Load course on page load
 document.addEventListener('DOMContentLoaded', function () {
   loadCourse();
+  updateCartBadge();
+  window.addEventListener('scroll', handleStickyCta);
 });

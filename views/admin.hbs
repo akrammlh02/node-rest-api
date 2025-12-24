@@ -6,14 +6,202 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DevAcademy - Admin Panel</title>
   <link rel="stylesheet" href="/admin.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link rel="icon" type="image/x-icon" href="/images/logo.png">
   <style>
     * {
       font-family: 'Inter', sans-serif;
+    }
+
+    /* Interactive Admin Styles */
+    .lesson-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f0f0f0;
+      transition: all 0.2s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lesson-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(123, 9, 205, 0.1);
+      border-color: #d8b4fe;
+    }
+
+    .lesson-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .lesson-order-badge {
+      background: #f3e8ff;
+      color: #7b09cd;
+      font-weight: 700;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    /* Interactive Management Toolbar */
+    #interactiveManagementToolbar {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border: 1px solid #dee2e6;
+    }
+
+    #interactiveManagementToolbar .form-check-input {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+
+    #interactiveManagementToolbar .form-check-label {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .lesson-card .form-check-input {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .lesson-card .form-check-input:checked {
+      background-color: #7b09cd;
+      border-color: #7b09cd;
+    }
+
+    #bulkDeleteBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Table View Improvements */
+    #interactiveLessonsTable table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    #interactiveLessonsTable thead th {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      font-weight: 600;
+      color: #495057;
+      border-bottom: 2px solid #dee2e6;
+      padding: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    #interactiveLessonsTable tbody tr {
+      transition: all 0.2s ease;
+    }
+
+    #interactiveLessonsTable tbody tr:hover {
+      background-color: #f8f9fa;
+      transform: scale(1.01);
+    }
+
+    #interactiveLessonsTable tbody td {
+      padding: 12px;
+      vertical-align: middle;
+    }
+
+    /* Search Input Styling */
+    #interactiveSearchInput {
+      border-left: none;
+    }
+
+    #interactiveSearchInput:focus {
+      border-color: #7b09cd;
+      box-shadow: 0 0 0 0.2rem rgba(123, 9, 205, 0.25);
+    }
+
+    /* View Mode Toggle */
+    .btn-group .btn-check:checked+.btn-outline-secondary {
+      background-color: #7b09cd;
+      border-color: #7b09cd;
+      color: white;
+    }
+
+    /* Roadmap Cards */
+    .roadmap-card {
+      cursor: pointer;
+      border: 1px solid #e9ecef;
+    }
+
+    .roadmap-card:hover {
+      border-color: #7b09cd;
+    }
+
+    .roadmap-card .card-body {
+      padding: 20px;
+    }
+
+    .roadmap-card .badge {
+      font-size: 11px;
+      padding: 5px 10px;
+      font-weight: 600;
+    }
+
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+      #interactiveManagementToolbar {
+        flex-direction: column;
+        align-items: stretch !important;
+      }
+
+      #interactiveManagementToolbar>div {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .lesson-card {
+        margin-bottom: 15px;
+      }
+
+      .roadmap-card {
+        margin-bottom: 15px;
+      }
+    }
+
+    .code-editor-textarea {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 15px;
+      line-height: 1.5;
+    }
+
+    .code-editor-textarea:focus {
+      outline: none;
+      border-color: #7b09cd;
+      box-shadow: 0 0 0 2px rgba(123, 9, 205, 0.2);
+    }
+
+    .nav-pills .nav-link.active {
+      background-color: #7b09cd;
+    }
+
+    .nav-pills .nav-link {
+      color: #4b5563;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -67,15 +255,18 @@
               <li><a onclick="afficheSection('Quizzes')">
                   <span class="material-symbols-outlined">quiz</span>Quizzes</a>
               </li>
+              <li><a onclick="afficheSection('Payments')">
+                  <span class="material-symbols-outlined">payments</span>Payments & Proofs</a>
+              </li>
+              <li><a onclick="afficheSection('Interactive')">
+                  <span class="material-symbols-outlined">code</span>Interactive</a>
+              </li>
               <hr>
               <li>
                 <div style="width: 50%;">
                   <button type="button" class="btn btn-danger"><a href="/logout"> Logout</a></button>
                 </div>
               </li>
-            </ul>
-
-
             </ul>
           </div>
         </div>
@@ -105,6 +296,12 @@
         </li>
         <li><a onclick="afficheSection('Quizzes')">
             <span class="material-symbols-outlined">quiz</span>Quizzes</a>
+        </li>
+        <li><a onclick="afficheSection('Payments')">
+            <span class="material-symbols-outlined">payments</span>Payments & Proofs</a>
+        </li>
+        <li><a onclick="afficheSection('Interactive')">
+            <span class="material-symbols-outlined">code</span>Interactive</a>
         </li>
         <hr>
         <li><a style="color: red;" href="/logout"><span class="material-symbols-outlined">logout</span>Logout</a>
@@ -472,16 +669,69 @@
                     placeholder="e.g., Web Development, AI, Python" required>
                 </div>
                 <div class="mb-3">
-                  <label for="previewVideoUrl" class="form-label">Preview Video URL</label>
-                  <input type="url" class="form-control" id="previewVideoUrl"
-                    placeholder="https://www.youtube.com/embed/VIDEO_ID">
-                  <small class="form-text text-muted">
-                    <strong>Important:</strong> Use YouTube embed format:
-                    <code>https://www.youtube.com/embed/VIDEO_ID</code>
-                    <br>
-                    Example: If your video is <code>youtu.be/ABC123</code>, use
-                    <code>https://www.youtube.com/embed/ABC123</code>
-                  </small>
+                  <label for="previewVideoUrl" class="form-label">Preview Video</label>
+
+                  <!-- YouTube Auth Status (Admin Only - Hidden from regular users) -->
+                  <div class="mb-2" id="youtubeAuthStatus" style="display: block;">
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="youtubeAuthBtn"
+                      onclick="checkYouTubeAuth()">
+                      <span class="material-symbols-outlined"
+                        style="vertical-align: middle; font-size: 16px;">link</span>
+                      Connect YouTube (Admin Setup)
+                    </button>
+                    <span id="youtubeAuthStatusText" class="ms-2"></span>
+                    <small class="d-block text-muted mt-1">Click to authorize YouTube for video uploads</small>
+                  </div>
+
+                  <!-- Video Upload Option -->
+                  <div class="mb-2">
+                    <label class="form-check-label">
+                      <input type="radio" name="previewVideoType" value="upload" id="previewVideoUploadRadio" checked>
+                      Upload Video File
+                    </label>
+                    <label class="form-check-label ms-3">
+                      <input type="radio" name="previewVideoType" value="url" id="previewVideoUrlRadio">
+                      Use Existing YouTube URL
+                    </label>
+                  </div>
+
+                  <!-- Video File Upload -->
+                  <div id="previewVideoUploadSection">
+                    <input type="file" class="d-none" id="previewVideoFile" accept="video/*">
+                    <button type="button" class="btn btn-primary mb-2" id="previewVideoUploadBtn"
+                      onclick="document.getElementById('previewVideoFile').click()"
+                      style="background-color: #7b09cd; border: none;">
+                      <span class="material-symbols-outlined" style="vertical-align: middle;">upload</span>
+                      Select Video File to Upload
+                    </button>
+                    <div id="previewVideoFileName" class="mb-2" style="display: none;">
+                      <small class="text-muted">Selected: <span id="previewVideoFileNameText"></span></small>
+                    </div>
+                    <div class="progress mb-2" id="previewVideoProgress" style="display: none; height: 25px;">
+                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        style="width: 0%">
+                        <span id="previewVideoProgressText">0%</span>
+                      </div>
+                    </div>
+                    <div id="previewVideoUploadStatus" class="mb-2" style="display: none;"></div>
+                    <small class="form-text text-muted">
+                      Select a video file to upload. The video will be processed and the embed URL will be filled
+                      automatically.
+                    </small>
+                  </div>
+
+                  <!-- Video URL Input -->
+                  <div id="previewVideoUrlSection" style="display: none;">
+                    <input type="url" class="form-control" id="previewVideoUrl"
+                      placeholder="https://www.youtube.com/embed/VIDEO_ID">
+                    <small class="form-text text-muted">
+                      <strong>Important:</strong> Use YouTube embed format:
+                      <code>https://www.youtube.com/embed/VIDEO_ID</code>
+                      <br>
+                      Example: If your video is <code>youtu.be/ABC123</code>, use
+                      <code>https://www.youtube.com/embed/ABC123</code>
+                    </small>
+                  </div>
                 </div>
                 <div class="mb-3">
                   <label for="courseSkills" class="form-label">Skills (Comma separated)</label>
@@ -574,8 +824,50 @@
                 <div class="mb-3">
                   <input type="text" class="form-control mb-2" id="quickLessonTitle" placeholder="Lesson Title"
                     onkeypress="if(event.key === 'Enter') document.getElementById('quickLessonVideoUrl').focus()">
-                  <input type="url" class="form-control mb-2" id="quickLessonVideoUrl" placeholder="Video URL"
-                    onkeypress="if(event.key === 'Enter') document.getElementById('quickLessonResources').focus()">
+
+                  <!-- Video Type Selection -->
+                  <div class="mb-2">
+                    <label class="form-check-label">
+                      <input type="radio" name="lessonVideoType" value="upload" id="lessonVideoUploadRadio" checked>
+                      Upload Video to YouTube
+                    </label>
+                    <label class="form-check-label ms-3">
+                      <input type="radio" name="lessonVideoType" value="url" id="lessonVideoUrlRadio">
+                      Use Existing YouTube URL
+                    </label>
+                  </div>
+
+                  <!-- Video File Upload -->
+                  <div id="lessonVideoUploadSection" class="mb-2">
+                    <input type="file" class="d-none" id="quickLessonVideoFile" accept="video/*">
+                    <button type="button" class="btn btn-primary mb-2 w-100" id="lessonVideoUploadBtn"
+                      onclick="document.getElementById('quickLessonVideoFile').click()"
+                      style="background-color: #7b09cd; border: none;">
+                      <span class="material-symbols-outlined" style="vertical-align: middle;">upload</span>
+                      Select Video File to Upload
+                    </button>
+                    <div id="lessonVideoFileName" class="mb-2" style="display: none;">
+                      <small class="text-muted">Selected: <span id="lessonVideoFileNameText"></span></small>
+                    </div>
+                    <div class="progress mb-2" id="lessonVideoProgress" style="display: none; height: 25px;">
+                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                        style="width: 0%">
+                        <span id="lessonVideoProgressText">0%</span>
+                      </div>
+                    </div>
+                    <div id="lessonVideoUploadStatus" class="mb-2" style="display: none;"></div>
+                    <small class="form-text text-muted mb-2 d-block">
+                      Select a video file to upload. The video will be processed and the URL will be filled
+                      automatically.
+                    </small>
+                  </div>
+
+                  <!-- Video URL Input -->
+                  <div id="lessonVideoUrlSection" style="display: none;" class="mb-2">
+                    <input type="url" class="form-control mb-2" id="quickLessonVideoUrl" placeholder="Video URL"
+                      onkeypress="if(event.key === 'Enter') document.getElementById('quickLessonResources').focus()">
+                  </div>
+
                   <textarea class="form-control mb-2" id="quickLessonResources" rows="2"
                     placeholder="Resources (optional): One URL per line"
                     onkeypress="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); quickAddLesson(); }"></textarea>
@@ -768,6 +1060,7 @@
                   <th>Type</th>
                   <th>Courses</th>
                   <th>Progress</th>
+                  <th>Membership</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -860,6 +1153,79 @@
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                   <button type="submit" class="btn btn-danger">Remove Course</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Give Membership to Client Modal -->
+      <div class="modal fade" id="giveMembershipModal" tabindex="-1" aria-labelledby="giveMembershipModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #7b09cd, #a855f7); color: white;">
+              <h5 class="modal-title" id="giveMembershipModalLabel">
+                <span class="material-symbols-rounded align-middle me-1">workspace_premium</span> Give Membership
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="giveMembershipForm">
+                <input type="hidden" id="membershipClientId" value="">
+                <div class="mb-4 text-center">
+                  <p class="text-muted">Grant a premium membership tier to <strong
+                      id="membershipClientName">User</strong></p>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-bold">Select Membership Tier</label>
+                  <div class="d-grid gap-2">
+                    <input type="radio" class="btn-check" name="membershipTier" id="tierFree" value="Free" checked>
+                    <label class="btn btn-outline-secondary d-flex justify-content-between align-items-center p-3"
+                      for="tierFree">
+                      <span>Free Tier</span>
+                      <span class="badge bg-secondary">Basic Access</span>
+                    </label>
+
+                    <input type="radio" class="btn-check" name="membershipTier" id="tierPro" value="Pro">
+                    <label class="btn btn-outline-primary d-flex justify-content-between align-items-center p-3"
+                      for="tierPro">
+                      <span class="fw-bold">Pro Tier</span>
+                      <span class="badge bg-primary">Full Access</span>
+                    </label>
+
+                    <input type="radio" class="btn-check" name="membershipTier" id="tierVIP" value="VIP">
+                    <label class="btn btn-outline-warning d-flex justify-content-between align-items-center p-3"
+                      for="tierVIP">
+                      <span class="fw-bold text-dark">VIP Tier</span>
+                      <span class="badge bg-warning text-dark">Premium Support</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="membershipDuration" class="form-label fw-bold">Duration (Months)</label>
+                  <select class="form-select" id="membershipDuration">
+                    <option value="1">1 Month</option>
+                    <option value="3">3 Months</option>
+                    <option value="6">6 Months</option>
+                    <option value="12" selected>1 Year (12 Months)</option>
+                    <option value="infinite">Lifetime / 100 Years</option>
+                  </select>
+                </div>
+
+                <div id="membershipMessage" class="alert small py-2" style="display: none;"></div>
+
+                <div class="modal-footer px-0 pb-0 d-flex justify-content-between">
+                  <button type="button" class="btn btn-outline-danger" id="revokeMembershipBtn">Revoke Access</button>
+                  <div>
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary"
+                      style="background-color: #7b09cd; border: none;">Activate Membership</button>
+                  </div>
                 </div>
               </form>
             </div>
@@ -1310,93 +1676,790 @@
         </div>
       </div>
 
-      <!-- Add Ad Campaign Modal -->
-      <div class="modal fade" id="addAdCampaignModal" tabindex="-1" aria-labelledby="addAdCampaignModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header" style="background: linear-gradient(135deg, #1877f2, #0c63e4); color: white;">
-              <h5 class="modal-title" id="addAdCampaignModalLabel">
-                <span class="material-symbols-outlined" style="vertical-align: middle;">campaign</span>
-                Add Facebook Ad Campaign
-              </h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                aria-label="Close"></button>
+      <!-- Payments Section -->
+      <section id="Payments" class="payments-section" style="display: none;">
+        <div class="welcome">
+          <h1>Payments & Proofs</h1>
+          <p>Review and verify all student payments and transaction proofs.</p>
+        </div>
+
+        <div class="table-container">
+          <div class="section-header">
+            <h3>Recent Payments</h3>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; justify-content: flex-end;">
+              <div class="search-box">
+                <input type="text" class="form-control" id="paymentSearch" placeholder="Search payments..."
+                  onkeyup="filterPayments()">
+                <span class="material-symbols-outlined search-icon">search</span>
+              </div>
+              <div class="filter-buttons">
+                <button class="btn btn-filter active" onclick="loadPayments('all')">All</button>
+                <button class="btn btn-filter" onclick="loadPayments('pending')">Pending</button>
+                <button class="btn btn-filter" onclick="loadPayments('completed')">Completed</button>
+                <button class="btn btn-filter" onclick="loadPayments('failed')">Failed</button>
+              </div>
             </div>
-            <div class="modal-body">
-              <form id="addAdCampaignForm">
-                <input type="hidden" id="editCampaignId" value="">
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Client</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Proof</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminPaymentsTableBody">
+                <tr>
+                  <td colspan="7" class="text-center text-muted">Loading payments...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-                <div class="mb-3">
-                  <label for="campaignName" class="form-label">
-                    <strong>Campaign Name</strong> <span class="text-danger">*</span>
-                  </label>
-                  <input type="text" class="form-control" id="campaignName" required
-                    placeholder="e.g., Black Friday Sale 2024">
-                  <small class="text-muted">Give your campaign a memorable name</small>
-                </div>
-
-                <div class="mb-3">
-                  <label for="campaignSpend" class="form-label">
-                    <strong>Ad Spend Amount (DA)</strong> <span class="text-danger">*</span>
-                  </label>
-                  <input type="number" class="form-control" id="campaignSpend" required min="0" step="0.01"
-                    placeholder="0.00">
-                  <small class="text-muted">Total amount spent on this campaign</small>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="campaignStartDate" class="form-label">
-                        <strong>Start Date</strong> <span class="text-danger">*</span>
-                      </label>
-                      <input type="date" class="form-control" id="campaignStartDate" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="mb-3">
-                      <label for="campaignEndDate" class="form-label">
-                        <strong>End Date</strong>
-                      </label>
-                      <input type="date" class="form-control" id="campaignEndDate">
-                      <small class="text-muted">Leave empty if ongoing</small>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label for="campaignNotes" class="form-label">
-                    <strong>Notes</strong>
-                  </label>
-                  <textarea class="form-control" id="campaignNotes" rows="3"
-                    placeholder="Add any notes about this campaign..."></textarea>
-                </div>
-
-                <div class="mb-3" id="messageAdCampaign" style="display: none;"></div>
-
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <button type="submit" class="btn btn-primary" style="background-color: #1877f2; border: none;">
-                    <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">save</span>
-                    Save Campaign
-                  </button>
-                </div>
-              </form>
+      <!-- Proof Preview Modal -->
+      <div class="modal fade" id="proofPreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+              <h5 class="modal-title">Payment Proof Preview</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+              <div id="proofPreviewContainer">
+                <!-- Image or PDF here -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <a id="downloadProofLink" href="#" class="btn btn-outline-primary" target="_blank">
+                <span class="material-symbols-outlined" style="vertical-align: middle;">open_in_new</span>
+                Open Full Size
+              </a>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
       </div>
 
+      <section id="Interactive" class="interactive-section" style="display: none;">
+        <div class="welcome mb-4 ps-2">
+          <div class="content rounded-3 p-3 text-white"
+            style="background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);">
+            <h1 class="fs-3 mb-0">Interactive Coding</h1>
+            <p class="mb-0 opacity-75">Manage coding challenges and lessons</p>
+          </div>
+        </div>
+
+        <!-- Roadmap Management Section -->
+        <div class="card p-4 border-0 shadow-sm mb-4" style="border-radius: 12px;">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 fw-bold">
+              <span class="material-symbols-outlined align-middle me-2">route</span>
+              Learning Roadmaps
+            </h5>
+            <button class="btn btn-primary btn-sm" onclick="openAddPathModal()">
+              <span class="material-symbols-outlined align-middle me-1" style="font-size:18px">add</span>
+              New Roadmap
+            </button>
+          </div>
+          <div id="roadmapsList" class="row g-3">
+            <div class="col-12 text-center py-4">
+              <div class="spinner-border text-primary" role="status"></div>
+              <p class="mt-2 text-muted">Loading roadmaps...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-4 border-0 shadow-sm" style="border-radius: 12px;">
+          <!-- Top Toolbar -->
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <select id="interactivePathSelect" class="form-select border-0 bg-transparent fw-bold text-secondary"
+                style="width: 250px; outline: none; box-shadow: none;" onchange="loadInteractiveLessons(this.value)">
+                <option value="">Select a Path...</option>
+              </select>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-primary" onclick="openAddInteractiveLessonModal()"
+                style="background-color: #7b09cd; border: none; box-shadow: 0 4px 10px rgba(123, 9, 205, 0.3);">
+                <span class="material-symbols-outlined align-middle me-1">add_circle</span>
+                New Challenge
+              </button>
+            </div>
+          </div>
+
+          <!-- Statistics Bar -->
+          <div id="interactiveStatsBar" class="d-none mb-3">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                      <span class="material-symbols-outlined me-2" style="font-size:32px;">book</span>
+                      <div>
+                        <div class="small opacity-75">Total Lessons</div>
+                        <div class="h4 mb-0" id="totalLessonsCount">0</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-success text-white">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                      <span class="material-symbols-outlined me-2" style="font-size:32px;">check_circle</span>
+                      <div>
+                        <div class="small opacity-75">Output Match</div>
+                        <div class="h4 mb-0" id="outputMatchCount">0</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-warning text-dark">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                      <span class="material-symbols-outlined me-2" style="font-size:32px;">data_object</span>
+                      <div>
+                        <div class="small opacity-75">Regex Match</div>
+                        <div class="h4 mb-0" id="regexMatchCount">0</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm bg-info text-white">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                      <span class="material-symbols-outlined me-2" style="font-size:32px;">schedule</span>
+                      <div>
+                        <div class="small opacity-75">Avg Duration</div>
+                        <div class="h4 mb-0" id="avgDuration">15m</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Management Toolbar (shown when lessons are loaded) -->
+          <div id="interactiveManagementToolbar" class="d-none mb-4 p-3 bg-light rounded-3 border">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+              <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="selectAllLessons"
+                    onchange="toggleSelectAllLessons()">
+                  <label class="form-check-label fw-bold" for="selectAllLessons">
+                    Select All (<span id="selectedLessonsCount">0</span> selected)
+                  </label>
+                </div>
+                <button id="bulkDeleteBtn" class="btn btn-sm btn-danger" onclick="bulkDeleteInteractiveLessons()"
+                  disabled>
+                  <span class="material-symbols-outlined align-middle me-1" style="font-size: 18px;">delete</span>
+                  Delete Selected
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="clearSelection()">
+                  <span class="material-symbols-outlined align-middle me-1" style="font-size: 18px;">clear_all</span>
+                  Clear Selection
+                </button>
+              </div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="input-group" style="width: 250px;">
+                  <span class="input-group-text bg-white border-end-0">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">search</span>
+                  </span>
+                  <input type="text" id="interactiveSearchInput" class="form-control border-start-0"
+                    placeholder="Search lessons..." onkeyup="filterInteractiveLessons()">
+                </div>
+                <div class="btn-group" role="group">
+                  <input type="radio" class="btn-check" name="viewMode" id="viewModeGrid" value="grid" checked
+                    onchange="toggleInteractiveViewMode('grid')">
+                  <label class="btn btn-outline-secondary" for="viewModeGrid" title="Grid View">
+                    <span class="material-symbols-outlined">grid_view</span>
+                  </label>
+                  <input type="radio" class="btn-check" name="viewMode" id="viewModeTable" value="table"
+                    onchange="toggleInteractiveViewMode('table')">
+                  <label class="btn btn-outline-secondary" for="viewModeTable" title="Table View">
+                    <span class="material-symbols-outlined">table_rows</span>
+                  </label>
+                </div>
+                <select id="interactiveSortSelect" class="form-select form-select-sm" style="width: 180px;"
+                  onchange="sortInteractiveLessons()">
+                  <option value="order">Sort by Order</option>
+                  <option value="title">Sort by Title</option>
+                  <option value="date">Sort by Date</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lessons Grid View -->
+          <div id="interactiveLessonsGrid" class="row g-4">
+            <div class="col-12 text-center py-5">
+              <div class="text-muted">
+                <span class="material-symbols-outlined fs-1 d-block mb-3"
+                  style="opacity: 0.2; font-size: 64px !important;">school</span>
+                <h5 class="fw-normal">Select a learning path above to view and manage lessons.</h5>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lessons Table View -->
+          <div id="interactiveLessonsTable" class="d-none">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th style="width: 50px;">
+                      <input type="checkbox" class="form-check-input" id="selectAllLessonsTable"
+                        onchange="toggleSelectAllLessons()">
+                    </th>
+                    <th style="width: 60px;">#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Language</th>
+                    <th>Validation</th>
+                    <th>Access</th>
+                    <th style="width: 150px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="interactiveLessonsTableBody">
+                  <tr>
+                    <td colspan="8" class="text-center py-5 text-muted">
+                      Select a learning path above to view and manage lessons.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
     </section>
+    <!-- Add Ad Campaign Modal -->
+    <div class="modal fade" id="addAdCampaignModal" tabindex="-1" aria-labelledby="addAdCampaignModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background: linear-gradient(135deg, #1877f2, #0c63e4); color: white;">
+            <h5 class="modal-title" id="addAdCampaignModalLabel">
+              <span class="material-symbols-outlined" style="vertical-align: middle;">campaign</span>
+              Add Facebook Ad Campaign
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="addAdCampaignForm">
+              <input type="hidden" id="editCampaignId" value="">
+
+              <div class="mb-3">
+                <label for="campaignName" class="form-label">
+                  <strong>Campaign Name</strong> <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" id="campaignName" required
+                  placeholder="e.g., Black Friday Sale 2024">
+                <small class="text-muted">Give your campaign a memorable name</small>
+              </div>
+
+              <div class="mb-3">
+                <label for="campaignSpend" class="form-label">
+                  <strong>Ad Spend Amount (DA)</strong> <span class="text-danger">*</span>
+                </label>
+                <input type="number" class="form-control" id="campaignSpend" required min="0" step="0.01"
+                  placeholder="0.00">
+                <small class="text-muted">Total amount spent on this campaign</small>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="campaignStartDate" class="form-label">
+                      <strong>Start Date</strong> <span class="text-danger">*</span>
+                    </label>
+                    <input type="date" class="form-control" id="campaignStartDate" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="campaignEndDate" class="form-label">
+                      <strong>End Date</strong>
+                    </label>
+                    <input type="date" class="form-control" id="campaignEndDate">
+                    <small class="text-muted">Leave empty if ongoing</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="campaignNotes" class="form-label">
+                  <strong>Notes</strong>
+                </label>
+                <textarea class="form-control" id="campaignNotes" rows="3"
+                  placeholder="Add any notes about this campaign..."></textarea>
+              </div>
+
+              <div class="mb-3" id="messageAdCampaign" style="display: none;"></div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #1877f2; border: none;">
+                  <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">save</span>
+                  Save Campaign
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Interactive Lesson Modal (Tabbed) -->
+    <div class="modal fade" id="editInteractiveLessonModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0"
+            style="background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white;">
+            <h5 class="modal-title fw-bold">
+              <span class="material-symbols-outlined align-middle me-2">edit</span>
+              Edit Interactive Lesson
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body pt-0">
+            <ul class="nav nav-pills mb-4 mt-3" id="edit-int-modal-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="edit-int-tab-basics-btn" data-bs-toggle="pill"
+                  data-bs-target="#edit-int-tab-basics" type="button" role="tab">
+                  <span class="material-symbols-outlined align-middle me-2 fs-6">edit_note</span> Basics
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="edit-int-tab-code-btn" data-bs-toggle="pill"
+                  data-bs-target="#edit-int-tab-code" type="button" role="tab">
+                  <span class="material-symbols-outlined align-middle me-2 fs-6">code</span> Code
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="edit-int-tab-validation-btn" data-bs-toggle="pill"
+                  data-bs-target="#edit-int-tab-validation" type="button" role="tab">
+                  <span class="material-symbols-outlined align-middle me-2 fs-6">fact_check</span> Validation
+                </button>
+              </li>
+            </ul>
+
+            <form id="editInteractiveForm">
+              <input type="hidden" id="editIntLessonId">
+              <div id="editIntMessage" style="display:none;" class="alert alert-danger mb-3"></div>
+
+              <div class="tab-content" id="edit-int-modal-tabContent">
+                <!-- Tab 1: Basics -->
+                <div class="tab-pane fade show active" id="edit-int-tab-basics" role="tabpanel">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Lesson Title</label>
+                        <input type="text" class="form-control" id="editIntLessonTitle"
+                          placeholder="e.g. HTML Elements">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Challenge Description (Markdown)</label>
+                        <textarea class="form-control" id="editIntLessonDesc" rows="6"
+                          placeholder="Explain what the user needs to do..."></textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Order Number</label>
+                        <input type="number" class="form-control" id="editIntLessonOrder" value="1">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Access</label>
+                        <div class="form-check form-switch mt-1">
+                          <input class="form-check-input" type="checkbox" id="editIntLessonFree">
+                          <label class="form-check-label small fw-bold" for="editIntLessonFree">Free Preview</label>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Hints (One per line)</label>
+                        <textarea class="form-control" id="editIntHints" rows="5"
+                          placeholder="Hint 1&#10;Hint 2"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tab 2: Code -->
+                <div class="tab-pane fade" id="edit-int-tab-code" role="tabpanel">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label class="form-label fw-bold font-monospace">Starter Code</label>
+                      <textarea class="form-control code-editor-textarea" id="editIntStarterCode" rows="12"
+                        spellcheck="false"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-bold font-monospace text-success">Solution Code</label>
+                      <textarea class="form-control code-editor-textarea" id="editIntSolutionCode" rows="12"
+                        spellcheck="false"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tab 3: Validation -->
+                <div class="tab-pane fade" id="edit-int-tab-validation" role="tabpanel">
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">Validation Type</label>
+                    <div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editValType" id="editValOutput"
+                          value="output_match" checked>
+                        <label class="form-check-label" for="editValOutput">
+                          Output Match (Exact execution result)
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="editValType" id="editValRegex"
+                          value="regex_match">
+                        <label class="form-check-label" for="editValRegex">
+                          Regex Match (Check code patterns)
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold font-monospace">Expected Pattern / Output</label>
+                    <textarea class="form-control code-editor-textarea" id="editIntExpectedOutput" rows="4"
+                      placeholder="e.g. Hello World"></textarea>
+                    <div class="form-text">For Output Match, enter the exact expected console output. For Regex, enter
+                      the pattern to match in user code.</div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer bg-light p-3">
+            <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary px-5 fw-bold"
+              style="background-color: #0d6efd; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);"
+              onclick="updateInteractiveLesson()">
+              <span class="material-symbols-outlined align-middle me-1" style="font-size:18px">save</span>
+              Update Lesson
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Interactive Lesson Modal (Tabbed) -->
+    <div class="modal fade" id="addInteractiveLessonModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold">
+              <span class="material-symbols-outlined align-middle text-primary me-2">code_blocks</span>
+              Add Interactive Lesson
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body pt-0">
+            <ul class="nav nav-pills mb-4 mt-3" id="int-modal-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="int-tab-basics-btn" data-bs-toggle="pill"
+                  data-bs-target="#int-tab-basics" type="button" role="tab">
+                  <span class="material-symbols-outlined align-middle me-2 fs-6">edit_note</span> Basics
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="int-tab-code-btn" data-bs-toggle="pill" data-bs-target="#int-tab-code"
+                  type="button" role="tab">
+                  <span class="material-symbols-outlined align-middle me-2 fs-6">code</span> Code
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="int-tab-validation-btn" data-bs-toggle="pill"
+                  data-bs-target="#int-tab-validation" type="button" role="tab">
+                  <span class="material-symbols-outlined align-middle me-2 fs-6">fact_check</span> Validation
+                </button>
+              </li>
+            </ul>
+
+            <form id="addInteractiveForm">
+              <input type="hidden" id="intLessonPathId">
+              <div id="intMessage" style="display:none;" class="alert alert-danger mb-3"></div>
+
+              <div class="tab-content" id="int-modal-tabContent">
+                <!-- Tab 1: Basics -->
+                <div class="tab-pane fade show active" id="int-tab-basics" role="tabpanel">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Lesson Title</label>
+                        <input type="text" class="form-control" id="intLessonTitle" placeholder="e.g. HTML Elements">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Challenge Description (Markdown)</label>
+                        <textarea class="form-control" id="intLessonDesc" rows="6"
+                          placeholder="Explain what the user needs to do..."></textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Order Number</label>
+                        <input type="number" class="form-control" id="intLessonOrder" value="1">
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Access</label>
+                        <div class="form-check form-switch mt-1">
+                          <input class="form-check-input" type="checkbox" id="intLessonFree">
+                          <label class="form-check-label small fw-bold" for="intLessonFree">Free Preview</label>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Hints (One per line)</label>
+                        <textarea class="form-control" id="intHints" rows="5"
+                          placeholder="Hint 1&#10;Hint 2"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tab 2: Code -->
+                <div class="tab-pane fade" id="int-tab-code" role="tabpanel">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label class="form-label fw-bold font-monospace">Starter Code</label>
+                      <textarea class="form-control code-editor-textarea" id="intStarterCode" rows="12"
+                        spellcheck="false"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-bold font-monospace text-success">Solution Code</label>
+                      <textarea class="form-control code-editor-textarea" id="intSolutionCode" rows="12"
+                        spellcheck="false"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tab 3: Validation -->
+                <div class="tab-pane fade" id="int-tab-validation" role="tabpanel">
+                  <div class="mb-4">
+                    <label class="form-label fw-bold d-block mb-2">Validation Method</label>
+                    <div class="d-flex gap-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="valType" id="valOutput" value="output_match"
+                          checked>
+                        <label class="form-check-label" for="valOutput">
+                          Output Match (Exact execution result)
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="valType" id="valRegex" value="regex_match">
+                        <label class="form-check-label" for="valRegex">
+                          Regex Match (Check code patterns)
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold font-monospace">Expected Pattern / Output</label>
+                    <textarea class="form-control code-editor-textarea" id="intExpectedOutput" rows="4"
+                      placeholder="e.g. Hello World"></textarea>
+                    <div class="form-text">For Output Match, enter the exact expected console output. For Regex, enter
+                      the pattern to match in user code.</div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer bg-light p-3">
+            <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary px-5 fw-bold"
+              style="background-color: #7b09cd; box-shadow: 0 4px 10px rgba(123, 9, 205, 0.3);"
+              onclick="saveInteractiveLesson()">
+              Save Lesson
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <style>
+    .lesson-card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .lesson-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .lesson-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .lesson-order-badge {
+      background-color: #e0f7fa;
+      color: #00796b;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.85em;
+    }
+
+    .code-editor-textarea {
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 14px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 10px;
+      resize: vertical;
+    }
+
+    .code-editor-textarea:focus {
+      border-color: #7b09cd;
+      box-shadow: 0 0 0 0.25rem rgba(123, 9, 205, 0.25);
+    }
+
+    .form-check-input:checked {
+      background-color: #7b09cd;
+      border-color: #7b09cd;
+    }
+
+    .form-check-input:focus {
+      box-shadow: 0 0 0 0.25rem rgba(123, 9, 205, 0.25);
+    }
+
+    .btn-close-white {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    .nav-pills .nav-link {
+      color: #4b5563;
+      border-radius: 10px;
+      padding: 12px 15px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .nav-link:hover {
+      background-color: #7b09cd;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(123, 9, 205, 0.2);
+    }
+
+    .nav-pills .nav-link.active .material-symbols-outlined,
+    .nav-pills .nav-link:hover .material-symbols-outlined {
+      color: #fff;
+    }
+
+    .nav-pills .nav-link .material-symbols-outlined {
+      color: #9ca3af;
+      transition: color 0.2s ease;
+    }
+  </style>
 
   <script src="/admin.js"></script>
   <script src="/admin-edit-modals.js"></script>
   <script src="/admin-profit.js"></script>
   <script>
+    // YouTube Authentication Functions (Admin Only - for initial setup)
+    // Must be in global scope for onclick handler
+    window.checkYouTubeAuth = async function checkYouTubeAuth() {
+      const btn = document.getElementById('youtubeAuthBtn');
+      const statusText = document.getElementById('youtubeAuthStatusText');
+
+      // Disable button and show loading
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Connecting...';
+      }
+      if (statusText) {
+        statusText.textContent = 'Checking...';
+        statusText.style.color = 'blue';
+      }
+
+      try {
+        // First check if already authenticated
+        const response = await fetch('/admin/youtube/auth-status');
+        if (!response.ok) {
+          throw new Error('Failed to check auth status: ' + response.status);
+        }
+
+        const result = await response.json();
+
+        if (result.authenticated) {
+          if (btn) {
+            btn.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; font-size: 16px;">check_circle</span> YouTube Connected';
+            btn.classList.remove('btn-outline-primary');
+            btn.classList.add('btn-success');
+            btn.disabled = false;
+          }
+          if (statusText) {
+            statusText.textContent = '✓ Connected';
+            statusText.style.color = 'green';
+          }
+        } else {
+          // Get auth URL and redirect
+          if (statusText) {
+            statusText.textContent = 'Getting authorization URL...';
+          }
+
+          const authResponse = await fetch('/admin/youtube/auth-url');
+          if (!authResponse.ok) {
+            throw new Error('Failed to get auth URL: ' + authResponse.status);
+          }
+
+          const authResult = await authResponse.json();
+
+          if (authResult.success && authResult.authUrl) {
+            // Redirect to YouTube authorization
+            window.location.href = authResult.authUrl;
+          } else {
+            throw new Error(authResult.message || 'Failed to get YouTube auth URL');
+          }
+        }
+      } catch (error) {
+        console.error('Error checking YouTube auth:', error);
+
+        // Re-enable button
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; font-size: 16px;">link</span> Connect YouTube (Admin Setup)';
+        }
+
+        // Show error message
+        if (statusText) {
+          statusText.textContent = '✗ Error: ' + error.message;
+          statusText.style.color = 'red';
+        }
+
+        alert('Error connecting to YouTube: ' + error.message + '\n\nPlease check:\n1. YouTube credentials are set in .env file\n2. Server is running\n3. Console for more details');
+      }
+    }
+
     function afficheSection(sectionId) {
-      const sections = document.querySelectorAll('.dashboard-section, .courses-section, .clients-section, .purchases-section, .certificates-section, .quizzes-section');
+      const sections = document.querySelectorAll('.dashboard-section, .courses-section, .clients-section, .purchases-section, .certificates-section, .quizzes-section, .interactive-section, .payments-section');
       sections.forEach(sec => sec.style.display = 'none');
       document.getElementById(sectionId).style.display = 'block';
 
@@ -1411,6 +2474,179 @@
         loadQuizzes();
       } else if (sectionId === 'Dashboard') {
         loadDashboardStats();
+      } else if (sectionId === 'Interactive') {
+        loadInteractivePaths();
+      } else if (sectionId === 'Payments') {
+        loadPayments();
+      }
+    }
+
+    let allPayments = [];
+
+    async function loadPayments(filter = 'all') {
+      try {
+        const response = await fetch(`/admin/api/payments?status=${filter}`);
+        const data = await response.json();
+        if (data.success) {
+          allPayments = data.payments;
+          renderPayments(allPayments);
+
+          // Update filter buttons
+          document.querySelectorAll('.payments-section .btn-filter').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${filter}'`));
+          });
+        }
+      } catch (error) {
+        console.error('Error loading payments:', error);
+      }
+    }
+
+    function renderPayments(payments) {
+      const tbody = document.getElementById('adminPaymentsTableBody');
+      if (!tbody) return;
+
+      if (payments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">No payments found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = payments.map(p => {
+        const date = new Date(p.created_at).toLocaleDateString('fr-DZ', {
+          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        const statusBadge = p.status === 'completed'
+          ? '<span class="badge bg-success">Completed</span>'
+          : p.status === 'pending'
+            ? '<span class="badge bg-warning text-dark">Pending</span>'
+            : '<span class="badge bg-danger">Failed</span>';
+
+        // Online or Manual icon
+        const methodIcon = (p.payment_method === 'ccp' || p.payment_method === 'baridimob')
+          ? '<span class="material-symbols-outlined align-middle me-1" style="font-size:18px; color:#f59e0b">account_balance</span>'
+          : '<span class="material-symbols-outlined align-middle me-1" style="font-size:18px; color:#3b82f6">payments</span>';
+
+        const proofBtn = p.proof_url
+          ? `<button class="btn btn-sm btn-outline-info" onclick="viewProof('${p.proof_url}')">
+               <span class="material-symbols-outlined" style="font-size:18px">visibility</span> View Proof
+             </button>`
+          : '<span class="text-muted small">No Proof</span>';
+
+        const actions = p.status === 'pending'
+          ? `<div class="btn-group btn-group-sm">
+               <button class="btn btn-success" onclick="approvePayment(${p.id})">Approve</button>
+               <button class="btn btn-danger" onclick="rejectPayment(${p.id})">Reject</button>
+               <button class="btn btn-outline-danger" onclick="deletePayment(${p.id})">
+                 <span class="material-symbols-outlined" style="font-size:16px">delete</span>
+               </button>
+             </div>`
+          : `<button class="btn btn-sm btn-outline-danger" onclick="deletePayment(${p.id})">
+               <span class="material-symbols-outlined" style="font-size:16px">delete</span> Delete
+             </button>`;
+
+        return `
+          <tr>
+            <td class="small">${date}</td>
+            <td>
+              <div class="fw-bold">${p.client_name || 'Unknown'}</div>
+              <div class="text-muted small">${p.client_email || ''}</div>
+              <div class="small text-primary">
+                ${p.payment_type === 'membership'
+            ? `<span class="badge bg-primary"><span class="material-symbols-rounded align-middle fs-6">workspace_premium</span> ${p.membership_plan} Tier</span>`
+            : (p.course_title || 'Multiple Items')}
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                ${methodIcon}
+                <span class="text-uppercase small fw-bold">${p.payment_method}</span>
+              </div>
+            </td>
+            <td class="fw-bold">${p.amount} DA</td>
+            <td>${statusBadge}</td>
+            <td>${proofBtn}</td>
+            <td>${actions}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function deletePayment(id) {
+      if (!confirm('Are you sure you want to delete this payment record? This will NOT revoke course access if already granted.')) return;
+
+      try {
+        const response = await fetch(`/admin/api/payments/delete/${id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.success) {
+          showNotification('Payment record deleted.', 'info');
+          loadPayments();
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error deleting payment:', error);
+      }
+    }
+
+    function filterPayments() {
+      const search = document.getElementById('paymentSearch').value.toLowerCase();
+      const filtered = allPayments.filter(p =>
+        (p.client_name && p.client_name.toLowerCase().includes(search)) ||
+        (p.client_email && p.client_email.toLowerCase().includes(search)) ||
+        (p.course_title && p.course_title.toLowerCase().includes(search)) ||
+        (p.membership_plan && p.membership_plan.toLowerCase().includes(search)) ||
+        (p.id.toString().includes(search))
+      );
+      renderPayments(filtered);
+    }
+
+    function viewProof(url) {
+      const container = document.getElementById('proofPreviewContainer');
+      const downloadLink = document.getElementById('downloadProofLink');
+
+      downloadLink.href = url;
+
+      if (url.toLowerCase().endsWith('.pdf')) {
+        container.innerHTML = `<iframe src="${url}" width="100%" height="500px"></iframe>`;
+      } else {
+        container.innerHTML = `<img src="${url}" class="img-fluid" style="max-height: 80vh;">`;
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById('proofPreviewModal'));
+      modal.show();
+    }
+
+    async function approvePayment(id) {
+      if (!confirm('Are you sure you want to approve this payment? This will grant course access to the student.')) return;
+
+      try {
+        const response = await fetch(`/admin/api/payments/approve/${id}`, { method: 'POST' });
+        const data = await response.json();
+        if (data.success) {
+          showNotification('Payment approved successfully!', 'success');
+          loadPayments();
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error approving payment:', error);
+      }
+    }
+
+    async function rejectPayment(id) {
+      if (!confirm('Are you sure you want to reject this payment?')) return;
+
+      try {
+        const response = await fetch(`/admin/api/payments/reject/${id}`, { method: 'POST' });
+        const data = await response.json();
+        if (data.success) {
+          showNotification('Payment rejected.', 'warning');
+          loadPayments();
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error rejecting payment:', error);
       }
     }
 
@@ -1502,6 +2738,303 @@
         });
       }
 
+
+      // Check YouTube auth status on page load (only show admin setup if not authenticated)
+      // This runs silently - users don't need to know about YouTube
+      async function checkYouTubeAuthSilently() {
+        try {
+          const response = await fetch('/admin/youtube/auth-status');
+          if (!response.ok) {
+            console.error('Failed to check auth status:', response.status);
+            return;
+          }
+
+          const result = await response.json();
+          const authStatusDiv = document.getElementById('youtubeAuthStatus');
+          const btn = document.getElementById('youtubeAuthBtn');
+          const statusText = document.getElementById('youtubeAuthStatusText');
+
+          if (result.authenticated) {
+            // Hide button if authenticated
+            if (authStatusDiv) {
+              authStatusDiv.style.display = 'none';
+            }
+          } else {
+            // Show button if not authenticated
+            if (authStatusDiv) {
+              authStatusDiv.style.display = 'block';
+            }
+            if (btn) {
+              btn.disabled = false;
+            }
+            if (statusText) {
+              statusText.textContent = '';
+            }
+          }
+        } catch (error) {
+          console.error('Error checking YouTube auth:', error);
+          // Show button on error so admin can try to connect
+          const authStatusDiv = document.getElementById('youtubeAuthStatus');
+          if (authStatusDiv) {
+            authStatusDiv.style.display = 'block';
+          }
+        }
+      }
+
+      // Run check on page load
+      checkYouTubeAuthSilently();
+
+      // Video Upload Function
+      async function uploadVideoToYouTube(videoFile, title, description, progressBar, progressText, statusDiv) {
+        const formData = new FormData();
+        formData.append('video', videoFile);
+        formData.append('title', title || 'Untitled Video');
+        formData.append('description', description || '');
+
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+
+          // Track upload progress
+          xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable && progressBar) {
+              const percentComplete = (e.loaded / e.total) * 100;
+              const percentRounded = Math.round(percentComplete);
+              progressBar.style.width = percentComplete + '%';
+              if (progressText) {
+                progressText.textContent = percentRounded + '% - Uploading...';
+              }
+            }
+          });
+
+          xhr.addEventListener('load', () => {
+            if (xhr.status === 200) {
+              try {
+                const result = JSON.parse(xhr.responseText);
+                if (result.success) {
+                  if (progressText) {
+                    progressText.textContent = '100% - Upload Complete!';
+                  }
+                  if (statusDiv) {
+                    statusDiv.innerHTML = '<span style="color: green;">✓ Video uploaded successfully!</span>';
+                    statusDiv.style.display = 'block';
+                  }
+                  resolve(result.videoUrl);
+                } else {
+                  if (result.needsAuth) {
+                    // Don't show YouTube-specific errors to users - show generic message
+                    if (statusDiv) {
+                      statusDiv.innerHTML = '<span style="color: red;">⚠ Upload service not available. Please contact administrator.</span>';
+                      statusDiv.style.display = 'block';
+                    }
+                    // Silently check auth status (admin will see setup button if needed)
+                    checkYouTubeAuthSilently();
+                    reject(new Error('Upload service not available'));
+                  } else {
+                    if (statusDiv) {
+                      statusDiv.innerHTML = '<span style="color: red;">✗ ' + (result.message || 'Upload failed. Please try again.') + '</span>';
+                      statusDiv.style.display = 'block';
+                    }
+                    reject(new Error(result.message || 'Upload failed'));
+                  }
+                }
+              } catch (e) {
+                if (statusDiv) {
+                  statusDiv.innerHTML = '<span style="color: red;">✗ Invalid response from server</span>';
+                  statusDiv.style.display = 'block';
+                }
+                reject(new Error('Invalid response from server'));
+              }
+            } else {
+              if (statusDiv) {
+                statusDiv.innerHTML = '<span style="color: red;">✗ Upload failed with status: ' + xhr.status + '</span>';
+                statusDiv.style.display = 'block';
+              }
+              reject(new Error('Upload failed with status: ' + xhr.status));
+            }
+          });
+
+          xhr.addEventListener('error', () => {
+            if (statusDiv) {
+              statusDiv.innerHTML = '<span style="color: red;">✗ Network error during upload</span>';
+              statusDiv.style.display = 'block';
+            }
+            reject(new Error('Network error during upload'));
+          });
+
+          xhr.open('POST', '/admin/youtube/upload');
+          xhr.send(formData);
+        });
+      }
+
+      // Handle preview video file selection and auto-upload
+      const previewVideoFileInput = document.getElementById('previewVideoFile');
+      if (previewVideoFileInput) {
+        previewVideoFileInput.addEventListener('change', async function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          // Show file name
+          const fileNameDiv = document.getElementById('previewVideoFileName');
+          const fileNameText = document.getElementById('previewVideoFileNameText');
+          if (fileNameDiv && fileNameText) {
+            fileNameText.textContent = file.name + ' (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)';
+            fileNameDiv.style.display = 'block';
+          }
+
+          // Get course title for video title
+          const courseTitle = document.getElementById('courseTitle')?.value || 'Course Preview';
+          const courseDescription = document.getElementById('courseDescription')?.value || '';
+
+          // Show progress bar
+          const progressBar = document.querySelector('#previewVideoProgress .progress-bar');
+          const progressText = document.getElementById('previewVideoProgressText');
+          const progressContainer = document.getElementById('previewVideoProgress');
+          const statusDiv = document.getElementById('previewVideoUploadStatus');
+
+          progressContainer.style.display = 'block';
+          if (statusDiv) statusDiv.style.display = 'none';
+          progressBar.style.width = '0%';
+          if (progressText) progressText.textContent = '0% - Starting upload...';
+
+          try {
+            const videoUrl = await uploadVideoToYouTube(
+              file,
+              courseTitle + ' - Preview',
+              courseDescription,
+              progressBar,
+              progressText,
+              statusDiv
+            );
+
+            // Fill in the preview video URL field (even if URL section is hidden)
+            const previewVideoUrlInput = document.getElementById('previewVideoUrl');
+            if (previewVideoUrlInput) {
+              previewVideoUrlInput.value = videoUrl;
+            }
+
+            // Store uploaded URL in a data attribute for form submission
+            const uploadSection = document.getElementById('previewVideoUploadSection');
+            if (uploadSection) {
+              uploadSection.setAttribute('data-uploaded-url', videoUrl);
+            }
+
+            // Hide progress after 2 seconds
+            setTimeout(() => {
+              progressContainer.style.display = 'none';
+            }, 2000);
+          } catch (error) {
+            console.error('Upload error:', error);
+            progressContainer.style.display = 'none';
+          }
+        });
+      }
+
+      // Handle lesson video file selection and auto-upload
+      const lessonVideoFileInput = document.getElementById('quickLessonVideoFile');
+      if (lessonVideoFileInput) {
+        lessonVideoFileInput.addEventListener('change', async function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          // Show file name
+          const fileNameDiv = document.getElementById('lessonVideoFileName');
+          const fileNameText = document.getElementById('lessonVideoFileNameText');
+          if (fileNameDiv && fileNameText) {
+            fileNameText.textContent = file.name + ' (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)';
+            fileNameDiv.style.display = 'block';
+          }
+
+          // Get lesson title for video title
+          const lessonTitle = document.getElementById('quickLessonTitle')?.value || 'Lesson Video';
+
+          // Show progress bar
+          const progressBar = document.querySelector('#lessonVideoProgress .progress-bar');
+          const progressText = document.getElementById('lessonVideoProgressText');
+          const progressContainer = document.getElementById('lessonVideoProgress');
+          const statusDiv = document.getElementById('lessonVideoUploadStatus');
+
+          progressContainer.style.display = 'block';
+          if (statusDiv) statusDiv.style.display = 'none';
+          progressBar.style.width = '0%';
+          if (progressText) progressText.textContent = '0% - Starting upload...';
+
+          try {
+            const videoUrl = await uploadVideoToYouTube(
+              file,
+              lessonTitle,
+              '',
+              progressBar,
+              progressText,
+              statusDiv
+            );
+
+            // Fill in the lesson video URL field (even if URL section is hidden)
+            const lessonVideoUrlInput = document.getElementById('quickLessonVideoUrl');
+            if (lessonVideoUrlInput) {
+              lessonVideoUrlInput.value = videoUrl;
+            }
+
+            // Store uploaded URL in a data attribute
+            const lessonUploadSection = document.getElementById('lessonVideoUploadSection');
+            if (lessonUploadSection) {
+              lessonUploadSection.setAttribute('data-uploaded-url', videoUrl);
+            }
+
+            // Hide progress after 2 seconds
+            setTimeout(() => {
+              progressContainer.style.display = 'none';
+            }, 2000);
+          } catch (error) {
+            console.error('Upload error:', error);
+            progressContainer.style.display = 'none';
+          }
+        });
+      }
+
+      // Toggle between upload and URL modes for preview video
+      const previewVideoUploadRadio = document.getElementById('previewVideoUploadRadio');
+      const previewVideoUrlRadio = document.getElementById('previewVideoUrlRadio');
+      const previewVideoUploadSection = document.getElementById('previewVideoUploadSection');
+      const previewVideoUrlSection = document.getElementById('previewVideoUrlSection');
+
+      if (previewVideoUploadRadio && previewVideoUrlRadio) {
+        previewVideoUploadRadio.addEventListener('change', function () {
+          if (this.checked) {
+            previewVideoUploadSection.style.display = 'block';
+            previewVideoUrlSection.style.display = 'none';
+          }
+        });
+
+        previewVideoUrlRadio.addEventListener('change', function () {
+          if (this.checked) {
+            previewVideoUploadSection.style.display = 'none';
+            previewVideoUrlSection.style.display = 'block';
+          }
+        });
+      }
+
+      // Toggle between upload and URL modes for lesson video
+      const lessonVideoUploadRadio = document.getElementById('lessonVideoUploadRadio');
+      const lessonVideoUrlRadio = document.getElementById('lessonVideoUrlRadio');
+      const lessonVideoUploadSection = document.getElementById('lessonVideoUploadSection');
+      const lessonVideoUrlSection = document.getElementById('lessonVideoUrlSection');
+
+      if (lessonVideoUploadRadio && lessonVideoUrlRadio) {
+        lessonVideoUploadRadio.addEventListener('change', function () {
+          if (this.checked) {
+            lessonVideoUploadSection.style.display = 'block';
+            lessonVideoUrlSection.style.display = 'none';
+          }
+        });
+
+        lessonVideoUrlRadio.addEventListener('change', function () {
+          if (this.checked) {
+            lessonVideoUploadSection.style.display = 'none';
+            lessonVideoUrlSection.style.display = 'block';
+          }
+        });
+      }
+
       // Setup course form
       const form = document.getElementById('addCourseForm');
       if (form) {
@@ -1513,12 +3046,69 @@
           const courseImage = document.getElementById('courseImage');
           const coursePrice = document.getElementById('coursePrice').value;
           const courseCategory = document.getElementById('courseCategory').value;
-          const previewVideoUrl = document.getElementById('previewVideoUrl').value;
           const courseSkills = document.getElementById('courseSkills').value;
           const message = document.getElementById('messageCourse');
           const isPublished = document.getElementById('isPublished').value;
           const durationHours = document.getElementById('durationHours').value;
           const existingUrl = existingImageUrl.value;
+
+          // Get preview video URL
+          let previewVideoUrl = '';
+          const previewVideoType = document.querySelector('input[name="previewVideoType"]:checked')?.value;
+
+          if (previewVideoType === 'upload') {
+            // Check if URL was already uploaded (stored in the URL input field or data attribute)
+            const uploadedUrl = document.getElementById('previewVideoUrl').value;
+            const uploadSection = document.getElementById('previewVideoUploadSection');
+            const storedUrl = uploadSection?.getAttribute('data-uploaded-url') || uploadedUrl;
+
+            if (storedUrl && storedUrl.includes('youtube.com/embed/')) {
+              previewVideoUrl = storedUrl;
+            } else {
+              // If no URL yet, check if file is selected for new upload
+              const previewVideoFile = document.getElementById('previewVideoFile');
+              if (previewVideoFile && previewVideoFile.files[0]) {
+                const progressBar = document.querySelector('#previewVideoProgress .progress-bar');
+                const progressText = document.getElementById('previewVideoProgressText');
+                const progressContainer = document.getElementById('previewVideoProgress');
+                const statusDiv = document.getElementById('previewVideoUploadStatus');
+                progressContainer.style.display = 'block';
+                if (statusDiv) statusDiv.style.display = 'none';
+                progressBar.style.width = '0%';
+                if (progressText) progressText.textContent = '0% - Starting upload...';
+
+                try {
+                  previewVideoUrl = await uploadVideoToYouTube(
+                    previewVideoFile.files[0],
+                    courseTitle + ' - Preview',
+                    courseDescription,
+                    progressBar,
+                    progressText,
+                    statusDiv
+                  );
+                  // Update the URL input field
+                  document.getElementById('previewVideoUrl').value = previewVideoUrl;
+                  if (uploadSection) {
+                    uploadSection.setAttribute('data-uploaded-url', previewVideoUrl);
+                  }
+                  progressContainer.style.display = 'none';
+                } catch (error) {
+                  progressContainer.style.display = 'none';
+                  message.textContent = error.message || 'Failed to upload video to YouTube';
+                  message.style.display = 'block';
+                  message.style.color = 'red';
+                  return;
+                }
+              } else {
+                message.textContent = 'Please select a video file to upload or switch to URL mode.';
+                message.style.display = 'block';
+                message.style.color = 'red';
+                return;
+              }
+            }
+          } else {
+            previewVideoUrl = document.getElementById('previewVideoUrl').value;
+          }
 
           message.textContent = '';
           message.style.display = 'none';
@@ -1556,7 +3146,7 @@
           formData.append('description', courseDescription);
           formData.append('price', coursePrice);
           formData.append('level', courseCategory);
-          formData.append('previewVideoUrl', previewVideoUrl);
+          formData.append('previewVideoUrl', previewVideoUrl || '');
           formData.append('skills', courseSkills);
           formData.append('isPublished', isPublished);
           formData.append('durationHours', durationHours);
@@ -1969,11 +3559,1147 @@
         importBtn.disabled = false;
       }
     }
+    // ==========================================
+    // Interactive Coding Management Functions
+    // ==========================================
+
+    let allInteractiveLessons = [];
+    let filteredInteractiveLessons = [];
+    let currentViewMode = 'grid';
+    let selectedLessonIds = new Set();
+
+    function loadInteractivePaths() {
+      const select = document.getElementById('interactivePathSelect');
+      select.innerHTML = '<option value="">Loading...</option>';
+
+      fetch('/admin/api/interactive/paths')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            select.innerHTML = '<option value="">Select a Path...</option>';
+            data.paths.forEach(path => {
+              select.innerHTML += `<option value="${path.id}">${path.title} (${path.programming_language})</option>`;
+            });
+            // Also load roadmaps list
+            loadRoadmapsList(data.paths);
+          }
+        })
+        .catch(err => console.error(err));
+    }
+
+    async function loadRoadmapsList(paths) {
+      const roadmapsList = document.getElementById('roadmapsList');
+
+      if (!paths || paths.length === 0) {
+        roadmapsList.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <div class="text-muted">
+              <span class="material-symbols-outlined fs-1 d-block mb-3" style="opacity: 0.2; font-size: 64px !important;">route</span>
+              <h5 class="fw-normal">No roadmaps yet</h5>
+              <p>Click "New Roadmap" to create your first learning path.</p>
+            </div>
+          </div>`;
+        return;
+      }
+
+      // Get lesson counts for each path
+      const pathsWithCounts = await Promise.all(paths.map(async (path) => {
+        try {
+          const response = await fetch(`/admin/api/interactive/paths/${path.id}/lessons`);
+          const result = await response.json();
+          return {
+            ...path,
+            lessonCount: result.success ? result.lessons.length : 0
+          };
+        } catch (error) {
+          return { ...path, lessonCount: 0 };
+        }
+      }));
+
+      roadmapsList.innerHTML = pathsWithCounts.map(path => {
+        const languageColors = {
+          javascript: 'bg-warning',
+          python: 'bg-info',
+          html: 'bg-danger',
+          css: 'bg-primary',
+          java: 'bg-success',
+          cpp: 'bg-secondary',
+          php: 'bg-dark'
+        };
+        const langColor = languageColors[path.programming_language?.toLowerCase()] || 'bg-secondary';
+
+        // Tier badge styling
+        const tierInfo = {
+          'Free': { color: 'bg-secondary', icon: 'person' },
+          'Pro': { color: 'bg-primary', icon: 'bolt' },
+          'VIP': { color: 'bg-warning text-dark', icon: 'workspace_premium' }
+        };
+        const currentTier = path.required_tier || 'Free';
+        const tierStyle = tierInfo[currentTier] || tierInfo['Free'];
+
+        return `
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm roadmap-card" style="border-radius: 12px; transition: all 0.3s ease;">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h6 class="card-title fw-bold mb-1">${path.title}</h6>
+                    <div class="d-flex gap-2 align-items-center">
+                      <span class="badge ${langColor} text-white">${path.programming_language || 'N/A'}</span>
+                      <span class="badge ${tierStyle.color}" title="Required Tier">
+                        <span class="material-symbols-outlined align-middle" style="font-size:14px">${tierStyle.icon}</span>
+                        ${currentTier}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="dropdown">
+                    <button class="btn btn-link link-dark p-0" data-bs-toggle="dropdown">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" href="#" onclick="editRoadmap(${path.id})">
+                        <span class="material-symbols-outlined align-middle me-2" style="font-size:18px">edit</span>Edit</a></li>
+                      <li><a class="dropdown-item" href="#" onclick="selectRoadmap(${path.id})">
+                        <span class="material-symbols-outlined align-middle me-2" style="font-size:18px">visibility</span>View Lessons</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item text-danger" href="#" onclick="deleteRoadmap(${path.id}, '${path.title.replace(/'/g, "\\'")}')">
+                        <span class="material-symbols-outlined align-middle me-2" style="font-size:18px">delete</span>Delete</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <p class="card-text text-muted small mb-3" style="min-height: 40px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                  ${path.description || 'No description provided.'}
+                </p>
+                
+                <!-- Tier Toggle Buttons -->
+                <div class="mb-3">
+                  <label class="small text-muted d-block mb-1">Access Tier:</label>
+                  <div class="btn-group w-100" role="group">
+                    <button type="button" class="btn btn-sm ${currentTier === 'Free' ? 'btn-secondary' : 'btn-outline-secondary'}" 
+                      onclick="togglePathTier(${path.id}, 'Free')">
+                      <span class="material-symbols-outlined align-middle" style="font-size:14px">person</span>
+                      Free
+                    </button>
+                    <button type="button" class="btn btn-sm ${currentTier === 'Pro' ? 'btn-primary' : 'btn-outline-primary'}" 
+                      onclick="togglePathTier(${path.id}, 'Pro')">
+                      <span class="material-symbols-outlined align-middle" style="font-size:14px">bolt</span>
+                      Pro
+                    </button>
+                    <button type="button" class="btn btn-sm ${currentTier === 'VIP' ? 'btn-warning' : 'btn-outline-warning'}" 
+                      onclick="togglePathTier(${path.id}, 'VIP')">
+                      <span class="material-symbols-outlined align-middle" style="font-size:14px">workspace_premium</span>
+                      VIP
+                    </button>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">
+                    <span class="material-symbols-outlined align-middle" style="font-size:16px">book</span>
+                    ${path.lessonCount} lesson${path.lessonCount !== 1 ? 's' : ''}
+                  </small>
+                  <button class="btn btn-sm btn-outline-primary" onclick="selectRoadmap(${path.id})">
+                    Manage
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // Add hover effects
+      document.querySelectorAll('.roadmap-card').forEach(card => {
+        card.addEventListener('mouseenter', function () {
+          this.style.transform = 'translateY(-5px)';
+          this.style.boxShadow = '0 8px 20px rgba(0,0,0,0.15)';
+        });
+        card.addEventListener('mouseleave', function () {
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
+        });
+      });
+    }
+
+    function selectRoadmap(pathId) {
+      document.getElementById('interactivePathSelect').value = pathId;
+      loadInteractiveLessons(pathId);
+      // Scroll to lessons section
+      document.getElementById('interactiveManagementToolbar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function editRoadmap(pathId) {
+      fetch(`/admin/api/interactive/paths/${pathId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const path = data.path;
+            document.getElementById('editPathId').value = pathId;
+            document.getElementById('editPathTitle').value = path.title;
+            document.getElementById('editPathLanguage').value = path.programming_language;
+            document.getElementById('editPathDesc').value = path.description || '';
+            document.getElementById('editPathMessage').style.display = 'none';
+            new bootstrap.Modal(document.getElementById('editLearningPathModal')).show();
+          } else {
+            alert('Error loading roadmap: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(err => {
+          console.error('Error loading roadmap:', err);
+          alert('Error connecting to the server.');
+        });
+    }
+
+    function updateLearningPath() {
+      const pathId = document.getElementById('editPathId').value;
+      const title = document.getElementById('editPathTitle').value;
+      const language = document.getElementById('editPathLanguage').value;
+      const description = document.getElementById('editPathDesc').value;
+      const msg = document.getElementById('editPathMessage');
+
+      if (!title || !language) {
+        msg.textContent = 'Title and Language are required';
+        msg.className = 'alert alert-danger';
+        msg.style.display = 'block';
+        return;
+      }
+
+      fetch(`/admin/api/interactive/paths/${pathId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, language, description })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            showNotification('Roadmap updated successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('editLearningPathModal')).hide();
+            loadInteractivePaths();
+            // Update select dropdown if this path is selected
+            const select = document.getElementById('interactivePathSelect');
+            if (select.value == pathId) {
+              loadInteractiveLessons(pathId);
+            }
+          } else {
+            msg.textContent = data.message || 'Error updating roadmap';
+            msg.className = 'alert alert-danger';
+            msg.style.display = 'block';
+          }
+        })
+        .catch(err => {
+          console.error('Error updating roadmap:', err);
+          msg.textContent = 'Server Error';
+          msg.className = 'alert alert-danger';
+          msg.style.display = 'block';
+        });
+    }
+
+    async function togglePathTier(pathId, requiredTier) {
+      try {
+        const response = await fetch(`/admin/api/interactive/paths/${pathId}/toggle-tier`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requiredTier })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification(result.message, 'success');
+          loadInteractivePaths(); // Reload to update UI
+        } else {
+          showNotification(result.message || 'Error updating tier', 'danger');
+        }
+      } catch (error) {
+        console.error('Error toggling path tier:', error);
+        showNotification('Error connecting to the server.', 'danger');
+      }
+    }
+
+    function deleteRoadmap(pathId, pathTitle) {
+      if (!confirm(`Are you sure you want to delete the roadmap "${pathTitle}"?\n\nThis will also delete all lessons in this roadmap. This action cannot be undone.`)) {
+        return;
+      }
+
+      fetch(`/admin/api/interactive/paths/${pathId}`, {
+        method: 'DELETE'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            showNotification('Roadmap deleted successfully!', 'success');
+            loadInteractivePaths();
+            // Clear selection if deleted path was selected
+            const select = document.getElementById('interactivePathSelect');
+            if (select.value == pathId) {
+              select.value = '';
+              loadInteractiveLessons('');
+            }
+          } else {
+            showNotification('Error deleting roadmap: ' + (data.message || 'Unknown error'), 'danger');
+          }
+        })
+        .catch(err => {
+          console.error('Error deleting roadmap:', err);
+          showNotification('Error connecting to the server.', 'danger');
+        });
+    }
+
+    function loadInteractiveLessons(pathId) {
+      const grid = document.getElementById('interactiveLessonsGrid');
+      const table = document.getElementById('interactiveLessonsTable');
+      const tableBody = document.getElementById('interactiveLessonsTableBody');
+      const toolbar = document.getElementById('interactiveManagementToolbar');
+
+      // Reset state
+      allInteractiveLessons = [];
+      filteredInteractiveLessons = [];
+      selectedLessonIds.clear();
+      clearSelection();
+
+      if (!pathId) {
+        grid.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <div class="text-muted">
+                        <span class="material-symbols-outlined fs-1 d-block mb-3" style="opacity: 0.2; font-size: 64px !important;">school</span>
+                        <h5 class="fw-normal">Select a learning path above to view and manage lessons.</h5>
+                    </div>
+                </div>`;
+        tableBody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-muted">Select a learning path above to view and manage lessons.</td></tr>';
+        toolbar.classList.add('d-none');
+        return;
+      }
+
+      grid.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading lessons...</p></div>';
+      tableBody.innerHTML = '<tr><td colspan="8" class="text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Loading lessons...</p></td></tr>';
+
+      fetch(`/admin/api/interactive/paths/${pathId}/lessons`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            allInteractiveLessons = data.lessons.sort((a, b) => a.order_number - b.order_number);
+            filteredInteractiveLessons = [...allInteractiveLessons];
+
+            if (allInteractiveLessons.length === 0) {
+              const emptyState = `
+                            <div class="col-12 text-center py-5">
+                                <div class="p-5 text-muted bg-light rounded-3 border border-dashed">
+                                    <span class="material-symbols-outlined fs-1 d-block mb-3">playlist_add</span>
+                                    <h4>No lessons yet</h4>
+                                    <p>Click the "New Challenge" button to create your first interactive lesson.</p>
+                                </div>
+                            </div>`;
+              grid.innerHTML = emptyState;
+              tableBody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-muted">No lessons yet. Click the "New Challenge" button to create your first interactive lesson.</td></tr>';
+              toolbar.classList.add('d-none');
+              document.getElementById('interactiveStatsBar').classList.add('d-none');
+            } else {
+              toolbar.classList.remove('d-none');
+              document.getElementById('interactiveStatsBar').classList.remove('d-none');
+              updateInteractiveStats();
+              renderInteractiveLessons();
+            }
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          grid.innerHTML = '<div class="alert alert-danger">Error loading lessons.</div>';
+          tableBody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-danger">Error loading lessons.</td></tr>';
+          toolbar.classList.add('d-none');
+        });
+    }
+
+    function renderInteractiveLessons() {
+      if (currentViewMode === 'grid') {
+        renderInteractiveLessonsGrid();
+      } else {
+        renderInteractiveLessonsTable();
+      }
+      updateSelectedCount();
+      updateInteractiveStats();
+    }
+
+    function updateInteractiveStats() {
+      const totalLessons = filteredInteractiveLessons.length;
+      const outputMatch = filteredInteractiveLessons.filter(l => l.validation_type === 'output_match').length;
+      const regexMatch = filteredInteractiveLessons.filter(l => l.validation_type === 'regex_match').length;
+
+      document.getElementById('totalLessonsCount').textContent = totalLessons;
+      document.getElementById('outputMatchCount').textContent = outputMatch;
+      document.getElementById('regexMatchCount').textContent = regexMatch;
+    }
+
+    function renderInteractiveLessonsGrid() {
+      const grid = document.getElementById('interactiveLessonsGrid');
+      const table = document.getElementById('interactiveLessonsTable');
+
+      grid.classList.remove('d-none');
+      table.classList.add('d-none');
+
+      if (filteredInteractiveLessons.length === 0) {
+        grid.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <div class="text-muted">
+              <span class="material-symbols-outlined fs-1 d-block mb-3" style="opacity: 0.2; font-size: 64px !important;">search_off</span>
+              <h5 class="fw-normal">No lessons match your search criteria.</h5>
+            </div>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = '';
+      filteredInteractiveLessons.forEach(l => {
+        const validationBadge = l.validation_type === 'regex_match'
+          ? '<span class="badge bg-warning text-dark"><span class="material-symbols-outlined align-middle" style="font-size:12px">data_object</span> Regex</span>'
+          : '<span class="badge bg-success"><span class="material-symbols-outlined align-middle" style="font-size:12px">check_circle</span> Match</span>';
+
+        const languageBadge = `<span class="badge bg-info text-white">${l.programming_language || 'N/A'}</span>`;
+        const isChecked = selectedLessonIds.has(l.lesson_id) ? 'checked' : '';
+
+        // Free/Paid badge
+        const isFree = l.is_free === 1 || l.is_free === true;
+        const freeBadge = isFree
+          ? '<span class="badge bg-success"><span class="material-symbols-outlined align-middle" style="font-size:12px">lock_open</span> Free</span>'
+          : '<span class="badge bg-secondary"><span class="material-symbols-outlined align-middle" style="font-size:12px">lock</span> Paid</span>';
+
+        grid.innerHTML += `
+          <div class="col-md-6 col-lg-4">
+            <div class="lesson-card position-relative">
+              <div class="form-check position-absolute" style="top: 10px; left: 10px; z-index: 10;">
+                <input class="form-check-input lesson-checkbox" type="checkbox" value="${l.lesson_id}" 
+                  id="lesson-${l.lesson_id}" ${isChecked} onchange="updateSelectedCount()">
+              </div>
+              <div>
+                <div class="lesson-card-header">
+                  <div class="lesson-order-badge">${l.order_number}</div>
+                  <div class="dropdown">
+                    <button class="btn btn-link link-dark p-0" data-bs-toggle="dropdown">
+                      <span class="material-symbols-outlined">more_vert</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" href="#" onclick="editInteractiveLessonPreview(${l.lesson_id})">
+                        <span class="material-symbols-outlined align-middle me-2" style="font-size:18px">edit</span>Edit</a></li>
+                      <li><a class="dropdown-item" href="#" onclick="duplicateInteractiveLesson(${l.lesson_id})">
+                        <span class="material-symbols-outlined align-middle me-2" style="font-size:18px">content_copy</span>Duplicate</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item text-danger" href="#" onclick="deleteInteractiveLesson(${l.lesson_id})">
+                        <span class="material-symbols-outlined align-middle me-2" style="font-size:18px">delete</span>Delete</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <h5 class="text-truncate" title="${l.title}">${l.title}</h5>
+                <p class="text-muted small mb-3" style="min-height: 40px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                  ${(l.code_challenge || 'No description provided.').substring(0, 100)}${(l.code_challenge || '').length > 100 ? '...' : ''}
+                </p>
+                <div class="d-flex gap-2 mb-3 flex-wrap">
+                  ${validationBadge}
+                  ${languageBadge}
+                  ${freeBadge}
+                </div>
+                
+                <!-- Free/Paid Toggle -->
+                <div class="mb-3">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="free-toggle-${l.lesson_id}" 
+                      ${isFree ? 'checked' : ''} onchange="toggleLessonFree(${l.lesson_id}, this.checked)">
+                    <label class="form-check-label small fw-bold" for="free-toggle-${l.lesson_id}">
+                      ${isFree ? 'Free Preview' : 'Paid Only'}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-2">
+                <small class="text-muted">
+                  <span class="material-symbols-outlined align-middle" style="font-size:16px">schedule</span> 15 min
+                </small>
+                <div class="btn-group" role="group">
+                  <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="editInteractiveLessonPreview(${l.lesson_id})" title="Edit">
+                    <span class="material-symbols-outlined align-middle me-1" style="font-size:16px">edit</span>Edit
+                  </button>
+                  <button class="btn btn-sm btn-outline-secondary rounded-pill px-2" onclick="duplicateInteractiveLesson(${l.lesson_id})" title="Duplicate">
+                    <span class="material-symbols-outlined align-middle" style="font-size:16px">content_copy</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function renderInteractiveLessonsTable() {
+      const grid = document.getElementById('interactiveLessonsGrid');
+      const table = document.getElementById('interactiveLessonsTable');
+      const tableBody = document.getElementById('interactiveLessonsTableBody');
+
+      grid.classList.add('d-none');
+      table.classList.remove('d-none');
+
+      if (filteredInteractiveLessons.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-muted">No lessons match your search criteria.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = filteredInteractiveLessons.map(l => {
+        const validationBadge = l.validation_type === 'regex_match'
+          ? '<span class="badge bg-warning text-dark"><span class="material-symbols-outlined align-middle" style="font-size:12px">data_object</span> Regex</span>'
+          : '<span class="badge bg-success"><span class="material-symbols-outlined align-middle" style="font-size:12px">check_circle</span> Match</span>';
+
+        const isChecked = selectedLessonIds.has(l.lesson_id) ? 'checked' : '';
+        const isFree = l.is_free === 1 || l.is_free === true;
+
+        return `
+          <tr>
+            <td>
+              <input type="checkbox" class="form-check-input lesson-checkbox" value="${l.lesson_id}" 
+                id="lesson-table-${l.lesson_id}" ${isChecked} onchange="updateSelectedCount()">
+            </td>
+            <td><strong>${l.order_number}</strong></td>
+            <td><strong>${l.title}</strong></td>
+            <td><small class="text-muted">${(l.code_challenge || 'No description').substring(0, 80)}${(l.code_challenge || '').length > 80 ? '...' : ''}</small></td>
+            <td><span class="badge bg-info text-white">${l.programming_language || 'N/A'}</span></td>
+            <td>${validationBadge}</td>
+            <td>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="free-toggle-table-${l.lesson_id}" 
+                  ${isFree ? 'checked' : ''} onchange="toggleLessonFree(${l.lesson_id}, this.checked)">
+              </div>
+            </td>
+            <td>
+              <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-primary" onclick="editInteractiveLessonPreview(${l.lesson_id})" title="Edit">
+                  <span class="material-symbols-outlined" style="font-size:18px">edit</span>
+                </button>
+                <button class="btn btn-outline-info" onclick="duplicateInteractiveLesson(${l.lesson_id})" title="Duplicate">
+                  <span class="material-symbols-outlined" style="font-size:18px">content_copy</span>
+                </button>
+                <button class="btn btn-outline-danger" onclick="deleteInteractiveLesson(${l.lesson_id})" title="Delete">
+                  <span class="material-symbols-outlined" style="font-size:18px">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function toggleInteractiveViewMode(mode) {
+      currentViewMode = mode;
+      renderInteractiveLessons();
+    }
+
+    function filterInteractiveLessons() {
+      const searchTerm = document.getElementById('interactiveSearchInput').value.toLowerCase().trim();
+
+      if (!searchTerm) {
+        filteredInteractiveLessons = [...allInteractiveLessons];
+      } else {
+        filteredInteractiveLessons = allInteractiveLessons.filter(lesson =>
+          lesson.title.toLowerCase().includes(searchTerm) ||
+          (lesson.code_challenge && lesson.code_challenge.toLowerCase().includes(searchTerm)) ||
+          (lesson.programming_language && lesson.programming_language.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      renderInteractiveLessons();
+    }
+
+    function sortInteractiveLessons() {
+      const sortBy = document.getElementById('interactiveSortSelect').value;
+
+      filteredInteractiveLessons.sort((a, b) => {
+        if (sortBy === 'title') {
+          return a.title.localeCompare(b.title);
+        } else if (sortBy === 'date') {
+          return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+        } else {
+          return a.order_number - b.order_number;
+        }
+      });
+
+      renderInteractiveLessons();
+    }
+
+    function toggleSelectAllLessons() {
+      const selectAll = document.getElementById('selectAllLessons');
+      const selectAllTable = document.getElementById('selectAllLessonsTable');
+
+      // Determine which checkbox was clicked
+      const clickedCheckbox = event?.target || (selectAll?.checked !== undefined ? selectAll : selectAllTable);
+      const isChecked = clickedCheckbox.checked;
+
+      // Sync both select all checkboxes
+      if (selectAll) selectAll.checked = isChecked;
+      if (selectAllTable) selectAllTable.checked = isChecked;
+
+      // Check/uncheck all lesson checkboxes
+      document.querySelectorAll('.lesson-checkbox').forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
+
+      updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+      // Update selectedLessonIds set based on checked checkboxes
+      selectedLessonIds.clear();
+      document.querySelectorAll('.lesson-checkbox:checked').forEach(cb => {
+        selectedLessonIds.add(parseInt(cb.value));
+      });
+
+      const count = selectedLessonIds.size;
+      const totalCheckboxes = document.querySelectorAll('.lesson-checkbox').length;
+
+      // Update count display
+      const countElement = document.getElementById('selectedLessonsCount');
+      if (countElement) countElement.textContent = count;
+
+      // Enable/disable bulk delete button
+      const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+      if (bulkDeleteBtn) bulkDeleteBtn.disabled = count === 0;
+
+      // Update select all checkboxes state (checked if all are selected, indeterminate if some are selected)
+      const selectAll = document.getElementById('selectAllLessons');
+      const selectAllTable = document.getElementById('selectAllLessonsTable');
+
+      if (selectAll) {
+        selectAll.checked = count > 0 && count === totalCheckboxes;
+        selectAll.indeterminate = count > 0 && count < totalCheckboxes;
+      }
+      if (selectAllTable) {
+        selectAllTable.checked = count > 0 && count === totalCheckboxes;
+        selectAllTable.indeterminate = count > 0 && count < totalCheckboxes;
+      }
+    }
+
+    function clearSelection() {
+      selectedLessonIds.clear();
+      document.querySelectorAll('.lesson-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+      const selectAll = document.getElementById('selectAllLessons');
+      const selectAllTable = document.getElementById('selectAllLessonsTable');
+      if (selectAll) {
+        selectAll.checked = false;
+        selectAll.indeterminate = false;
+      }
+      if (selectAllTable) {
+        selectAllTable.checked = false;
+        selectAllTable.indeterminate = false;
+      }
+      updateSelectedCount();
+    }
+
+    async function bulkDeleteInteractiveLessons() {
+      const selected = Array.from(selectedLessonIds);
+
+      if (selected.length === 0) {
+        showNotification('Please select at least one lesson to delete.', 'warning');
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to delete ${selected.length} lesson(s)? This action cannot be undone.`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch('/admin/api/interactive/lessons/bulk', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lessonIds: selected })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification(`Successfully deleted ${result.deletedCount} lesson(s)!`, 'success');
+          selectedLessonIds.clear();
+          const pathId = document.getElementById('interactivePathSelect').value;
+          loadInteractiveLessons(pathId);
+        } else {
+          showNotification(result.message || 'Error deleting lessons', 'danger');
+        }
+      } catch (error) {
+        console.error('Error bulk deleting lessons:', error);
+        showNotification('Error connecting to the server.', 'danger');
+      }
+    }
+
+    function showNotification(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+      toast.style.zIndex = '9999';
+      toast.style.minWidth = '300px';
+      toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      toast.innerHTML = `
+        <div class="d-flex align-items-center">
+          <span class="material-symbols-outlined align-middle me-2">${type === 'success' ? 'check_circle' : type === 'warning' ? 'warning' : 'error'}</span>
+          <span>${message}</span>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function editInteractiveLessonPreview(lessonId) {
+      fetch(`/admin/api/interactive/lesson/${lessonId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const lesson = data.lesson;
+
+            // Populate edit form
+            document.getElementById('editIntLessonId').value = lessonId;
+            document.getElementById('editIntLessonTitle').value = lesson.title || '';
+            document.getElementById('editIntLessonDesc').value = lesson.code_challenge || '';
+            document.getElementById('editIntLessonOrder').value = lesson.order_number || 1;
+            document.getElementById('editIntLessonFree').checked = lesson.is_free === 1 || lesson.is_free === true;
+            document.getElementById('editIntStarterCode').value = lesson.starter_code || '';
+            document.getElementById('editIntSolutionCode').value = lesson.solution_code || '';
+            document.getElementById('editIntExpectedOutput').value = lesson.expected_output || '';
+
+            // Set validation type
+            const validationType = lesson.validation_type || 'output_match';
+            document.querySelectorAll('input[name="editValType"]').forEach(radio => {
+              radio.checked = radio.value === validationType;
+            });
+
+            // Set hints
+            let hintsText = '';
+            if (lesson.hints) {
+              if (Array.isArray(lesson.hints)) {
+                hintsText = lesson.hints.join('\n');
+              } else if (typeof lesson.hints === 'string') {
+                try {
+                  const parsed = JSON.parse(lesson.hints);
+                  hintsText = Array.isArray(parsed) ? parsed.join('\n') : lesson.hints;
+                } catch (e) {
+                  hintsText = lesson.hints;
+                }
+              }
+            }
+            document.getElementById('editIntHints').value = hintsText;
+
+            // Clear message
+            document.getElementById('editIntMessage').style.display = 'none';
+
+            // Switch to first tab
+            const firstTabEl = document.querySelector('#editInteractiveLessonModal button[data-bs-target="#edit-int-tab-basics"]');
+            if (firstTabEl) {
+              const firstTab = new bootstrap.Tab(firstTabEl);
+              firstTab.show();
+            }
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('editInteractiveLessonModal'));
+            modal.show();
+          } else {
+            alert('Error loading lesson: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(err => {
+          console.error('Error loading lesson:', err);
+          alert('Error connecting to the server.');
+        });
+    }
+
+    function updateInteractiveLesson() {
+      const lessonId = document.getElementById('editIntLessonId').value;
+      const title = document.getElementById('editIntLessonTitle').value;
+      const orderNumber = document.getElementById('editIntLessonOrder').value;
+      const description = document.getElementById('editIntLessonDesc').value;
+      const starterCode = document.getElementById('editIntStarterCode').value;
+      const solutionCode = document.getElementById('editIntSolutionCode').value;
+      const validationType = document.querySelector('input[name="editValType"]:checked')?.value || 'output_match';
+      const expectedOutput = document.getElementById('editIntExpectedOutput').value;
+      const hints = document.getElementById('editIntHints').value;
+      const isFree = document.getElementById('editIntLessonFree').checked;
+      const messageDiv = document.getElementById('editIntMessage');
+
+      if (!title || !description || !solutionCode || !expectedOutput) {
+        messageDiv.textContent = 'Please fill in all required fields (Basics, Code, Validation)';
+        messageDiv.style.display = 'block';
+        messageDiv.className = 'alert alert-danger';
+        return;
+      }
+
+      const payload = {
+        title,
+        orderNumber,
+        description,
+        starterCode,
+        solutionCode,
+        validationType,
+        expectedOutput,
+        hints,
+        isFree
+      };
+
+      fetch(`/admin/api/interactive/lesson/${lessonId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            messageDiv.textContent = 'Lesson updated successfully!';
+            messageDiv.className = 'alert alert-success';
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+              bootstrap.Modal.getInstance(document.getElementById('editInteractiveLessonModal')).hide();
+              const pathId = document.getElementById('interactivePathSelect').value;
+              loadInteractiveLessons(pathId);
+            }, 1000);
+          } else {
+            messageDiv.textContent = data.message || 'Error updating lesson';
+            messageDiv.className = 'alert alert-danger';
+            messageDiv.style.display = 'block';
+          }
+        })
+        .catch(err => {
+          console.error('Error updating lesson:', err);
+          messageDiv.textContent = 'Server Error';
+          messageDiv.style.display = 'block';
+          messageDiv.className = 'alert alert-danger';
+        });
+    }
+
+    async function duplicateInteractiveLesson(lessonId) {
+      if (!confirm('Are you sure you want to duplicate this lesson?')) return;
+
+      try {
+        const response = await fetch(`/admin/api/interactive/lesson/${lessonId}/duplicate`, {
+          method: 'POST'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification('Lesson duplicated successfully!', 'success');
+          const pathId = document.getElementById('interactivePathSelect').value;
+          loadInteractiveLessons(pathId);
+        } else {
+          showNotification('Error duplicating lesson: ' + (result.message || 'Unknown error'), 'danger');
+        }
+      } catch (error) {
+        console.error('Error duplicating lesson:', error);
+        showNotification('Error connecting to the server.', 'danger');
+      }
+    }
+
+    function openAddInteractiveLessonModal() {
+      const pathId = document.getElementById('interactivePathSelect').value;
+      if (!pathId) {
+        alert('Please select a Learning Path first.');
+        return;
+      }
+
+      // Reset Form
+      document.getElementById('addInteractiveForm').reset();
+      document.getElementById('intLessonPathId').value = pathId;
+      document.getElementById('intMessage').style.display = 'none';
+
+      // Switch to first tab
+      const firstTabEl = document.querySelector('#addInteractiveLessonModal button[data-bs-target="#int-tab-basics"]');
+      const firstTab = new bootstrap.Tab(firstTabEl);
+      firstTab.show();
+
+      const modal = new bootstrap.Modal(document.getElementById('addInteractiveLessonModal'));
+      modal.show();
+    }
+
+    function saveInteractiveLesson() {
+      const pathId = document.getElementById('intLessonPathId').value;
+      const title = document.getElementById('intLessonTitle').value;
+      const orderNumber = document.getElementById('intLessonOrder').value;
+      const description = document.getElementById('intLessonDesc').value;
+      const starterCode = document.getElementById('intStarterCode').value;
+      const solutionCode = document.getElementById('intSolutionCode').value;
+      // Get validation type from radio
+      const validationType = document.querySelector('input[name="valType"]:checked').value;
+      const expectedOutput = document.getElementById('intExpectedOutput').value;
+      const hints = document.getElementById('intHints').value;
+      const isFree = document.getElementById('intLessonFree').checked;
+      const messageDiv = document.getElementById('intMessage');
+
+      if (!title || !description || !solutionCode || !expectedOutput) {
+        messageDiv.textContent = 'Please fill in all required fields (Basics, Code, Validation)';
+        messageDiv.style.display = 'block';
+        messageDiv.className = 'alert alert-danger';
+        return;
+      }
+
+      // Get path language from select dropdown text
+      const select = document.getElementById('interactivePathSelect');
+      const selectedText = select.options[select.selectedIndex].text;
+      const language = selectedText.includes('HTML') ? 'html' :
+        selectedText.includes('Python') ? 'python' :
+          selectedText.includes('CSS') ? 'css' : 'javascript';
+
+      const payload = {
+        pathId, title, orderNumber, description,
+        starterCode, solutionCode, validationType, expectedOutput,
+        hints, language, isFree
+      };
+
+      fetch('/admin/api/interactive/lesson', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            messageDiv.textContent = 'Lesson created successfully!';
+            messageDiv.className = 'alert alert-success';
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+              bootstrap.Modal.getInstance(document.getElementById('addInteractiveLessonModal')).hide();
+              loadInteractiveLessons(pathId);
+            }, 1000);
+          } else {
+            messageDiv.textContent = data.message;
+            messageDiv.className = 'alert alert-danger';
+            messageDiv.style.display = 'block';
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          messageDiv.textContent = 'Server Error';
+          messageDiv.style.display = 'block';
+          messageDiv.className = 'alert alert-danger';
+        });
+    }
+
+    function deleteInteractiveLesson(lessonId) {
+      if (!confirm('Are you sure you want to delete this lesson?\n\nThis action cannot be undone.')) return;
+
+      fetch(`/admin/api/interactive/lesson/${lessonId}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // Remove from selected set
+            selectedLessonIds.delete(lessonId);
+            updateSelectedCount();
+
+            const pathId = document.getElementById('interactivePathSelect').value;
+            loadInteractiveLessons(pathId);
+
+            // Show success message
+            showNotification('Lesson deleted successfully!', 'success');
+          } else {
+            alert('Error deleting lesson: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(err => {
+          console.error('Error deleting lesson:', err);
+          alert('Error connecting to the server.');
+        });
+    }
+
+    async function toggleLessonFree(lessonId, isFree) {
+      try {
+        const response = await fetch(`/admin/api/interactive/lesson/${lessonId}/toggle-free`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isFree })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification(result.message, 'success');
+          // Update the label text
+          const label = document.querySelector(`label[for="free-toggle-${lessonId}"]`);
+          if (label) {
+            label.textContent = isFree ? 'Free Preview' : 'Paid Only';
+          }
+          // Reload lessons to update badges
+          const pathId = document.getElementById('interactivePathSelect').value;
+          if (pathId) {
+            loadInteractiveLessons(pathId);
+          }
+        } else {
+          showNotification(result.message || 'Error updating lesson', 'danger');
+          // Revert checkbox
+          const checkbox = document.getElementById(`free-toggle-${lessonId}`);
+          if (checkbox) checkbox.checked = !isFree;
+        }
+      } catch (error) {
+        console.error('Error toggling lesson free status:', error);
+        showNotification('Error connecting to the server.', 'danger');
+        // Revert checkbox
+        const checkbox = document.getElementById(`free-toggle-${lessonId}`);
+        if (checkbox) checkbox.checked = !isFree;
+      }
+    }
+
+    function openAddPathModal() {
+      document.getElementById('addPathForm').reset();
+      document.getElementById('pathMessage').style.display = 'none';
+      new bootstrap.Modal(document.getElementById('addLearningPathModal')).show();
+    }
+
+    function saveLearningPath() {
+      const title = document.getElementById('newPathTitle').value.trim();
+      const language = document.getElementById('newPathLanguage').value;
+      const description = document.getElementById('newPathDesc').value.trim();
+      const msg = document.getElementById('pathMessage');
+
+      if (!title || !language) {
+        msg.textContent = 'Title and Language are required';
+        msg.className = 'alert alert-danger';
+        msg.style.display = 'block';
+        return;
+      }
+
+      msg.style.display = 'none';
+
+      fetch('/admin/api/interactive/paths', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, language, description })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            showNotification('Roadmap created successfully!', 'success');
+            setTimeout(() => {
+              bootstrap.Modal.getInstance(document.getElementById('addLearningPathModal')).hide();
+              loadInteractivePaths();
+            }, 500);
+          } else {
+            msg.textContent = data.message || 'Error creating roadmap';
+            msg.className = 'alert alert-danger';
+            msg.style.display = 'block';
+          }
+        })
+        .catch(err => {
+          console.error('Error creating roadmap:', err);
+          msg.textContent = 'Server Error: ' + err.message;
+          msg.className = 'alert alert-danger';
+          msg.style.display = 'block';
+        });
+    }
+
   </script>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+  <!-- Add Learning Path Modal -->
+  <div class="modal fade" id="addLearningPathModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: linear-gradient(135deg, #7b09cd, #a855f7); color: white;">
+          <h5 class="modal-title">
+            <span class="material-symbols-outlined align-middle me-2">add_circle</span>
+            Create New Learning Roadmap
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addPathForm">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Roadmap Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="newPathTitle" required
+                placeholder="e.g. Advanced React Development">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Programming Language <span class="text-danger">*</span></label>
+              <select class="form-select" id="newPathLanguage" required>
+                <option value="">Select a language...</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="php">PHP</option>
+                <option value="typescript">TypeScript</option>
+                <option value="react">React</option>
+                <option value="vue">Vue.js</option>
+                <option value="nodejs">Node.js</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Description</label>
+              <textarea class="form-control" id="newPathDesc" rows="4"
+                placeholder="Describe what students will learn in this roadmap..."></textarea>
+            </div>
+            <div id="pathMessage" class="alert" style="display:none;"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveLearningPath()"
+            style="background-color: #7b09cd; border: none;">
+            <span class="material-symbols-outlined align-middle me-1" style="font-size:18px">save</span>
+            Create Roadmap
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Learning Path Modal -->
+  <div class="modal fade" id="editLearningPathModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd, #0dcaf0); color: white;">
+          <h5 class="modal-title">
+            <span class="material-symbols-outlined align-middle me-2">edit</span>
+            Edit Learning Roadmap
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editPathForm">
+            <input type="hidden" id="editPathId">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Roadmap Title <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="editPathTitle" required
+                placeholder="e.g. Advanced React Development">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Programming Language <span class="text-danger">*</span></label>
+              <select class="form-select" id="editPathLanguage" required>
+                <option value="">Select a language...</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="php">PHP</option>
+                <option value="typescript">TypeScript</option>
+                <option value="react">React</option>
+                <option value="vue">Vue.js</option>
+                <option value="nodejs">Node.js</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Description</label>
+              <textarea class="form-control" id="editPathDesc" rows="4"
+                placeholder="Describe what students will learn in this roadmap..."></textarea>
+            </div>
+            <div id="editPathMessage" class="alert" style="display:none;"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="updateLearningPath()"
+            style="background-color: #0d6efd; border: none;">
+            <span class="material-symbols-outlined align-middle me-1" style="font-size:18px">save</span>
+            Update Roadmap
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 
 </body>

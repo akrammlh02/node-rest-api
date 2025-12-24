@@ -27,6 +27,7 @@ router.post('/', (req, res) => {
                         id: result[0].id,
                         email: result[0].email,
                         fullName: result[0].fullname,
+                        role: 'admin'
                     }
                     return res.json({ success: true, type: 'admin' });
                 } else {
@@ -49,7 +50,11 @@ router.post('/', (req, res) => {
                         req.session.user = {
                             id: user.id,
                             email: user.email,
-                            fullName: user.fullname
+                            fullName: user.fullname,
+                            role: 'client',
+                            membershipTier: user.membership_tier || 'Free',
+                            membershipExpiry: user.membership_expiry,
+                            membershipStatus: user.membership_status || 'none'
                         };
                         return res.json({ success: true, type: 'client' });
                     } else {

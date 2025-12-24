@@ -13,9 +13,11 @@
   <link rel="icon" type="image/x-icon" href="/images/logo.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <style>
     * {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Outfit', sans-serif;
     }
   </style>
 </head>
@@ -25,9 +27,11 @@
     <nav>
       <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
       <ul class="nav-links">
+
         <li><a href="/">Home</a></li>
         <li><a href="/course">Courses</a></li>
         <li><a href="/quiz">Quiz</a></li>
+
         {{!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             English
@@ -37,8 +41,9 @@
             <li><a class="dropdown-item" href="/login">English</a></li>
           </ul>
         </li> --}}
-        <li><a href="/login">Login</a></li>
-        <li><button type="button" class="btn signup"><a href="/signup" style="color: white !important;"> Sign up</a></button></li>
+        {{!-- <li><a href="/login">Login</a></li> --}}
+        <li><button type="button" class="btn signup"><a href="/signup" style="color: white !important;"> Sign
+              Up</a></button></li>
       </ul>
       <div class="menu">
 
@@ -65,9 +70,9 @@
                 <li><a class="dropdown-item" href="/login">English</a></li>
               </ul>
             </li> --}}
-            <a href="/login">Login</a>
             <div style="width: 50%;">
-              <button type="button" class="btn signup" ><a href="/signup" style="color: white !important;"> Sign up</a></button>
+              <button type="button" class="btn signup"><a href="/signup" style="color: white !important;"> Sign
+                  up</a></button>
 
             </div>
             </ul>
