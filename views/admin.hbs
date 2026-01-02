@@ -2076,6 +2076,13 @@
                         <textarea class="form-control" id="editIntLessonDesc" rows="6"
                           placeholder="Explain what the user needs to do..."></textarea>
                       </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Lesson Explanation (HTML/Markdown)</label>
+                        <textarea class="form-control" id="editIntLessonTheory" rows="5"
+                          placeholder="Use this space to teach the concept before the challenge."></textarea>
+                        <div class="form-text">Displayed in the learner Explanation panel. Supports Markdown or inline
+                          HTML.</div>
+                      </div>
                     </div>
                     <div class="col-md-4">
                       <div class="mb-3">
@@ -2141,6 +2148,24 @@
                       placeholder="e.g. Hello World"></textarea>
                     <div class="form-text">For Output Match, enter the exact expected console output. For Regex, enter
                       the pattern to match in user code.</div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold font-monospace">Display Output (Optional)</label>
+                    <textarea class="form-control code-editor-textarea" id="editIntDisplayOutput" rows="3"
+                      placeholder="Friendly output text shown to the learner."></textarea>
+                    <div class="form-text">Use when you want to show a prettified version of the expected result.</div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <label class="form-label fw-bold mb-0">Automated Test Cases</label>
+                      <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTestCaseRow('edit')">
+                        <span class="material-symbols-outlined align-middle me-1" style="font-size:16px">add</span>
+                        Add Test Case
+                      </button>
+                    </div>
+                    <div id="editIntTestCasesList" class="d-flex flex-column gap-3 mt-2"></div>
+                    <div class="form-text">Provide input/output pairs for validation or student preview. Leave blank if
+                      not needed.</div>
                   </div>
                 </div>
               </div>
@@ -2210,6 +2235,13 @@
                         <textarea class="form-control" id="intLessonDesc" rows="6"
                           placeholder="Explain what the user needs to do..."></textarea>
                       </div>
+                      <div class="mb-3">
+                        <label class="form-label fw-bold">Lesson Explanation (HTML/Markdown)</label>
+                        <textarea class="form-control" id="intLessonTheory" rows="5"
+                          placeholder="Use this space to teach the concept before the challenge."></textarea>
+                        <div class="form-text">Displayed in the learner Explanation panel. Supports Markdown or inline
+                          HTML.</div>
+                      </div>
                     </div>
                     <div class="col-md-4">
                       <div class="mb-3">
@@ -2274,6 +2306,24 @@
                       placeholder="e.g. Hello World"></textarea>
                     <div class="form-text">For Output Match, enter the exact expected console output. For Regex, enter
                       the pattern to match in user code.</div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-bold font-monospace">Display Output (Optional)</label>
+                    <textarea class="form-control code-editor-textarea" id="intDisplayOutput" rows="3"
+                      placeholder="Friendly output text shown to the learner."></textarea>
+                    <div class="form-text">Use when you want to show a prettified version of the expected result.</div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <label class="form-label fw-bold mb-0">Automated Test Cases</label>
+                      <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTestCaseRow('int')">
+                        <span class="material-symbols-outlined align-middle me-1" style="font-size:16px">add</span>
+                        Add Test Case
+                      </button>
+                    </div>
+                    <div id="intTestCasesList" class="d-flex flex-column gap-3 mt-2"></div>
+                    <div class="form-text">Provide input/output pairs for validation or student preview. Leave blank if
+                      not needed.</div>
                   </div>
                 </div>
               </div>
@@ -4242,6 +4292,53 @@
       }, 3000);
     }
 
+    function addTestCaseRow(context, data = {}) {
+      const listId = context === 'edit' ? 'editIntTestCasesList' : 'intTestCasesList';
+      const list = document.getElementById(listId);
+      if (!list) return;
+
+      const row = document.createElement('div');
+      row.className = 'test-case-row border rounded-3 p-3 bg-white shadow-sm';
+      row.innerHTML = `
+        <div class="d-flex flex-column flex-md-row gap-3">
+          <div class="flex-fill">
+            <label class="form-label small fw-bold text-muted">Input</label>
+            <textarea class="form-control test-input" rows="2" placeholder="e.g. 5 10">${data.input || ''}</textarea>
+          </div>
+          <div class="flex-fill">
+            <label class="form-label small fw-bold text-muted">Expected Output</label>
+            <textarea class="form-control test-output" rows="2" placeholder="e.g. 15">${data.output || ''}</textarea>
+          </div>
+        </div>
+        <div class="text-end mt-2">
+          <button type="button" class="btn btn-link text-danger p-0" onclick="removeTestCaseRow(this)">
+            <span class="material-symbols-outlined align-middle" style="font-size:18px">delete</span>
+            Remove
+          </button>
+        </div>
+      `;
+      list.appendChild(row);
+    }
+
+    function removeTestCaseRow(button) {
+      const row = button.closest('.test-case-row');
+      if (row) {
+        row.remove();
+      }
+    }
+
+    function collectTestCases(context) {
+      const listId = context === 'edit' ? 'editIntTestCasesList' : 'intTestCasesList';
+      const rows = document.querySelectorAll(`#${listId} .test-case-row`);
+      if (!rows.length) return [];
+
+      return Array.from(rows).map(row => {
+        const input = row.querySelector('.test-input')?.value.trim() || '';
+        const output = row.querySelector('.test-output')?.value.trim() || '';
+        return { input, output };
+      }).filter(tc => tc.input || tc.output);
+    }
+
     function editInteractiveLessonPreview(lessonId) {
       fetch(`/admin/api/interactive/lesson/${lessonId}`)
         .then(res => res.json())
@@ -4258,6 +4355,12 @@
             document.getElementById('editIntStarterCode').value = lesson.starter_code || '';
             document.getElementById('editIntSolutionCode').value = lesson.solution_code || '';
             document.getElementById('editIntExpectedOutput').value = lesson.expected_output || '';
+            document.getElementById('editIntLessonTheory').value = lesson.text_content || '';
+            document.getElementById('editIntDisplayOutput').value = lesson.display_output || '';
+
+            const editTestList = document.getElementById('editIntTestCasesList');
+            if (editTestList) editTestList.innerHTML = '';
+            (lesson.test_cases || []).forEach(tc => addTestCaseRow('edit', tc));
 
             // Set validation type
             const validationType = lesson.validation_type || 'output_match';
@@ -4315,6 +4418,9 @@
       const expectedOutput = document.getElementById('editIntExpectedOutput').value;
       const hints = document.getElementById('editIntHints').value;
       const isFree = document.getElementById('editIntLessonFree').checked;
+      const theoryContent = document.getElementById('editIntLessonTheory').value;
+      const displayOutput = document.getElementById('editIntDisplayOutput').value;
+      const testCases = collectTestCases('edit');
       const messageDiv = document.getElementById('editIntMessage');
 
       if (!title || !description || !solutionCode || !expectedOutput) {
@@ -4333,7 +4439,10 @@
         validationType,
         expectedOutput,
         hints,
-        isFree
+        isFree,
+        theoryContent,
+        displayOutput,
+        testCases
       };
 
       fetch(`/admin/api/interactive/lesson/${lessonId}`, {
@@ -4422,6 +4531,9 @@
       const expectedOutput = document.getElementById('intExpectedOutput').value;
       const hints = document.getElementById('intHints').value;
       const isFree = document.getElementById('intLessonFree').checked;
+      const theoryContent = document.getElementById('intLessonTheory').value;
+      const displayOutput = document.getElementById('intDisplayOutput').value;
+      const testCases = collectTestCases('create');
       const messageDiv = document.getElementById('intMessage');
 
       if (!title || !description || !solutionCode || !expectedOutput) {
@@ -4441,7 +4553,7 @@
       const payload = {
         pathId, title, orderNumber, description,
         starterCode, solutionCode, validationType, expectedOutput,
-        hints, language, isFree
+        hints, language, isFree, theoryContent, displayOutput, testCases
       };
 
       fetch('/admin/api/interactive/lesson', {

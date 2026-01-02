@@ -4,6 +4,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const conn = require('../config/db');
 const youtubeService = require('../services/youtubeService');
+const { isAdmin, isAdminAr, isAdminAPI } = require('../utils/authMiddleware');
 
 // Multer setup to store file in memory (better for Cloudinary)
 const storage = multer.memoryStorage();
@@ -39,11 +40,7 @@ const uploadVideo = multer({
   }
 });
 
-router.get('/', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
-
+router.get('/', isAdmin, (req, res) => {
   // Prevent caching of protected pages
   res.set({
     'Cache-Control': 'no-store, no-cache, must-revalidate, private',
@@ -66,11 +63,7 @@ router.get('/', (req, res) => {
 })
 
 
-router.get('/ar', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login/ar');
-  }
-
+router.get('/ar', isAdminAr, (req, res) => {
   // Prevent caching of protected pages
   res.set({
     'Cache-Control': 'no-store, no-cache, must-revalidate, private',
@@ -92,7 +85,7 @@ router.get('/ar', (req, res) => {
   });
 })
 
-router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
+router.post('/addCourse', isAdminAPI, upload.single('courseImage'), async (req, res) => {
   try {
     // Support both old and new field names for backward compatibility during transition
     const {
@@ -169,7 +162,7 @@ router.post('/addCourse', upload.single('courseImage'), async (req, res) => {
   }
 });
 
-router.delete('/deleteCourse/:id', (req, res) => {
+router.delete('/deleteCourse/:id', isAdminAPI, (req, res) => {
   const courseId = req.params.id;
 
   // First, get all chapters for this course
@@ -219,7 +212,7 @@ router.delete('/deleteCourse/:id', (req, res) => {
 });
 
 // API: Get chapters for a course
-router.get('/api/courses/:courseId/chapters', (req, res) => {
+router.get('/api/courses/:courseId/chapters', isAdminAPI, (req, res) => {
   const courseId = req.params.courseId;
   const sql = 'SELECT * FROM chapters WHERE course_id = ? ORDER BY `order` ASC';
   conn.query(sql, [courseId], (err, result) => {
@@ -232,7 +225,7 @@ router.get('/api/courses/:courseId/chapters', (req, res) => {
 });
 
 // API: Add chapter
-router.post('/api/courses/:courseId/chapters', (req, res) => {
+router.post('/api/courses/:courseId/chapters', isAdminAPI, (req, res) => {
   const courseId = req.params.courseId;
   const { title } = req.body;
 
@@ -261,7 +254,7 @@ router.post('/api/courses/:courseId/chapters', (req, res) => {
 });
 
 // API: Delete chapter
-router.delete('/api/chapters/:chapterId', (req, res) => {
+router.delete('/api/chapters/:chapterId', isAdminAPI, (req, res) => {
   const chapterId = req.params.chapterId;
 
   // First delete all lessons in this chapter
@@ -290,7 +283,7 @@ router.delete('/api/chapters/:chapterId', (req, res) => {
 });
 
 // API: Update chapter order (move up/down)
-router.put('/api/chapters/:chapterId/order', (req, res) => {
+router.put('/api/chapters/:chapterId/order', isAdminAPI, (req, res) => {
   const chapterId = req.params.chapterId;
   const { direction } = req.body; // 'up' or 'down'
 
@@ -335,7 +328,7 @@ router.put('/api/chapters/:chapterId/order', (req, res) => {
 });
 
 // API: Update chapter title
-router.put('/api/chapters/:chapterId', (req, res) => {
+router.put('/api/chapters/:chapterId', isAdminAPI, (req, res) => {
   const chapterId = req.params.chapterId;
   const { title } = req.body;
 
@@ -359,7 +352,7 @@ router.put('/api/chapters/:chapterId', (req, res) => {
 });
 
 // API: Get lessons for a chapter
-router.get('/api/chapters/:chapterId/lessons', (req, res) => {
+router.get('/api/chapters/:chapterId/lessons', isAdminAPI, (req, res) => {
   const chapterId = req.params.chapterId;
   const sql = 'SELECT * FROM lessons WHERE chapitre_id = ? ORDER BY order_number ASC';
   conn.query(sql, [chapterId], (err, result) => {
@@ -372,7 +365,7 @@ router.get('/api/chapters/:chapterId/lessons', (req, res) => {
 });
 
 // API: Add lesson
-router.post('/api/chapters/:chapterId/lessons', (req, res) => {
+router.post('/api/chapters/:chapterId/lessons', isAdminAPI, (req, res) => {
   const chapterId = req.params.chapterId;
   const { title, videoUrl } = req.body;
 
@@ -408,7 +401,7 @@ router.post('/api/chapters/:chapterId/lessons', (req, res) => {
 });
 
 // API: Delete lesson
-router.delete('/api/lessons/:lessonId', (req, res) => {
+router.delete('/api/lessons/:lessonId', isAdminAPI, (req, res) => {
   const lessonId = req.params.lessonId;
   const sql = 'DELETE FROM lessons WHERE lesson_id = ?';
   conn.query(sql, [lessonId], (err, result) => {
@@ -426,7 +419,7 @@ router.delete('/api/lessons/:lessonId', (req, res) => {
 });
 
 // API: Update lesson order (move up/down)
-router.put('/api/lessons/:lessonId/order', (req, res) => {
+router.put('/api/lessons/:lessonId/order', isAdminAPI, (req, res) => {
   const lessonId = req.params.lessonId;
   const { direction } = req.body; // 'up' or 'down'
 
@@ -471,7 +464,7 @@ router.put('/api/lessons/:lessonId/order', (req, res) => {
 });
 
 // API: Update lesson title and video URL
-router.put('/api/lessons/:lessonId', (req, res) => {
+router.put('/api/lessons/:lessonId', isAdminAPI, (req, res) => {
   const lessonId = req.params.lessonId;
   const { title, videoUrl, isFree } = req.body;
 
@@ -501,7 +494,7 @@ router.put('/api/lessons/:lessonId', (req, res) => {
 });
 
 // API: Get all clients
-router.get('/api/clients', (req, res) => {
+router.get('/api/clients', isAdminAPI, (req, res) => {
   const sql = 'SELECT id, fullname, email, membership_tier, membership_expiry, membership_status FROM client ORDER BY id DESC';
   conn.query(sql, (err, result) => {
     if (err) {
@@ -513,7 +506,7 @@ router.get('/api/clients', (req, res) => {
 });
 
 // API: Get client's purchased courses with progress
-router.get('/api/clients/:clientId/purchases', (req, res) => {
+router.get('/api/clients/:clientId/purchases', isAdminAPI, (req, res) => {
   const clientId = req.params.clientId;
   const sql = `
     SELECT p.*, c.title as course_title, c.price, c.course_id
@@ -589,7 +582,7 @@ router.get('/api/clients/:clientId/purchases', (req, res) => {
 });
 
 // API: Manually add course to client (for manual payment)
-router.post('/api/clients/add-course', (req, res) => {
+router.post('/api/clients/add-course', isAdminAPI, (req, res) => {
   const { clientId, courseId } = req.body;
 
   if (!clientId || !courseId) {
@@ -627,7 +620,7 @@ router.post('/api/clients/add-course', (req, res) => {
 });
 
 // API: Manually give membership to client
-router.post('/api/clients/give-membership', (req, res) => {
+router.post('/api/clients/give-membership', isAdminAPI, (req, res) => {
   const { clientId, tier, duration } = req.body;
 
   if (!clientId || !tier) {
@@ -680,7 +673,7 @@ router.post('/api/clients/give-membership', (req, res) => {
 });
 
 // API: Manually remove/revoke membership from client
-router.post('/api/clients/remove-membership', (req, res) => {
+router.post('/api/clients/remove-membership', isAdminAPI, (req, res) => {
   const { clientId } = req.body;
 
   if (!clientId) {
@@ -705,7 +698,7 @@ router.post('/api/clients/remove-membership', (req, res) => {
 });
 
 // API: Get course by ID (for editing)
-router.get('/api/courses/:courseId', (req, res) => {
+router.get('/api/courses/:courseId', isAdminAPI, (req, res) => {
   const courseId = req.params.courseId;
   const sql = 'SELECT * FROM courses WHERE course_id = ?';
   conn.query(sql, [courseId], (err, result) => {
@@ -720,7 +713,7 @@ router.get('/api/courses/:courseId', (req, res) => {
 });
 
 // API: Get all courses (for client course selection)
-router.get('/api/courses', (req, res) => {
+router.get('/api/courses', isAdminAPI, (req, res) => {
   const sql = 'SELECT course_id, title, price FROM courses ORDER BY course_id DESC';
   conn.query(sql, (err, result) => {
     if (err) {
@@ -731,7 +724,7 @@ router.get('/api/courses', (req, res) => {
 });
 
 // API: Update course
-router.put('/updateCourse/:id', upload.single('courseImage'), async (req, res) => {
+router.put('/updateCourse/:id', isAdminAPI, upload.single('courseImage'), async (req, res) => {
   try {
     const courseId = req.params.id;
     // Support both old and new field names
@@ -1571,7 +1564,10 @@ router.post('/api/interactive/lesson', (req, res) => {
     hints, // Array of strings or JSON string
     language,
     orderNumber,
-    isFree
+    isFree,
+    theoryContent,
+    displayOutput,
+    testCases
   } = req.body;
 
   if (!title || !pathId) {
@@ -1581,22 +1577,46 @@ router.post('/api/interactive/lesson', (req, res) => {
   // Default chapter ID (assuming 1 exists as catch-all)
   const chapitreId = 1;
 
-  // Handle hints input (could be array or string)
-  let hintsJson = '[]';
-  try {
-    if (Array.isArray(hints)) {
-      hintsJson = JSON.stringify(hints);
-    } else if (typeof hints === 'string') {
-      // Check if it's strictly a JSON string or comma-separated
-      if (hints.trim().startsWith('[')) {
-        hintsJson = hints;
-      } else {
-        hintsJson = JSON.stringify(hints.split('\n').filter(h => h.trim()));
+  const serializeHints = (value) => {
+    let hintsJson = '[]';
+    try {
+      if (Array.isArray(value)) {
+        hintsJson = JSON.stringify(value.filter(h => typeof h === 'string' && h.trim()).map(h => h.trim()));
+      } else if (typeof value === 'string') {
+        if (value.trim().startsWith('[')) {
+          hintsJson = value;
+        } else {
+          hintsJson = JSON.stringify(value.split('\n').map(h => h.trim()).filter(Boolean));
+        }
       }
+    } catch (e) {
+      hintsJson = '[]';
     }
-  } catch (e) {
-    hintsJson = '[]';
-  }
+    return hintsJson;
+  };
+
+  const serializeTestCases = (value) => {
+    let testCasesJson = '[]';
+    try {
+      if (Array.isArray(value)) {
+        const cleaned = value
+          .map(tc => ({
+            input: (tc?.input || '').toString(),
+            output: (tc?.output || '').toString()
+          }))
+          .filter(tc => tc.input.trim() || tc.output.trim());
+        testCasesJson = JSON.stringify(cleaned);
+      } else if (typeof value === 'string' && value.trim()) {
+        testCasesJson = value.trim().startsWith('[') ? value : '[]';
+      }
+    } catch (e) {
+      testCasesJson = '[]';
+    }
+    return testCasesJson;
+  };
+
+  const hintsJson = serializeHints(hints);
+  const testCasesJson = serializeTestCases(testCases);
 
   const isFreeValue = (isFree === true || isFree === 'true' || isFree === 1) ? 1 : 0;
 
@@ -1605,14 +1625,16 @@ router.post('/api/interactive/lesson', (req, res) => {
             chapitre_id, title, lesson_type, content_type, 
             code_challenge, starter_code, solution_code, 
             expected_output, validation_type, hints, 
-            programming_language, created_at, text_content, duration_minutes, order_number, is_free, content_url
-        ) VALUES (?, ?, 'interactive_code', 'text', ?, ?, ?, ?, ?, ?, ?, NOW(), '', 15, ?, ?, '')
+            programming_language, created_at, text_content, duration_minutes, order_number, is_free, content_url,
+            display_output, test_cases
+        ) VALUES (?, ?, 'interactive_code', 'text', ?, ?, ?, ?, ?, ?, ?, NOW(), ?, 15, ?, ?, '', ?, ?)
     `;
 
   conn.query(insertLessonSql, [
     chapitreId, title, description, starterCode, solutionCode,
     expectedOutput, validationType || 'output_match', hintsJson,
-    language || 'javascript', orderNumber || 0, isFreeValue
+    language || 'javascript', theoryContent || '', orderNumber || 0, isFreeValue,
+    displayOutput || '', testCasesJson
   ], (err, result) => {
     if (err) {
       console.error('Error inserting lesson:', err);
@@ -1656,6 +1678,14 @@ router.get('/api/interactive/lesson/:lessonId', (req, res) => {
       }
     }
 
+    if (lesson.test_cases && typeof lesson.test_cases === 'string') {
+      try {
+        lesson.test_cases = JSON.parse(lesson.test_cases);
+      } catch (e) {
+        lesson.test_cases = [];
+      }
+    }
+
     res.json({ success: true, lesson });
   });
 });
@@ -1672,28 +1702,56 @@ router.put('/api/interactive/lesson/:lessonId', (req, res) => {
     validationType,
     hints,
     orderNumber,
-    isFree
+    isFree,
+    theoryContent,
+    displayOutput,
+    testCases
   } = req.body;
 
   if (!title) {
     return res.json({ success: false, message: 'Title is required' });
   }
 
-  // Handle hints input
-  let hintsJson = '[]';
-  try {
-    if (Array.isArray(hints)) {
-      hintsJson = JSON.stringify(hints);
-    } else if (typeof hints === 'string') {
-      if (hints.trim().startsWith('[')) {
-        hintsJson = hints;
-      } else {
-        hintsJson = JSON.stringify(hints.split('\n').filter(h => h.trim()));
+  const serializeHints = (value) => {
+    let hintsJson = '[]';
+    try {
+      if (Array.isArray(value)) {
+        hintsJson = JSON.stringify(value.filter(h => typeof h === 'string' && h.trim()).map(h => h.trim()));
+      } else if (typeof value === 'string') {
+        if (value.trim().startsWith('[')) {
+          hintsJson = value;
+        } else {
+          hintsJson = JSON.stringify(value.split('\n').map(h => h.trim()).filter(Boolean));
+        }
       }
+    } catch (e) {
+      hintsJson = '[]';
     }
-  } catch (e) {
-    hintsJson = '[]';
-  }
+    return hintsJson;
+  };
+
+  const serializeTestCases = (value) => {
+    let testCasesJson = '[]';
+    try {
+      if (Array.isArray(value)) {
+        const cleaned = value
+          .map(tc => ({
+            input: (tc?.input || '').toString(),
+            output: (tc?.output || '').toString()
+          }))
+          .filter(tc => tc.input.trim() || tc.output.trim());
+        testCasesJson = JSON.stringify(cleaned);
+      } else if (typeof value === 'string' && value.trim()) {
+        testCasesJson = value.trim().startsWith('[') ? value : '[]';
+      }
+    } catch (e) {
+      testCasesJson = '[]';
+    }
+    return testCasesJson;
+  };
+
+  const hintsJson = serializeHints(hints);
+  const testCasesJson = serializeTestCases(testCases);
 
   const isFreeValue = (isFree === true || isFree === 'true' || isFree === 1) ? 1 : 0;
 
@@ -1707,7 +1765,10 @@ router.put('/api/interactive/lesson/:lessonId', (req, res) => {
       validation_type = ?,
       hints = ?,
       order_number = ?,
-      is_free = ?
+      is_free = ?,
+      text_content = ?,
+      display_output = ?,
+      test_cases = ?
     WHERE lesson_id = ? AND lesson_type = 'interactive_code'
   `;
 
@@ -1721,6 +1782,9 @@ router.put('/api/interactive/lesson/:lessonId', (req, res) => {
     hintsJson,
     orderNumber || 0,
     isFreeValue,
+    theoryContent || '',
+    displayOutput || '',
+    testCasesJson,
     lessonId
   ], (err, result) => {
     if (err) {

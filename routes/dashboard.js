@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const conn = require('../config/db');
+const { isClient, isClientAr, isClientAPI } = require('../utils/authMiddleware');
 
-router.get('/', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
+router.get('/', isClient, (req, res) => {
 
   // Prevent caching of protected pages
   res.set({
@@ -61,10 +59,7 @@ router.get('/', (req, res) => {
   });
 })
 
-router.get('/ar', (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login/ar');
-  }
+router.get('/ar', isClientAr, (req, res) => {
 
   // Prevent caching of protected pages
   res.set({
@@ -117,10 +112,7 @@ router.get('/ar', (req, res) => {
 })
 
 // API: Get client's purchased courses
-router.get('/api/my-courses', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+router.get('/api/my-courses', isClientAPI, (req, res) => {
 
   const clientId = req.session.user.id;
   const sql = `
@@ -140,10 +132,7 @@ router.get('/api/my-courses', (req, res) => {
 });
 
 // API: Update profile
-router.put('/api/update-profile', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+router.put('/api/update-profile', isClientAPI, (req, res) => {
 
   const { fullName } = req.body;
   const clientId = req.session.user.id;
@@ -167,10 +156,7 @@ router.put('/api/update-profile', (req, res) => {
 });
 
 // API: Change password
-router.put('/api/change-password', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+router.put('/api/change-password', isClientAPI, (req, res) => {
 
   const { currentPassword, newPassword } = req.body;
   const clientId = req.session.user.id;
@@ -223,10 +209,7 @@ router.put('/api/change-password', (req, res) => {
 });
 
 // API: Get course progress
-router.get('/api/progress', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+router.get('/api/progress', isClientAPI, (req, res) => {
 
   const clientId = req.session.user.id;
 
@@ -299,10 +282,7 @@ router.get('/api/progress', (req, res) => {
 });
 
 // API: Get client statistics
-router.get('/api/stats', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+router.get('/api/stats', isClientAPI, (req, res) => {
 
   const clientId = req.session.user.id;
 
@@ -382,10 +362,7 @@ router.get('/api/stats', (req, res) => {
 })
 
 // API: Get client's certificates
-router.get('/api/certificates', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+router.get('/api/certificates', isClientAPI, (req, res) => {
 
   const clientId = req.session.user.id;
 
@@ -406,10 +383,7 @@ router.get('/api/certificates', (req, res) => {
 });
 
 // API: Get first lesson of a course
-router.get('/api/first-lesson/:courseId', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
+router.get('/api/first-lesson/:courseId', isClientAPI, (req, res) => {
 
   const courseId = req.params.courseId;
   const clientId = req.session.user.id;

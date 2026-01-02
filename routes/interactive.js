@@ -567,6 +567,9 @@ router.post('/api/submit-code', (req, res) => {
                 const expectedOutputContext = lesson.expected_output ? `\n\nExpected Output: ${lesson.expected_output}` : '';
                 const testCasesContext = lesson.test_cases ? `\n\nTest Cases: ${JSON.stringify(safeJSONParse(lesson.test_cases))}` : '';
 
+                // Helper for delay
+                const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
                 for (const modelName of modelCandidates) {
                     try {
                         const model = genAI.getGenerativeModel({ model: modelName });
@@ -615,7 +618,8 @@ Provide a JSON response with this exact structure (no markdown formatting, no ba
                         const statusCode = e.status || e.statusCode || (e.response && e.response.status);
 
                         if (statusCode === 429) {
-                            console.log(`⚠️  AI Model ${modelName} rate limited (429). Trying next model...`);
+                            console.log(`⚠️  AI Model ${modelName} rate limited (429). Waiting 2s before trying next model...`);
+                            await sleep(2000); // Wait 2s before trying next model
                         } else if (statusCode === 404) {
                             console.log(`⚠️  AI Model ${modelName} not found (404). Trying next model...`);
                         } else {
