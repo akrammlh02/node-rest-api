@@ -62,8 +62,43 @@ async function loadCourse() {
         document.getElementById('courseTitle').textContent = course.title;
         document.getElementById('courseDescription').textContent = course.description || 'No description available.';
 
+        // Update level badge
+        if (course.level) {
+            const badgeSpan = document.querySelector('.hero-badge span:last-child');
+            if (badgeSpan) badgeSpan.textContent = course.level;
+        }
+
         // Update header
         document.getElementById('headerCourseTitle').textContent = course.title;
+
+        // Update Skills/Tech Stack
+        if (course.skills) {
+            const skillsContainer = document.getElementById('courseSkills');
+            const skillsSection = document.getElementById('techStackSection');
+
+            if (skillsContainer && skillsSection) {
+                const skills = course.skills.split(',').map(s => s.trim()).filter(s => s);
+
+                if (skills.length > 0) {
+                    skillsContainer.innerHTML = skills.map(skill => `
+                        <div class="tech-item">
+                            <span class="material-symbols-outlined">code</span>
+                            <span>${skill}</span>
+                        </div>
+                    `).join('');
+                    skillsSection.style.display = 'block';
+
+                    // Add animation observer to new elements
+                    const techItems = document.querySelectorAll('.tech-item');
+                    techItems.forEach(el => {
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateY(20px)';
+                        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                        observer.observe(el);
+                    });
+                }
+            }
+        }
 
         // Update pricing
         const price = course.price || 0;
@@ -86,6 +121,64 @@ async function loadCourse() {
 
                 heroVideoFrame.src = videoUrl;
                 heroVideoSection.style.display = 'block';
+            }
+        }
+
+        // Specific Content for Course ID 14 (Frontend Course)
+        const courseProjectsData = {
+            '14': [
+                {
+                    title: "Modern Portfolio Website",
+                    description: "Build a stunning, responsive personal portfolio to showcase your work and resume. Learn CSS Grid, Flexbox, and animations.",
+                    image: "/images/front-end-1.jpg",
+                    tags: ["HTML5", "CSS3", "Responsive Design"]
+                },
+                {
+                    title: "E-Commerce Product Page",
+                    description: "Create a dynamic product page with image galleries, cart functionality, and interactive UI elements using JavaScript.",
+                    image: "/images/Untitled-design.png",
+                    tags: ["JavaScript", "DOM Manipulation", "UI/UX"]
+                },
+                {
+                    title: "Dashboard Interface",
+                    description: "Master advanced layout techniques by building a complex admin dashboard with charts, data tables, and sidebar navigation.",
+                    image: "/images/background.gif", // Using gif for dynamic feel
+                    tags: ["CSS Grid", "Charts", "Complex Layouts"]
+                }
+            ]
+        };
+
+        // Render Projects if data exists for this course
+        if (courseProjectsData[courseId]) {
+            const projectsContainer = document.getElementById('courseProjects');
+            const projectsSection = document.getElementById('projectsSection');
+
+            if (projectsContainer && projectsSection) {
+                projectsContainer.innerHTML = courseProjectsData[courseId].map(project => `
+                    <div class="project-card">
+                        <div class="project-image-container">
+                            <img src="${project.image}" alt="${project.title}" class="project-image">
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">${project.title}</h3>
+                            <p class="project-description">${project.description}</p>
+                            <div class="project-tags">
+                                ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                projectsSection.style.display = 'block';
+
+                // Add animation observer to new elements
+                const projectCards = document.querySelectorAll('.project-card');
+                projectCards.forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(30px)';
+                    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                    observer.observe(el);
+                });
             }
         }
 
@@ -187,6 +280,20 @@ function enrollCourse() {
         );
 
         const whatsappUrl = `https://wa.me/213540921726?text=${message}`;
+
+        // Track Facebook Pixel - Lead event
+        if (typeof fbq !== 'undefined') {
+            const priceValue = parseFloat(coursePrice.replace(/[^0-9.]/g, '')) || 0;
+            fbq('track', 'Lead', {
+                content_name: courseTitle,
+                content_category: 'Course',
+                content_ids: [courseId],
+                value: priceValue,
+                currency: 'DZD'
+            });
+            console.log('Facebook Pixel: Lead event tracked');
+        }
+
         window.open(whatsappUrl, '_blank');
 
         // Track conversion (you can add analytics here)

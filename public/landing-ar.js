@@ -86,7 +86,95 @@ async function loadCourse() {
                 }
 
                 heroVideoFrame.src = videoUrl;
+                heroVideoFrame.src = videoUrl;
                 heroVideoSection.style.display = 'block';
+            }
+        }
+
+        // Update Skills/Tech Stack
+        if (course.skills) {
+            const skillsContainer = document.getElementById('courseSkills');
+            const skillsSection = document.getElementById('techStackSection');
+
+            if (skillsContainer && skillsSection) {
+                const skills = course.skills.split(',').map(s => s.trim()).filter(s => s);
+
+                if (skills.length > 0) {
+                    skillsContainer.innerHTML = skills.map(skill => `
+                        <div class="tech-item">
+                            <span class="material-symbols-outlined">code</span>
+                            <span>${skill}</span>
+                        </div>
+                    `).join('');
+                    skillsSection.style.display = 'block';
+
+                    // Add animation observer to new elements
+                    const techItems = document.querySelectorAll('.tech-item');
+                    techItems.forEach(el => {
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateY(20px)';
+                        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                        observer.observe(el);
+                    });
+                }
+            }
+        }
+
+        // Specific Content for Course ID 14 (Frontend Course - Arabic)
+        const courseProjectsData = {
+            '14': [
+                {
+                    title: "موقع معرض أعمال شخصي",
+                    description: "قم ببناء موقع شخصي (Portfolio) احترافي ومتجاوب مع جميع الشاشات لعرض مهاراتك ومشاريعك. ستتعلم استخدام HTML5 و CSS3 المتقدمة.",
+                    image: "/images/front-end-1.jpg",
+                    tags: ["HTML5", "CSS3", "تصميم متجاوب"]
+                },
+                {
+                    title: "صفحة منتج لمتجر إلكتروني",
+                    description: "أنشئ صفحة تفاعلية لمنتج تحتوي على معرض صور، سلة تسوق، وأزرار تفاعلية باستخدام JavaScript للتحكم في عناصر الصفحة DOM.",
+                    image: "/images/Untitled-design.png",
+                    tags: ["JavaScript", "تفاعل المستخدم", "DOM"]
+                },
+                {
+                    title: "لوحة تحكم إدارية (Dashboard)",
+                    description: "أتقن تصميم الواجهات المعقدة ببناء لوحة تحكم تحتوي على قوائم جانبية، جداول بيانات، ورسوم بيانية باستخدام CSS Grid و Flexbox.",
+                    image: "/images/background.gif",
+                    tags: ["CSS Grid", "تخطيط متقدم", "لوحة تحكم"]
+                }
+            ]
+        };
+
+        // Render Projects if data exists for this course
+        if (courseProjectsData[courseId]) {
+            const projectsContainer = document.getElementById('courseProjects');
+            const projectsSection = document.getElementById('projectsSection');
+
+            if (projectsContainer && projectsSection) {
+                projectsContainer.innerHTML = courseProjectsData[courseId].map(project => `
+                    <div class="project-card">
+                        <div class="project-image-container">
+                            <img src="${project.image}" alt="${project.title}" class="project-image">
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">${project.title}</h3>
+                            <p class="project-description">${project.description}</p>
+                            <div class="project-tags">
+                                ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                projectsSection.style.display = 'block';
+
+                // Add animation observer to new elements
+                const projectCards = document.querySelectorAll('.project-card');
+                projectCards.forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(30px)';
+                    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                    observer.observe(el);
+                });
             }
         }
 

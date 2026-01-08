@@ -72,7 +72,14 @@
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-container">
-                <!-- Video Preview - FIRST -->
+                <div class="hero-badge">
+                    <span class="material-symbols-outlined">verified</span>
+                    <span>دورة معتمدة مع شهادة</span>
+                </div>
+
+                <h1 class="hero-title" id="courseTitle">جاري تحميل الدورة...</h1>
+
+                <!-- Video Preview - Moved under title/description -->
                 <div class="hero-video" id="heroVideoSection" style="display: none;">
                     <div class="video-wrapper">
                         <iframe id="heroVideoFrame" width="100%" height="220" frameborder="0" loading="lazy"
@@ -85,13 +92,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="hero-badge">
-                    <span class="material-symbols-outlined">verified</span>
-                    <span>دورة معتمدة مع شهادة</span>
-                </div>
-
-                <h1 class="hero-title" id="courseTitle">جاري تحميل الدورة...</h1>
 
                 <p class="hero-description" id="courseDescription">
                     جاري تحميل الوصف...
@@ -126,6 +126,34 @@
             </div>
         </section>
 
+        <!-- Tech Stack Section -->
+        <section class="tech-stack-section" id="techStackSection" style="display: none;">
+            <div class="container">
+                <p class="section-subtitle">مدعوم بتقنيات حديثة</p>
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">layers</span>
+                    التقنيات التي ستتقنها
+                </h2>
+                <div class="tech-grid" id="courseSkills">
+                    <!-- Skills will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Showcase Section (Dynamic) -->
+        <section class="projects-section" id="projectsSection" style="display: none;">
+            <div class="container">
+                <p class="section-subtitle">خبرة عملية</p>
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">laptop_chromebook</span>
+                    ماذا ستبني في هذه الدورة؟
+                </h2>
+                <div class="projects-grid" id="courseProjects">
+                    <!-- Projects will be loaded here -->
+                </div>
+            </div>
+        </section>
+
         <!-- Social Proof Section -->
         <section class="testimonials-section">
             <h2 class="section-title">
@@ -135,65 +163,60 @@
 
             <div class="testimonials-slider">
                 <div class="testimonial-card featured">
-                    <div class="quote-icon">"</div>
-                    <p class="testimonial-text">
-                        الدورة غيرت فهمي تماماً للخوارزميات. الأستاذ يشرح المفاهيم المعقدة بطريقة بسيطة.
-                    </p>
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-06-49.jpg" class="testimonial-screenshot"
+                        alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person</span>
                         </div>
                         <div>
-                            <h4>أحمد بن علي</h4>
-                            <div class="rating">
-                                ⭐⭐⭐⭐⭐
-                            </div>
+                            <h4>طالب مشترك</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="testimonial-card featured">
-                    <div class="quote-icon">"</div>
-                    <p class="testimonial-text">
-                        هذه الدورة ساعدتني كثيراً في فهم مادة الخوارزميات في الجامعة. الشرح واضح ومنظم،
-                        وساعدني على النجاح في الامتحانات وفهم الدروس بشكل أفضل.
-                    </p>
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-06-51.jpg" class="testimonial-screenshot"
+                        alt="رأي طالبة">
                     <div class="student-info">
                         <div class="student-avatar">
-                            <span class="material-symbols-outlined">school</span>
+                            <span class="material-symbols-outlined">person_2</span>
                         </div>
                         <div>
-                            <h4>أحمد بن علي</h4>
-                            <small>طالب علوم الحاسوب – السنة الثانية</small>
-                            <div class="rating">
-                                ⭐⭐⭐⭐⭐
-                            </div>
+                            <h4>طالبة مشتركة</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
                         </div>
                     </div>
                 </div>
-
 
                 <div class="testimonial-card">
-                    <div class="quote-icon">"</div>
-                    <p class="testimonial-text">
-                        كنت أواجه صعوبة كبيرة في فهم الخوارزميات خلال المحاضرات،
-                        لكن هذه الدورة قدمت لي شرحاً مبسطاً مع أمثلة واضحة.
-                        أصبحت أفهم الحلول خطوة بخطوة دون تعقيد.
-                    </p>
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-07-12.jpg" class="testimonial-screenshot"
+                        alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
-                            <span class="material-symbols-outlined">school</span>
+                            <span class="material-symbols-outlined">person</span>
                         </div>
                         <div>
-                            <h4>ياسين مزيان</h4>
-                            <small>طالب إعلام آلي – السنة الأولى</small>
-                            <div class="rating">
-                                ⭐⭐⭐⭐⭐
-                            </div>
+                            <h4>طالب مشترك</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
                         </div>
                     </div>
                 </div>
 
+                <div class="testimonial-card">
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-07-22.jpg" class="testimonial-screenshot"
+                        alt="رأي طالبة">
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">person_2</span>
+                        </div>
+                        <div>
+                            <h4>طالبة مشتركة</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- CTA After Testimonials -->

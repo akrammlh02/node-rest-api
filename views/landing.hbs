@@ -22,6 +22,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/images/logo.png">
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1567430537783358');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1567430537783358&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
 </head>
 
 <body>
@@ -114,6 +133,34 @@
                             <span class="material-symbols-outlined">play_circle</span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section class="tech-stack-section" id="techStackSection" style="display: none;">
+            <div class="container">
+                <p class="section-subtitle">Powered by modern technologies</p>
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">layers</span>
+                    Technologies You Will Master
+                </h2>
+                <div class="tech-grid" id="courseSkills">
+                    <!-- Skills will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Showcase Section (Dynamic) -->
+        <section class="projects-section" id="projectsSection" style="display: none;">
+            <div class="container">
+                <p class="section-subtitle">Hands-on Experience</p>
+                <h2 class="section-title">
+                    <span class="material-symbols-outlined">laptop_chromebook</span>
+                    What You Will Build
+                </h2>
+                <div class="projects-grid" id="courseProjects">
+                    <!-- Projects will be loaded here -->
                 </div>
             </div>
         </section>
