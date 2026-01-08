@@ -1711,3 +1711,55 @@ body {
     transform: scale(1.02);
     cursor: pointer;
 }
+
+/* ==================== REDESIGNED TESTIMONIALS (SCREENSHOTS) ==================== */
+.testimonials-slider {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.testimonial-card {
+    background: white !important;
+    padding: var(--spacing-sm) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: var(--shadow-sm) !important;
+    border: 1px solid var(--border-color) !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: var(--text-primary) !important;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.testimonial-screenshot {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: block;
+    background: var(--bg-secondary);
+}
+
+.testimonial-card.featured {
+    transform: none; /* Reset the scale from previous styles */
+}
+
+.testimonial-card.featured:hover {
+   transform: translateY(-5px); 
+}
+
+.student-info {
+    padding: 0 var(--spacing-xs) var(--spacing-xs);
+}
+
+.student-avatar {
+    background: var(--bg-secondary) !important;
+    color: var(--primary-color) !important;
+    border: 2px solid var(--primary-color);
+}

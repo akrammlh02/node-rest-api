@@ -38,10 +38,9 @@ async function loadCourse() {
         const result = await response.json();
 
         if (!result.success || !result.course) {
-            alert('الدورة غير موجودة. سيتم التوجيه إلى صفحة الدورات...');
-            setTimeout(() => {
-                window.location.href = '/course';
-            }, 2000);
+            console.error('Course data not found or invalid:', result);
+            // Optionally update UI to show error, but do not alert/redirect immediately if it might be a glitch
+            // document.getElementById('courseTitle').textContent = 'حدث خطأ في تحميل الدورة';
             return;
         }
 
@@ -79,10 +78,10 @@ async function loadCourse() {
             if (heroVideoSection && heroVideoFrame) {
                 let videoUrl = course.preview_video_url;
 
-                // Add YouTube autoplay parameters (with sound)
+                // Add YouTube parameters (no autoplay, sound on)
                 if (videoUrl.includes('youtube.com/embed/')) {
                     const separator = videoUrl.includes('?') ? '&' : '?';
-                    videoUrl += `${separator}autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+                    videoUrl += `${separator}rel=0&modestbranding=1&playsinline=1`;
                 }
 
                 heroVideoFrame.src = videoUrl;
@@ -188,11 +187,17 @@ async function loadCourse() {
             });
         }
 
-        document.getElementById('totalLessons').textContent = totalLessons;
+        const totalLessonsEl = document.getElementById('totalLessons');
+        if (totalLessonsEl) {
+            totalLessonsEl.textContent = totalLessons;
+        }
 
         // Update student count (dynamic from database or calculated)
         const studentCount = Math.floor(totalLessons * 10) + 200;
-        document.getElementById('studentCount').textContent = `${studentCount}+`;
+        const studentCountEl = document.getElementById('studentCount');
+        if (studentCountEl) {
+            studentCountEl.textContent = `${studentCount}+`;
+        }
 
         // Update inline student count if element exists
         const studentCountInline = document.getElementById('studentCountInline');
@@ -201,14 +206,17 @@ async function loadCourse() {
         }
 
         const certificateCount = Math.floor(studentCount * 0.6);
-        document.getElementById('certificateCount').textContent = `${certificateCount}+`;
+        const certificateCountEl = document.getElementById('certificateCount');
+        if (certificateCountEl) {
+            certificateCountEl.textContent = `${certificateCount}+`;
+        }
 
         // Render chapters
         renderChapters(course.chapters || []);
 
     } catch (error) {
         console.error('خطأ في تحميل الدورة:', error);
-        alert('خطأ في تحميل الدورة. يرجى المحاولة لاحقاً.');
+        // alert('خطأ في تحميل الدورة. يرجى المحاولة لاحقاً.');
     }
 }
 

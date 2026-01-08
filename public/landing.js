@@ -113,10 +113,10 @@ async function loadCourse() {
             if (heroVideoSection && heroVideoFrame) {
                 let videoUrl = course.preview_video_url;
 
-                // Add YouTube autoplay parameters
+                // Add YouTube parameters
                 if (videoUrl.includes('youtube.com/embed/')) {
                     const separator = videoUrl.includes('?') ? '&' : '?';
-                    videoUrl += `${separator}autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1`;
+                    videoUrl += `${separator}rel=0&modestbranding=1&playsinline=1`;
                 }
 
                 heroVideoFrame.src = videoUrl;
