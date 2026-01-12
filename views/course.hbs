@@ -119,51 +119,76 @@
     <div class="courses" id="coursesContainer">
       {{#if courses}}
       {{#each courses}}
-      <div class="course" data-course-id="{{course_id}}">
-        <a href="/course/course-view?id={{course_id}}" class="course-card-link">
-          <div class="image-box">
-            <button class="add-cart-btn" onclick="addToCart(event, '{{course_id}}')" title="Add to Checkout">
-              <span class="material-symbols-outlined">shopping_cart</span>
-            </button>
-            <img src="{{thumbnail_url}}" alt="{{title}}" width="100%" onerror="this.src='/images/front-end-1.jpg'">
-            <div class="price-badge">{{price}} DA</div>
+      <article class="course-card" data-course-id="{{course_id}}"
+        data-category="{{#if category}}{{category}}{{else}}web{{/if}}">
+        <div class="card-image-wrapper">
+          <button class="add-cart-btn" onclick="addToCart(event, '{{course_id}}')" title="Add to Cart">
+            <span class="material-symbols-outlined">add_shopping_cart</span>
+          </button>
+          <img src="{{thumbnail_url}}" alt="{{title}}" loading="lazy" onerror="this.src='/images/front-end-1.jpg'">
+          <div class="price-badge">{{price}} DA</div>
+          <div class="overlay-hover"></div>
+        </div>
+
+        <div class="card-content">
+          <div class="card-header">
+            <span class="level-tag">{{#if level}}{{level}}{{else}}Beginner{{/if}}</span>
+            <div class="rating">
+              <span class="material-symbols-outlined filled">star</span>
+              <span>5.0</span>
+            </div>
           </div>
-          <p class="category">{{#if level}}{{level}}{{else}}COURSE{{/if}}</p>
-          <div style="width: 100%;display: flex; justify-content: center;">
-            <hr>
-          </div>
-          <h5>{{title}}</h5>
+
+          <a href="/course/course-view?id={{course_id}}" class="card-title">
+            <h3>{{title}}</h3>
+          </a>
+
           {{#if skills}}
-          <div class="skills-container"
-            style="display: flex; flex-direction: column;padding-left: 15px;gap: 4px; margin: 0px -5px; font-size: 0.9rem;">
+          <div class="skills-preview">
             {{#each (split skills ",")}}
-            <span style="color: #0e1af8;">
-              <span class="material-symbols-outlined"
-                style="font-size: 16px; vertical-align: middle; margin-right: 4px;">check_circle</span>
+            <div class="skill-pill">
+              <span class="material-symbols-outlined">check_small</span>
               {{trim this}}
-            </span>
+            </div>
             {{/each}}
           </div>
           {{else}}
-          <p class="description">{{description}}</p>
+          <p class="card-description">{{description}}</p>
           {{/if}}
-          <p class="powered">By Akram Melihi</p>
-          <div style="width: 100%;display: flex; justify-content: center;">
-            <hr>
+
+          <div class="card-separator"></div>
+
+          <div class="card-meta">
+            <div class="meta-item">
+              <span class="material-symbols-outlined">schedule</span>
+              {{duration_hours}}h
+            </div>
+            <div class="meta-item">
+              <span class="material-symbols-outlined">play_circle</span>
+              {{lessons_count}} Lessons
+            </div>
           </div>
-          <div class="information">
-            <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
-            <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
+
+          <div class="card-footer">
+            <div class="instructor-profile">
+              <span class="material-symbols-outlined" style="font-size: 20px; color: #666;">person</span>
+              <span>Akram Melihi</span>
+            </div>
+            <button class="view-course-btn" onclick="window.location.href='/course/course-view?id={{course_id}}'">
+              View Course
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
           </div>
-        </a>
-        <div class="button-join">
-          <a href="/course/course-view?id={{course_id}}" class="view-courses course-button">Learn More</a>
         </div>
-      </div>
+      </article>
       {{/each}}
       {{else}}
       <div class="no-courses">
-        <p>No courses available at the moment.</p>
+        <div class="empty-state">
+          <span class="material-symbols-outlined">search_off</span>
+          <h3>No Courses Found</h3>
+          <p>We couldn't find any courses matching your criteria. Try adjusting your search.</p>
+        </div>
       </div>
       {{/if}}
     </div>

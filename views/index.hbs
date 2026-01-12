@@ -15,12 +15,17 @@
     content="DevAcademy - Premium E-Learning Platform for Web Development. Master Frontend, Backend, and Full-Stack Development with hands-on projects.">
   <title>DevAcademy - Master Coding Skills | Premium E-Learning Platform</title>
 
+  <!-- Performance Optimizations -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
   <link rel="icon" type="image/x-icon" href="/images/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">
@@ -34,140 +39,123 @@
     html {
       scroll-behavior: smooth;
     }
-
-    /* Loading animation */
-    .page-loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      transition: opacity 0.5s ease-out;
-    }
-
-    .page-loader.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .loader-spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
   </style>
 </head>
 
 <body>
-  <!-- Page Loader -->
-  <div class="page-loader" id="pageLoader">
-    <div class="loader-spinner"></div>
+  <!-- Page Loader Removed -->
+
+  <!-- Social Floating Action Button (FAB) -->
+  <div class="social-fab-container">
+    <input type="checkbox" id="fabToggle" class="fab-toggle">
+    <label for="fabToggle" class="fab-main-btn" aria-label="Contact Support">
+      <span class="material-symbols-outlined fab-icon">chat</span>
+      <span class="material-symbols-outlined fab-close">close</span>
+    </label>
+
+    <div class="fab-options">
+      <!-- WhatsApp -->
+      <a href="https://wa.me/213540921726" target="_blank" class="fab-option whatsapp-opt" aria-label="WhatsApp">
+        <i class="devicon-twitter-original" style="display:none"></i> <!-- Placeholder -->
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+        <span class="tooltip">WhatsApp</span>
+      </a>
+
+      <!-- Telegram -->
+      <a href="https://t.me/+uv8hLl55DdMzNTg0" target="_blank" class="fab-option telegram-opt" aria-label="Telegram">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+        <span class="tooltip">Telegram</span>
+      </a>
+
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/devacademy__/" target="_blank" class="fab-option instagram-opt"
+        aria-label="Instagram">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
+        <span class="tooltip">Instagram</span>
+      </a>
+    </div>
   </div>
 
-  <!-- Social Media Floating Buttons -->
-  <button class="whatsapp" onclick="window.open('https://wa.me/213540921726')" aria-label="Contact us on WhatsApp">
-    <span class="svgContainer">
-      <svg viewBox="0 0 448 512" fill="white" height="1.6em" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z">
-        </path>
-      </svg>
-    </span>
-    <span class="BG"></span>
-  </button>
-
-  <button class="telegram" onclick="window.open('https://t.me/+uv8hLl55DdMzNTg0')"
-    aria-label="Join our Telegram channel">
-    <span class="svgContainer">
-      <svg viewBox="0 0 496 512" height="1.6em" xmlns="http://www.w3.org/2000/svg" fill="white">
-        <path
-          d="M248 8C111 8 0 119 0 256S111 504 248 504 496 393 496 256 385 8 248 8zM363 176.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7 .2-.7 .3-3.1-1.2-4.4s-3.6-.8-5.1-.5q-3.3 .7-104.6 69.1-q-14.8 10.2-26.9 9.9c-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3q.8-6.7 18.5-13.7 108.4-47.2 144.6-62.3c68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6 .5 9.6 2.9a10.5 10.5 0 0 1 3.5 6.7A43.8 43.8 0 0 1 363 176.7z"
-          fill="white"></path>
-      </svg>
-    </span>
-    <span class="BG"></span>
-  </button>
-
-  <button class="instagram" onclick="window.open('https://www.instagram.com/a.4dou/')"
-    aria-label="Follow us on Instagram">
-    <span class="svgContainer">
-      <svg viewBox="0 0 496 512" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <g transform="translate(40 50) scale(2.5)">
-          <path
-            d="M122.406,0H46.654C20.929,0,0,20.93,0,46.655v75.752c0,25.726,20.929,46.655,46.654,46.655h75.752 c25.727,0,46.656-20.93,46.656-46.655V46.655C169.063,20.93,148.133,0,122.406,0z M154.063,122.407 c0,17.455-14.201,31.655-31.656,31.655H46.654C29.2,154.063,15,139.862,15,122.407V46.655C15,29.201,29.2,15,46.654,15h75.752 c17.455,0,31.656,14.201,31.656,31.655V122.407z"
-            fill="white" />
-          <path
-            d="M84.531,40.97c-24.021,0-43.563,19.542-43.563,43.563c0,24.02,19.542,43.561,43.563,43.561s43.563-19.541,43.563-43.561 C128.094,60.512,108.552,40.97,84.531,40.97z M84.531,113.093c-15.749,0-28.563-12.812-28.563-28.561 c0-15.75,12.813-28.563,28.563-28.563s28.563,12.813,28.563,28.563C113.094,100.281,100.28,113.093,84.531,113.093z"
-            fill="white" />
-          <path
-            d="M129.921,28.251c-2.89,0-5.729,1.17-7.77,3.22c-2.051,2.04-3.23,4.88-3.23,7.78c0,2.891,1.18,5.73,3.23,7.78 c2.04,2.04,4.88,3.22,7.77,3.22c2.9,0,5.73-1.18,7.78-3.22c2.05-2.05,3.22-4.89,3.22-7.78c0-2.9-1.17-5.74-3.22-7.78 C135.661,29.421,132.821,28.251,129.921,28.251z"
-            fill="white" />
-        </g>
-      </svg>
-    </span>
-    <span class="BG"></span>
-  </button>
-
   <!-- Navigation Header -->
-  <header>
-    <nav>
-      <a href="/" aria-label="DevAcademy Home">
-        <img src="/images/logo2-removebg-preview.png" alt="DevAcademy Logo" height="55em">
-      </a>
-      <ul class="nav-links">
+  <header class="main-header">
+    <div class="header-container">
+      <nav class="navbar">
+        <!-- Logo -->
+        <a href="/" class="brand-logo" aria-label="DevAcademy Home">
+          <img src="/images/logo2-removebg-preview.png" alt="DevAcademy Logo">
+          {{!-- <span class="brand-text">DevAcademy</span> --}}
+        </a>
 
-        {{#if isLoggedIn}}
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><button type="button" class="btn btn-danger"><a href="/logout">Logout</a></button></li>
-        {{else}}
-        <li><a href="/login">Login</a></li>
-        <li><button type="button" class="btn signup"><a href="/signup">Sign Up</a></button></li>
-        {{/if}}
-      </ul>
-      <div class="menu">
-        <button class="btn btn-primary menu-button" type="button" data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" aria-label="Open menu">
-          <span class="material-symbols-outlined">menu</span>
+        <!-- Desktop Navigation -->
+        <ul class="nav-links-desktop">
+          <li><a href="/" class="nav-link">Home</a></li>
+          <li><a href="/course" class="nav-link">Courses</a></li>
+          <li><a href="#interactive" class="nav-link">Code</a></li>
+          <li><a href="#quiz-system" class="nav-link">Quiz</a></li>
+        </ul>
+
+        <!-- Auth Buttons -->
+        <div class="header-actions">
+          {{#if isLoggedIn}}
+          <a href="/dashboard" class="action-btn dashboard-btn">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+          </a>
+          <a href="/logout" class="action-btn logout-btn">
+            <span class="material-symbols-outlined">logout</span>
+          </a>
+          {{else}}
+          <a href="/login" class="action-btn login-btn">Login</a>
+          <a href="/signup" class="action-btn signup-btn">Get Started</a>
+          {{/if}}
+
+          <!-- Mobile Menu Trigger -->
+          <button class="mobile-menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight" aria-label="Open menu">
+            <svg class="hamburger-icon" viewBox="0 0 24 24" width="32" height="32">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Mobile Menu Offcanvas -->
+    <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="offcanvasRight"
+      aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
+        <button type="button" class="btn-close-custom" data-bs-dismiss="offcanvas" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
         </button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="mobile-nav-links">
+          <a href="/" class="mobile-link">
+            <span class="material-symbols-outlined">home</span> Home
+          </a>
+          <a href="/course" class="mobile-link">
+            <span class="material-symbols-outlined">school</span> Courses
+          </a>
+          <a href="#interactive" class="mobile-link">
+            <span class="material-symbols-outlined">code</span> Code Editor
+          </a>
+          <a href="#quiz-system" class="mobile-link">
+            <span class="material-symbols-outlined">quiz</span> Quiz
+          </a>
+        </div>
 
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <a href="/">Home</a>
-            <a href="/course">Courses</a>
-            <a href="/quiz">Quiz</a>
-            {{#if isLoggedIn}}
-            <a href="/dashboard">Dashboard</a>
-            <div style="width: 50%;">
-              <button type="button" class="btn btn-danger"><a href="/logout">Logout</a></button>
-            </div>
-            {{else}}
-            <a href="/login">Login</a>
-            <div style="width: 50%;">
-              <button type="button" class="btn signup"><a href="/signup">Sign Up</a></button>
-            </div>
-            {{/if}}
-          </div>
+        <div class="mobile-auth-actions">
+          {{#if isLoggedIn}}
+          <a href="/dashboard" class="mobile-btn dashboard">Dashboard</a>
+          <a href="/logout" class="mobile-btn logout">Logout</a>
+          {{else}}
+          <a href="/login" class="mobile-btn login">Login</a>
+          <a href="/signup" class="mobile-btn signup">Sign Up Free</a>
+          {{/if}}
         </div>
       </div>
-    </nav>
+    </div>
   </header>
 
   <!-- Hero Section -->
@@ -244,6 +232,61 @@
     </div>
   </section>
 
+  <!-- Tech Stack Infinite Marquee -->
+  <section class="tech-marquee-section">
+    <div class="marquee-wrapper">
+      <div class="marquee-content">
+        <!-- Logo Set 1 -->
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+            alt="HTML5"><span>HTML5</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+            alt="CSS3"><span>CSS3</span></div>
+        <div class="tech-item"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+            alt="JavaScript"><span>JavaScript</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+            alt="React"><span>React</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+            alt="Node.js"><span>Node.js</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+            alt="Python"><span>Python</span></div>
+        <div class="tech-item"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"
+            alt="MongoDB"><span>MongoDB</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+            alt="Git"><span>Git</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg"
+            alt="Figma"><span>Figma</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg"
+            alt="VS Code"><span>VS Code</span></div>
+
+        <!-- Logo Set 2 (Duplicate for seamless loop) -->
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+            alt="HTML5"><span>HTML5</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+            alt="CSS3"><span>CSS3</span></div>
+        <div class="tech-item"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+            alt="JavaScript"><span>JavaScript</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+            alt="React"><span>React</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+            alt="Node.js"><span>Node.js</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+            alt="Python"><span>Python</span></div>
+        <div class="tech-item"><img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"
+            alt="MongoDB"><span>MongoDB</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+            alt="Git"><span>Git</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg"
+            alt="Figma"><span>Figma</span></div>
+        <div class="tech-item"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg"
+            alt="VS Code"><span>VS Code</span></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Popular Courses Section -->
   <section class="five-section" id="courses" aria-label="Popular Courses">
     <div class="container">
@@ -252,87 +295,125 @@
       <div class="courses">
         {{#if courses}}
         {{#each courses}}
-        <article class="course">
-          <a href="/course/course-view?id={{course_id}}" class="course-card-link" aria-label="View {{title}} course">
-            <div class="image-box">
-              <img src="{{thumbnail_url}}" alt="{{title}} course thumbnail" width="100%" loading="lazy"
-                onerror="this.src='/images/front-end-1.jpg'">
-              <span class="price">{{price}} DA</span>
+        <article class="featured-course-card">
+          <a href="/course/course-view?id={{course_id}}" class="course-card-link">
+            <div class="card-image-wrapper">
+              <img src="{{thumbnail_url}}" alt="{{title}}" loading="lazy" onerror="this.src='/images/front-end-1.jpg'">
+              <div class="price-badge">{{price}} DA</div>
+              <div class="overlay-hover"></div>
             </div>
-            <p class="category">{{#if level}}{{level}}{{else}}COURSE{{/if}}</p>
-            <div style="width: 100%;display: flex; justify-content: center;">
-              <hr>
-            </div>
-            <h5>{{title}}</h5>
-            {{#if skills}}
-            <div class="skills-container"
-              style="display: flex;text-align: start; flex-direction: column;padding-left: 20px;gap: 4px; margin: 0px -5px; font-size: 0.9rem;">
-              {{#each (split skills ",")}}
-              <span style="color: #0e1af8;">
-                <span class="material-symbols-outlined"
-                  style="font-size: 16px; vertical-align: middle; margin-right: 4px;">check_circle</span>
-                {{trim this}}
-              </span>
-              {{/each}}
-            </div>
-            {{else}}
-            <p class="description">{{description}}</p>
-            {{/if}}
-            <p class="powered">
-              <span class="material-symbols-outlined"
-                style="font-size: 18px; vertical-align: middle; margin-right: 5px;">person</span>
-              By Akram Melihi
-            </p>
-            <div style="width: 100%;display: flex; justify-content: center;margin:0;margin-top: -40px;">
-              <hr>
-            </div>
-            <div class="information">
-              <p><span class="material-symbols-outlined">alarm</span> {{duration_hours}} hours</p>
-              <p><span class="material-symbols-outlined">book_ribbon</span> {{lessons_count}} Lessons</p>
+
+            <div class="card-content">
+              <div class="card-header">
+                <span class="level-tag">{{#if level}}{{level}}{{else}}Beginner{{/if}}</span>
+                <div class="rating">
+                  <span class="material-symbols-outlined filled">star</span>
+                  <span>5.0</span>
+                </div>
+              </div>
+
+              <div class="card-title">
+                <h3>{{title}}</h3>
+              </div>
+
+              {{#if skills}}
+              <div class="skills-preview">
+                {{#each (split skills ",")}}
+                <span class="skill-tag">{{trim this}}</span>
+                {{/each}}
+              </div>
+              {{else}}
+              <p class="card-description">{{description}}</p>
+              {{/if}}
+
+              <div class="card-separator"></div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <span class="material-symbols-outlined">schedule</span>
+                  {{duration_hours}}h
+                </div>
+                <div class="meta-item">
+                  <span class="material-symbols-outlined">play_circle</span>
+                  {{lessons_count}} Lessons
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <div class="instructor-profile">
+                  <!-- <div class="avatar-placeholder">AM</div> -->
+                  <span class="material-symbols-outlined" style="font-size: 20px; color: #666;">person</span>
+                  <span>Akram Melihi</span>
+                </div>
+                <button class="view-course-btn"
+                  onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/course/course-view?id={{course_id}}'">
+                  View Course
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+              </div>
             </div>
           </a>
-          <button class="btn btn-primary course-button"
-            style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;"
-            onclick="window.location.href='/course/course-view?id={{course_id}}'"
-            aria-label="Learn more about {{title}}">
-            Learn More
-          </button>
         </article>
         {{/each}}
         {{else}}
-        <article class="course">
-          <div class="image-box">
-            <img src="/images/front-end-1.jpg" alt="Frontend Development Course" width="100%" loading="lazy">
-            <span class="price">5200 DA</span>
-          </div>
-          <p class="category">ADVANCED PROGRAMMING</p>
-          <div style="width: 100%;display: flex; justify-content: center;">
-            <hr>
-          </div>
-          <h5>Frontend Development Course</h5>
-          <p class="description">Master modern web development with HTML, CSS, JavaScript, and React. Build responsive,
-            interactive websites from scratch!</p>
-          <p class="powered">By Akram Melihi</p>
-          <div style="width: 100%;display: flex; justify-content: center;">
-            <hr>
-          </div>
-          <div class="information">
-            <p><span class="material-symbols-outlined">alarm</span> 8 hours 19 min</p>
-            <p><span class="material-symbols-outlined">book_ribbon</span> 38 Lessons</p>
-          </div>
-          <button class="btn btn-primary" style="margin-bottom: 20px; width: 70%; font-size: 17px; font-weight: 700;"
-            onclick="window.location.href='/course'">
-            Browse Courses
-          </button>
+        <article class="featured-course-card">
+          <a href="/course" class="course-card-link">
+            <div class="card-image-wrapper">
+              <img src="/images/front-end-1.jpg" alt="Frontend Development" loading="lazy">
+              <div class="price-badge">5200 DA</div>
+              <div class="overlay-hover"></div>
+            </div>
+
+            <div class="card-content">
+              <div class="card-header">
+                <span class="level-tag">Advanced</span>
+                <div class="rating">
+                  <span class="material-symbols-outlined filled">star</span>
+                  <span>4.9</span>
+                </div>
+              </div>
+
+              <div class="card-title">
+                <h3>Frontend Development Course</h3>
+              </div>
+
+              <p class="card-description">Master modern web development with HTML, CSS, JavaScript, and React. Build
+                responsive, interactive websites from scratch!</p>
+
+              <div class="card-separator"></div>
+
+              <div class="card-meta">
+                <div class="meta-item">
+                  <span class="material-symbols-outlined">schedule</span>
+                  8h 19m
+                </div>
+                <div class="meta-item">
+                  <span class="material-symbols-outlined">play_circle</span>
+                  38 Lessons
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <div class="instructor-profile">
+                  <span class="material-symbols-outlined" style="font-size: 20px; color: #666;">person</span>
+                  <span>Akram Melihi</span>
+                </div>
+                <button class="view-course-btn"
+                  onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/course'">
+                  View Course
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </a>
         </article>
         {{/if}}
       </div>
       {{#if courses}}
-      <div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
-        <a href="/course" class="btn btn-primary" aria-label="Discover all available courses"
-          style="padding: 12px 40px; font-size: 18px; font-weight: 700; border-radius: 50px; box-shadow: 0 10px 30px rgba(123, 9, 205, 0.3); text-decoration: none; color: white;">
+      <div class="courses-actions">
+        <a href="/course" class="discover-btn" aria-label="Discover all available courses">
           Discover All Courses
-          <span class="material-symbols-outlined" style="vertical-align: middle; margin-left: 5px;">arrow_forward</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
         </a>
       </div>
       {{/if}}
@@ -340,21 +421,90 @@
   </section>
 
   <!-- Interactive Learning Section -->
+  <!-- Interactive Learning Section -->
   <section class="interactive-section" id="interactive" aria-label="Interactive Learning Platform">
-    <div class="interactive-content">
-      <div class="interactive-badge">
-        <span class="material-symbols-outlined">code</span>
-        New Feature
+    <!-- Animated Background Logos (Slanting Infinite Scroll) -->
+    <div class="interactive-bg-overlay">
+      <!-- Row 1: High Level -->
+      <div class="logo-row row-slow">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="">
+        <!-- Duplicate -->
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="">
       </div>
-      <h2 class="interactive-title">Learn by Doing</h2>
-      <p class="interactive-subtitle">
-        Experience our interactive coding platform! Write code, get instant feedback, and master programming through
-        hands-on practice.
-      </p>
+
+      <!-- Row 2: Systems -->
+      <div class="logo-row row-reverse">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original-wordmark.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg" alt="">
+        <!-- Duplicate -->
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original-wordmark.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg" alt="">
+      </div>
+
+      <!-- Row 3: Tools -->
+      <div class="logo-row row-fast">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="">
+        <!-- Duplicate -->
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="">
+      </div>
+    </div>
+
+    <div class="interactive-content">
+      <div class="interactive-header">
+        <div class="interactive-badge">
+          <span class="material-symbols-outlined">code</span>
+          New Feature
+        </div>
+        <h2 class="interactive-title">Learn by Doing</h2>
+        <p class="interactive-subtitle">
+          Experience our interactive coding platform! Write code, get instant feedback, and master programming through
+          hands-on practice.
+        </p>
+      </div>
 
       <div class="interactive-features">
-        <div class="interactive-feature">
-          <div class="feature-icon-wrapper">
+        <div class="interactive-card glass-card">
+          <div class="card-icon-box">
             <span class="material-symbols-outlined">terminal</span>
           </div>
           <h3>Professional Code Editor</h3>
@@ -362,8 +512,8 @@
             detection.</p>
         </div>
 
-        <div class="interactive-feature">
-          <div class="feature-icon-wrapper">
+        <div class="interactive-card glass-card">
+          <div class="card-icon-box">
             <span class="material-symbols-outlined">alt_route</span>
           </div>
           <h3>Structured Learning Paths</h3>
@@ -371,8 +521,8 @@
           </p>
         </div>
 
-        <div class="interactive-feature">
-          <div class="feature-icon-wrapper">
+        <div class="interactive-card glass-card">
+          <div class="card-icon-box">
             <span class="material-symbols-outlined">check_circle</span>
           </div>
           <h3>Instant Validation</h3>
@@ -380,45 +530,73 @@
         </div>
       </div>
 
-      <a href="/interactive/paths" class="interactive-cta" aria-label="Start interactive learning">
+      <a href="/interactive/paths" class="interactive-cta-btn" aria-label="Start interactive learning">
         Start Interactive Learning
-        <span class="material-symbols-outlined">arrow_forward</span>
+        <div class="icon-circle">
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
       </a>
     </div>
   </section>
 
   <!-- Quiz System Section -->
+  <!-- Quiz System Section -->
   <section class="quiz-section" id="quiz-system" aria-label="Professional Quiz System">
-    <div class="quiz-container">
-      <div class="quiz-badge">
-        <span class="material-symbols-outlined">quiz</span>
-        Knowledge Check
+    <!-- Animated Background Logos (Quiz Theme) -->
+    <div class="interactive-bg-overlay">
+      <div class="logo-row row-slow">
+        <!-- Using brain/puzzle/quiz related tech icons/concepts -->
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg" alt="Jest">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mocha/mocha-plain.svg" alt="Mocha">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jasmine/jasmine-original.svg" alt="Jasmine">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/karma/karma-original.svg" alt="Karma">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cucumber/cucumber-plain.svg" alt="Cucumber">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" alt="Selenium">
+        <!-- Duplicates -->
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg" alt="Jest">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mocha/mocha-plain.svg" alt="Mocha">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jasmine/jasmine-original.svg" alt="Jasmine">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/karma/karma-original.svg" alt="Karma">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cucumber/cucumber-plain.svg" alt="Cucumber">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" alt="Selenium">
       </div>
-      <h2 class="quiz-title">Challenge Your Knowledge</h2>
-      <p class="quiz-subtitle">
-        Validate your skills with our professional quiz system. Track your progress and push your limits with
-        carefully curated questions.
-      </p>
+    </div>
+
+    <div class="quiz-container">
+      <div class="quiz-header-content">
+        <div class="quiz-badge">
+          <span class="material-symbols-outlined">quiz</span>
+          Knowledge Check
+        </div>
+        <h2 class="quiz-title">Challenge Your Knowledge</h2>
+        <p class="quiz-subtitle">
+          Validate your skills with our professional quiz system. Track your progress and push your limits with
+          carefully curated questions.
+        </p>
+      </div>
 
       <div class="quiz-grid">
-        <div class="quiz-card">
-          <div class="card-icon">
+        <div class="quiz-card glass-card">
+          <div class="card-icon-box"
+            style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);">
             <span class="material-symbols-outlined">bolt</span>
           </div>
           <h3>Instant Feedback</h3>
           <p>Get immediate results and explanations for every question to help you learn faster.</p>
         </div>
 
-        <div class="quiz-card">
-          <div class="card-icon">
+        <div class="quiz-card glass-card">
+          <div class="card-icon-box"
+            style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);">
             <span class="material-symbols-outlined">trending_up</span>
           </div>
           <h3>Track Progress</h3>
           <p>Monitor your performance across different categories and see your technical growth over time.</p>
         </div>
 
-        <div class="quiz-card">
-          <div class="card-icon">
+        <div class="quiz-card glass-card">
+          <div class="card-icon-box"
+            style="background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%); box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);">
             <span class="material-symbols-outlined">military_tech</span>
           </div>
           <h3>Earn Badges</h3>
@@ -427,9 +605,11 @@
       </div>
 
       <div class="quiz-action">
-        <a href="/quiz" class="quiz-btn" aria-label="Go to quiz system">
+        <a href="/quiz" class="interactive-cta-btn" aria-label="Go to quiz system">
           Take a Quiz Now
-          <span class="material-symbols-outlined">arrow_forward</span>
+          <div class="icon-circle">
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </div>
         </a>
       </div>
     </div>
@@ -440,21 +620,88 @@
     aria-label="Why Choose DevAcademy">
     <h1>Why Choose <span class="DevAcademy">DevAcademy</span>?</h1>
     <p>We provide an exceptional learning experience designed for your success</p>
-    <div class="cards">
-      <div class="card">
-        <span class="material-symbols-outlined card2">diamond_shine</span>
-        <h4>High-Quality Content</h4>
-        <p>Courses carefully crafted by industry experts with real-world experience and best practices.</p>
+
+    <div class="why-cards-container">
+      <div class="why-cards-grid">
+        <div class="why-card">
+          <div class="why-card-header">
+            <div class="why-icon-wrapper quality-gradient">
+              <span class="material-symbols-outlined">diamond</span>
+            </div>
+            <span class="why-badge">01</span>
+          </div>
+          <div class="why-card-content">
+            <h3>High-Quality Content</h3>
+            <p>Courses carefully crafted by industry experts with real-world experience and best practices.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-card-header">
+            <div class="why-icon-wrapper flexible-gradient">
+              <span class="material-symbols-outlined">schedule</span>
+            </div>
+            <span class="why-badge">02</span>
+          </div>
+          <div class="why-card-content">
+            <h3>Flexible Learning</h3>
+            <p>Learn at your own pace, anytime and anywhere. Fit learning into your busy schedule.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-card-header">
+            <div class="why-icon-wrapper support-gradient">
+              <span class="material-symbols-outlined">support_agent</span>
+            </div>
+            <span class="why-badge">03</span>
+          </div>
+          <div class="why-card-content">
+            <h3>Continuous Support</h3>
+            <p>Get help when you need it. Our dedicated support team is here to assist you throughout your journey.</p>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <span class="material-symbols-outlined" style="padding: 10px;">nest_clock_farsight_analog</span>
-        <h4>Flexible Learning</h4>
-        <p>Learn at your own pace, anytime and anywhere. Fit learning into your busy schedule.</p>
-      </div>
-      <div class="card">
-        <span class="material-symbols-outlined" style="padding: 10px;">support_agent</span>
-        <h4>Continuous Support</h4>
-        <p>Get help when you need it. Our dedicated support team is here to assist you throughout your journey.</p>
+    </div>
+  </section>
+
+  <!-- Student Success Testimonials Section -->
+  <section class="testimonials-section" aria-label="Student Success Stories">
+    <div class="testimonials-header">
+      <h4>Success Stories</h4>
+      <h2>What Our Students <span class="DevAcademy">Achieved</span></h2>
+      <p>Real results from real students who transformed their careers with DevAcademy</p>
+    </div>
+
+    <div class="testimonials-slider">
+      <div class="testimonials-track">
+        <!-- First set of images -->
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-06-49.jpg" alt="Student Success Story" loading="lazy">
+        </div>
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-06-51.jpg" alt="Student Success Story" loading="lazy">
+        </div>
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-07-12.jpg" alt="Student Success Story" loading="lazy">
+        </div>
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-07-22.jpg" alt="Student Success Story" loading="lazy">
+        </div>
+
+        <!-- Duplicate set for seamless loop -->
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-06-49.jpg" alt="Student Success Story" loading="lazy">
+        </div>
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-06-51.jpg" alt="Student Success Story" loading="lazy">
+        </div>
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-07-12.jpg" alt="Student Success Story" loading="lazy">
+        </div>
+        <div class="testimonial-card">
+          <img src="/images/ness wach galo/photo_2026-01-08_14-07-22.jpg" alt="Student Success Story" loading="lazy">
+        </div>
       </div>
     </div>
   </section>
@@ -464,79 +711,84 @@
     <h4>FAQ</h4>
     <h1>Common Questions</h1>
 
-    <div class="faq-item">
-      <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false"
-        aria-controls="faq1">
-        <span>Do I need prior experience to start?</span>
-        <i class="arrow"></i>
-      </button>
-      <div class="collapse" id="faq1">
-        <div class="faq-answer">
-          Not at all! Our courses are designed for beginners. You'll start with the fundamentals and progress
-          step-by-step toward building real-world projects.
-        </div>
-      </div>
-    </div>
+    <!-- Accordion Wrapper -->
+    <div class="faq-list" id="faqAccordion">
 
-    <div class="faq-item">
-      <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false"
-        aria-controls="faq2">
-        <span>How long will I have access to the course?</span>
-        <i class="arrow"></i>
-      </button>
-      <div class="collapse" id="faq2">
-        <div class="faq-answer">
-          You'll get lifetime access! Once you purchase a course, you can watch it anytime, anywhere, as often as you
-          want. Learn at your own pace without any time restrictions.
+      <div class="faq-item">
+        <button class="faq-question collapsed" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false"
+          aria-controls="faq1">
+          <span>Do I need prior experience to start?</span>
+          <i class="arrow"></i>
+        </button>
+        <div class="collapse" id="faq1" data-bs-parent="#faqAccordion">
+          <div class="faq-answer">
+            Not at all! Our courses are designed for beginners. You'll start with the fundamentals and progress
+            step-by-step toward building real-world projects.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="faq-item">
-      <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false"
-        aria-controls="faq3">
-        <span>Will I receive a certificate after completion?</span>
-        <i class="arrow"></i>
-      </button>
-      <div class="collapse" id="faq3">
-        <div class="faq-answer">
-          Yes! After completing a course, you'll receive a certificate of completion that you can add to your resume,
-          LinkedIn profile, or portfolio to showcase your skills.
+      <div class="faq-item">
+        <button class="faq-question collapsed" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false"
+          aria-controls="faq2">
+          <span>How long will I have access to the course?</span>
+          <i class="arrow"></i>
+        </button>
+        <div class="collapse" id="faq2" data-bs-parent="#faqAccordion">
+          <div class="faq-answer">
+            You'll get lifetime access! Once you purchase a course, you can watch it anytime, anywhere, as often as you
+            want. Learn at your own pace without any time restrictions.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="faq-item">
-      <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false"
-        aria-controls="faq4">
-        <span>Can I contact the instructor if I have questions?</span>
-        <i class="arrow"></i>
-      </button>
-      <div class="collapse" id="faq4">
-        <div class="faq-answer">
-          Absolutely! You can contact us directly on WhatsApp or through the course platform whenever you need help.
-          We're here to support your learning journey.
+      <div class="faq-item">
+        <button class="faq-question collapsed" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false"
+          aria-controls="faq3">
+          <span>Will I receive a certificate after completion?</span>
+          <i class="arrow"></i>
+        </button>
+        <div class="collapse" id="faq3" data-bs-parent="#faqAccordion">
+          <div class="faq-answer">
+            Yes! After completing a course, you'll receive a certificate of completion that you can add to your resume,
+            LinkedIn profile, or portfolio to showcase your skills.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="faq-item">
-      <button class="faq-question" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false"
-        aria-controls="faq5">
-        <span>What payment methods do you accept?</span>
-        <i class="arrow"></i>
-      </button>
-      <div class="collapse" id="faq5">
-        <div class="faq-answer">
-          We offer several secure payment options:<br><br>
-          <strong>BaridiMob</strong> – Fast and secure mobile payment.<br>
-          <strong>CCP (Algérie Poste)</strong> – Pay directly through your CCP account.<br>
-          <strong>Binance (USDT)</strong> – Pay with cryptocurrency using Binance.<br>
-          <strong>RedotPay</strong> – Instant online payment for international users.<br><br>
-          After completing your payment, send us a screenshot on <strong>WhatsApp</strong> to confirm, and we'll
-          activate your access instantly ⚡
+      <div class="faq-item">
+        <button class="faq-question collapsed" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false"
+          aria-controls="faq4">
+          <span>Can I contact the instructor if I have questions?</span>
+          <i class="arrow"></i>
+        </button>
+        <div class="collapse" id="faq4" data-bs-parent="#faqAccordion">
+          <div class="faq-answer">
+            Absolutely! You can contact us directly on WhatsApp or through the course platform whenever you need help.
+            We're here to support your learning journey.
+          </div>
         </div>
       </div>
+
+      <div class="faq-item">
+        <button class="faq-question collapsed" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false"
+          aria-controls="faq5">
+          <span>What payment methods do you accept?</span>
+          <i class="arrow"></i>
+        </button>
+        <div class="collapse" id="faq5" data-bs-parent="#faqAccordion">
+          <div class="faq-answer">
+            We offer several secure payment options:<br><br>
+            <strong>BaridiMob</strong> – Fast and secure mobile payment.<br>
+            <strong>CCP (Algérie Poste)</strong> – Pay directly through your CCP account.<br>
+            <strong>Binance (USDT)</strong> – Pay with cryptocurrency using Binance.<br>
+            <strong>RedotPay</strong> – Instant online payment for international users.<br><br>
+            After completing your payment, send us a screenshot on <strong>WhatsApp</strong> to confirm, and we'll
+            activate your access instantly ⚡
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -551,8 +803,80 @@
   </section>
 
   <!-- Footer -->
-  <footer class="copyright" role="contentinfo">
-    <p>&copy; 2025 DevAcademy. All rights reserved.</p>
+  <!-- Premium Footer -->
+  <footer class="main-footer" role="contentinfo">
+    <div class="footer-content">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <img src="/images/logo2-removebg-preview.png" alt="DevAcademy Logo" loading="lazy">
+            {{!-- <span>DevAcademy</span> --}}
+          </a>
+          <p>Empowering the next generation of developers with premium, hands-on coding education. Master the skills
+            that matter.</p>
+          <div class="social-links-footer">
+            <a href="https://web.facebook.com/profile.php?id=61576897061264" target="_blank" aria-label="Facebook">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg"
+                alt="Facebook" style="width: 24px; height: 24px;">
+            </a>
+            <a href="https://www.instagram.com/devacademy__/" target="_blank" aria-label="Instagram">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram"
+                style="width: 24px; height: 24px;">
+            </a>
+            <a href="https://t.me/+uv8hLl55DdMzNTg0" target="_blank" aria-label="Telegram">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"
+                style="width: 24px; height: 24px;">
+            </a>
+            {{!-- <a href="https://www.linkedin.com/" target="_blank" aria-label="LinkedIn">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg"
+                alt="LinkedIn" style="width: 24px; height: 24px;">
+            </a> --}}
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="/course">Browse Courses</a></li>
+            <li><a href="/interactive/paths">Learning Paths</a></li>
+            <li><a href="/quiz">Quiz System</a></li>
+            <li><a href="/dashboard">Student Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="/contact">Help Center</a></li>
+            <li><a href="#faq">FAQs</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-newsletter">
+          <h4>Stay Updated</h4>
+          <p>Get the latest course updates and coding tips.</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Enter your email" required>
+            <button type="button" aria-label="Subscribe">
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 DevAcademy. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <span>•</span>
+          <a href="#">Terms of Use</a>
+          <span>•</span>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
   </footer>
 
   <!-- Scripts -->
@@ -562,13 +886,13 @@
     crossorigin="anonymous"></script>
 
   <script>
-    // Page loader
-    window.addEventListener('load', () => {
+    // Page loader removed to improve performance
+    /* window.addEventListener('load', () => {
       const loader = document.getElementById('pageLoader');
       setTimeout(() => {
         loader.classList.add('hidden');
       }, 500);
-    });
+    }); */
 
     // Typing animation for hero section
     const phrases = [

@@ -1,0 +1,53 @@
+/* Course Card Link Wrapper - Makes entire card clickable on mobile */
+.course-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+.course-card-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Ensure card title is not a nested link anymore */
+.course-card-link .card-title {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.course-card-link .card-title h3 {
+    color: #1a1c4b;
+    transition: color 0.3s ease;
+}
+
+.course-card-link:hover .card-title h3 {
+    color: #3f10fa;
+}
+
+/* Make button non-interactive on mobile since whole card is clickable */
+@media (max-width: 768px) {
+    .course-card-link .view-course-btn {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    /* But allow the card link to work */
+    .course-card-link {
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(63, 16, 250, 0.1);
+    }
+
+    .course-card-link:active {
+        opacity: 0.9;
+    }
+}
+
+/* Desktop: Keep button interactive */
+@media (min-width: 769px) {
+    .course-card-link .view-course-btn {
+        pointer-events: auto;
+    }
+}
