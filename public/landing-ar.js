@@ -111,13 +111,15 @@ async function loadCourse() {
 
         if (!result.success || !result.course) {
             console.error('Course data not found or invalid:', result);
-            // Optionally update UI to show error, but do not alert/redirect immediately if it might be a glitch
-            // document.getElementById('courseTitle').textContent = 'حدث خطأ في تحميل الدورة';
             return;
         }
 
         const course = result.course;
 
+        // STATIC CONTENT MODE:
+        // We do NOT update title, description, price, etc. automatically to keep the manual edits.
+
+        /* 
         // Update page title and meta tags
         document.getElementById('pageTitle').textContent = `${course.title} - DevAcademy`;
         document.getElementById('pageDescription').content = course.description || 'غير مستقبلك المهني مع دورتنا الشاملة';
@@ -141,8 +143,10 @@ async function loadCourse() {
         if (priceInline) {
             priceInline.textContent = price.toLocaleString('ar-DZ');
         }
+        */
 
-        // Display preview video if available
+        // Display preview video if available - STATIC ALREADY
+        /*
         if (course.preview_video_url && course.preview_video_url.trim() !== '') {
             const heroVideoSection = document.getElementById('heroVideoSection');
             const heroVideoFrame = document.getElementById('heroVideoFrame');
@@ -161,8 +165,10 @@ async function loadCourse() {
                 heroVideoSection.style.display = 'block';
             }
         }
+        */
 
-        // Update Skills/Tech Stack
+        // Update Skills/Tech Stack - STATIC ALREADY
+        /*
         if (course.skills) {
             const skillsContainer = document.getElementById('courseSkills');
             const skillsSection = document.getElementById('techStackSection');
@@ -190,65 +196,18 @@ async function loadCourse() {
                 }
             }
         }
+        */
 
-        // Specific Content for Course ID 14 (Frontend Course - Arabic)
-        const courseProjectsData = {
-            '14': [
-                {
-                    title: "موقع معرض أعمال شخصي",
-                    description: "قم ببناء موقع شخصي (Portfolio) احترافي ومتجاوب مع جميع الشاشات لعرض مهاراتك ومشاريعك. ستتعلم استخدام HTML5 و CSS3 المتقدمة.",
-                    image: "/images/front-end-1.jpg",
-                    tags: ["HTML5", "CSS3", "تصميم متجاوب"]
-                },
-                {
-                    title: "صفحة منتج لمتجر إلكتروني",
-                    description: "أنشئ صفحة تفاعلية لمنتج تحتوي على معرض صور، سلة تسوق، وأزرار تفاعلية باستخدام JavaScript للتحكم في عناصر الصفحة DOM.",
-                    image: "/images/Untitled-design.png",
-                    tags: ["JavaScript", "تفاعل المستخدم", "DOM"]
-                },
-                {
-                    title: "لوحة تحكم إدارية (Dashboard)",
-                    description: "أتقن تصميم الواجهات المعقدة ببناء لوحة تحكم تحتوي على قوائم جانبية، جداول بيانات، ورسوم بيانية باستخدام CSS Grid و Flexbox.",
-                    image: "/images/background.gif",
-                    tags: ["CSS Grid", "تخطيط متقدم", "لوحة تحكم"]
-                }
-            ]
-        };
+        // Projects - STATIC ALREADY
+        /*
+        const courseProjectsData = { ... };
+        if (courseProjectsData[courseId]) { ... }
+        */
 
-        // Render Projects if data exists for this course
-        if (courseProjectsData[courseId]) {
-            const projectsContainer = document.getElementById('courseProjects');
-            const projectsSection = document.getElementById('projectsSection');
+        // Render chapters - DYNAMIC (Requested by user)
+        renderChapters(course.chapters || []);
 
-            if (projectsContainer && projectsSection) {
-                projectsContainer.innerHTML = courseProjectsData[courseId].map(project => `
-                    <div class="project-card">
-                        <div class="project-image-container">
-                            <img src="${project.image}" alt="${project.title}" class="project-image">
-                        </div>
-                        <div class="project-content">
-                            <h3 class="project-title">${project.title}</h3>
-                            <p class="project-description">${project.description}</p>
-                            <div class="project-tags">
-                                ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-
-                projectsSection.style.display = 'block';
-
-                // Add animation observer to new elements
-                const projectCards = document.querySelectorAll('.project-card');
-                projectCards.forEach(el => {
-                    el.style.opacity = '0';
-                    el.style.transform = 'translateY(30px)';
-                    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-                    observer.observe(el);
-                });
-            }
-        }
-
+        /*
         // Calculate total lessons
         let totalLessons = 0;
         if (course.chapters) {
@@ -263,32 +222,10 @@ async function loadCourse() {
         if (totalLessonsEl) {
             totalLessonsEl.textContent = totalLessons;
         }
-
-        // Update student count (dynamic from database or calculated)
-        const studentCount = Math.floor(totalLessons * 10) + 200;
-        const studentCountEl = document.getElementById('studentCount');
-        if (studentCountEl) {
-            studentCountEl.textContent = `${studentCount}+`;
-        }
-
-        // Update inline student count if element exists
-        const studentCountInline = document.getElementById('studentCountInline');
-        if (studentCountInline) {
-            studentCountInline.textContent = `${studentCount}+`;
-        }
-
-        const certificateCount = Math.floor(studentCount * 0.6);
-        const certificateCountEl = document.getElementById('certificateCount');
-        if (certificateCountEl) {
-            certificateCountEl.textContent = `${certificateCount}+`;
-        }
-
-        // Render chapters
-        renderChapters(course.chapters || []);
+        */
 
     } catch (error) {
         console.error('خطأ في تحميل الدورة:', error);
-        // alert('خطأ في تحميل الدورة. يرجى المحاولة لاحقاً.');
     }
 }
 
@@ -372,7 +309,7 @@ function toggleFaq(index) {
 
 // Enroll course - WhatsApp integration with Arabic message
 function enrollCourse() {
-    const courseId = getCourseIdFromUrl();
+    const courseId = getCourseIdFromUrl() || '14';
     const courseTitle = document.getElementById('courseTitle').textContent;
     const coursePrice = document.getElementById('coursePrice').textContent;
 
@@ -397,7 +334,8 @@ function enrollCourse() {
         console.log('[ENROLL] Course:', courseTitle);
         console.log('[ENROLL] Price:', coursePrice);
 
-        // Track Facebook Pixel - Lead event
+        // DUAL TRACKING: Send both Client-side and Server-side
+        // 1. Client-Side: Try to send standard pixel event
         if (typeof fbq !== 'undefined') {
             console.log('[ENROLL] fbq is available - tracking Lead event (client-side)');
             const priceValue = parseFloat(coursePrice.replace(/[^0-9]/g, '')) || 0;
@@ -408,17 +346,16 @@ function enrollCourse() {
                 value: priceValue,
                 currency: 'DZD'
             });
-            console.log('[ENROLL] Lead event tracked (client-side):', courseTitle, priceValue, 'DZD');
-        } else if (typeof window.trackServerSide !== 'undefined') {
-            console.log('[ENROLL] fbq NOT available - using server-side tracking');
-            // Use server-side tracking
+        }
+
+        // 2. Server-Side: Always send as backup/dual track
+        if (typeof window.trackServerSide !== 'undefined') {
+            console.log('[ENROLL] Sending Server-side Lead event (Dual Tracking)');
             window.trackServerSide('Lead', {
                 courseName: courseTitle,
                 coursePrice: coursePrice.replace(/[^0-9]/g, ''),
                 courseId: courseId
             });
-        } else {
-            console.error('[ENROLL] No tracking available - neither client nor server-side');
         }
 
         // Track conversion
@@ -461,8 +398,8 @@ const observer = new IntersectionObserver((entries) => {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    // Load course data
-    loadCourse();
+    // Load course data - REMOVED for static version (Re-enabled for Chapters ONLY)
+    // loadCourse();
 
     // Initialize psychological triggers
     initCountdownTimer();

@@ -71,6 +71,9 @@ function trackMetaEvent(eventName, eventData, userData) {
  * Track PageView event (server-side)
  */
 router.post('/track/pageview', (req, res) => {
+    console.log('[META CAPI] PageView endpoint called');
+    console.log('[META CAPI] Request body:', req.body);
+
     const { url, fbc, fbp } = req.body;
 
     const userData = {
@@ -85,6 +88,7 @@ router.post('/track/pageview', (req, res) => {
         custom_data: {}
     };
 
+    console.log('[META CAPI] Sending PageView to Meta...');
     trackMetaEvent('PageView', eventData, userData);
 
     res.json({ success: true, message: 'PageView tracked' });
@@ -94,6 +98,9 @@ router.post('/track/pageview', (req, res) => {
  * Track Lead event (server-side)
  */
 router.post('/track/lead', (req, res) => {
+    console.log('[META CAPI] Lead endpoint called');
+    console.log('[META CAPI] Request body:', req.body);
+
     const { url, courseName, coursePrice, courseId, fbc, fbp } = req.body;
 
     const userData = {
@@ -114,6 +121,7 @@ router.post('/track/lead', (req, res) => {
         }
     };
 
+    console.log('[META CAPI] Sending Lead to Meta...');
     trackMetaEvent('Lead', eventData, userData);
 
     res.json({ success: true, message: 'Lead tracked' });

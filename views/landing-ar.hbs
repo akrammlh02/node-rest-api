@@ -14,6 +14,9 @@
         content="ابدأ رحلتك في برمجة الويب مع أفضل دورة في الجزائر. تعلم React و JavaScript وابنِ مشاريعك الخاصة.">
     <meta property="og:image" content="/images/logo.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://connect.facebook.net">
     <link rel="stylesheet" href="/landing-ar.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -58,10 +61,13 @@
                 .catch(err => console.error('[META CAPI] Server-side tracking failed:', err));
         }
 
+        // Flag to track if pixel loaded successfully
+        window.pixelLoaded = false;
+
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
@@ -75,6 +81,7 @@
             };
             t.onload = function () {
                 console.log('[META PIXEL] Successfully loaded fbevents.js');
+                window.pixelLoaded = true;
             };
 
             s.parentNode.insertBefore(t, s)
@@ -83,20 +90,24 @@
 
         console.log('[META PIXEL] Script tag created and inserted');
 
-        // Wait for script to load, then initialize
+        // Initialize standard pixel
+        fbq('init', '1567430537783358');
+        fbq('track', 'PageView');
+
+        // DUAL TRACKING: Send Server-Side PageView immediately
+        // This ensures tracking works even if client-side times out (ERR_CONNECTION_TIMED_OUT)
+        console.log('[META PIXEL] Sending Server-Side PageView (Dual Tracking)');
+        trackServerSide('PageView', {});
+
+        // AGGRESSIVE FALLBACK removed since we are forcing server-side above
+        // We still log the status for debugging
         setTimeout(function () {
-            if (typeof fbq !== 'undefined') {
-                console.log('[META PIXEL] fbq function is available');
-                fbq('init', '1567430537783358');
-                console.log('[META PIXEL] Initialized with ID 1567430537783358');
-                fbq('track', 'PageView');
-                console.log('[META PIXEL] PageView event tracked (client-side)');
+            if (!window.pixelLoaded) {
+                console.warn('[META PIXEL] Client-side pixel script did not load (blocked?)');
             } else {
-                console.error('[META PIXEL] fbq NOT available - Using server-side tracking');
-                // Fallback to server-side tracking
-                trackServerSide('PageView', {});
+                console.log('[META PIXEL] Client-side pixel script loaded successfully');
             }
-        }, 1000);
+        }, 2000);
 
         // Make trackServerSide available globally for button clicks
         window.trackServerSide = trackServerSide;
@@ -123,8 +134,9 @@
                 سجل الآن
             </button>
             <div class="header-info">
-                <div class="price-badge" id="headerPrice">0 دج</div>
-                <span class="course-title-header" id="headerCourseTitle">جاري التحميل...</span>
+                <div class="price-badge" id="headerPrice">4600 دج</div>
+                <span class="course-title-header" id="headerCourseTitle">دورة تطوير واجهات الويب (Frontend
+                    Development)</span>
             </div>
         </div>
     </header>
@@ -140,12 +152,14 @@
                     <span>دورة معتمدة مع شهادة</span>
                 </div>
 
-                <h1 class="hero-title" id="courseTitle">جاري تحميل الدورة...</h1>
+                <h1 class="hero-title" id="courseTitle">Build Your First Website: HTML, CSS & Smart Coding with AI</h1>
 
                 <!-- Video Preview - Moved under title/description -->
-                <div class="hero-video" id="heroVideoSection" style="display: none;">
+                <!-- Video Preview - Moved under title/description -->
+                <div class="hero-video" id="heroVideoSection">
                     <div class="video-wrapper">
                         <iframe id="heroVideoFrame" width="100%" height="220" frameborder="0" loading="lazy"
+                            src="https://www.youtube.com/embed/m835WHgDdA8?rel=0&modestbranding=1&playsinline=1"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                         </iframe>
@@ -157,7 +171,11 @@
                 </div>
 
                 <p class="hero-description" id="courseDescription">
-                    جاري تحميل الوصف...
+                    هذه الدورة راهي موجهة لأي واحد حاب يتعلم تطوير المواقع من الصفر، بلا خبرة مسبقة. راح تتعلم كيفاش
+                    تبني صفحات ويب بـ HTML، وكيفاش تزيّنها وتنسقها بـ CSS، وفي الأخير تطلع بموقع كامل متجاوب وتديه لايف
+                    على الإنترنت. الدورة تطبيقية، فيها مشروع Portfolio حقيقي، وراح تتعلم كيفاش تنشر موقعك بـ GitHub و
+                    Vercel، وزيد نعرّفوك كيفاش تستعمل الذكاء الاصطناعي باش يعاونك في الكودينغ. مناسبة للطلبة، المبتدئين،
+                    وأي واحد حاب يبدأ صح في مجال تطوير الويب.
                 </p>
 
                 <!-- Stats -->
@@ -166,7 +184,7 @@
                 <!-- Social Proof Stats -->
                 <div class="hero-stats">
                     <div class="stat-item">
-                        <div class="stat-number" id="studentCount">500+</div>
+                        <div class="stat-number" id="studentCount">1250+</div>
                         <div class="stat-label">طالب نجح معنا</div>
                     </div>
                     <div class="stat-item">
@@ -174,7 +192,7 @@
                         <div class="stat-label">⭐ تقييم ممتاز</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="certificateCount">300+</div>
+                        <div class="stat-number" id="certificateCount">850+</div>
                         <div class="stat-label">شهادة صادرة</div>
                     </div>
                 </div>
@@ -240,7 +258,7 @@
             <div class="testimonials-slider">
                 <div class="testimonial-card featured">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-06-49.jpg" class="testimonial-screenshot"
-                        alt="رأي طالب">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person</span>
@@ -254,7 +272,7 @@
 
                 <div class="testimonial-card featured">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-06-51.jpg" class="testimonial-screenshot"
-                        alt="رأي طالبة">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالبة">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person_2</span>
@@ -268,7 +286,7 @@
 
                 <div class="testimonial-card">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-07-12.jpg" class="testimonial-screenshot"
-                        alt="رأي طالب">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person</span>
@@ -282,7 +300,7 @@
 
                 <div class="testimonial-card">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-08_14-07-22.jpg" class="testimonial-screenshot"
-                        alt="رأي طالبة">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالبة">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person_2</span>
@@ -296,7 +314,7 @@
 
                 <div class="testimonial-card">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-09.jpg" class="testimonial-screenshot"
-                        alt="رأي طالب">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person</span>
@@ -310,7 +328,7 @@
 
                 <div class="testimonial-card">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-12.jpg" class="testimonial-screenshot"
-                        alt="رأي طالب">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person</span>
@@ -324,7 +342,7 @@
 
                 <div class="testimonial-card">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-13.jpg" class="testimonial-screenshot"
-                        alt="رأي طالب">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person</span>
@@ -338,7 +356,7 @@
 
                 <div class="testimonial-card">
                     <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-14.jpg" class="testimonial-screenshot"
-                        alt="رأي طالب">
+                        loading="lazy" decoding="async" width="200" height="180" alt="رأي طالب">
                     <div class="student-info">
                         <div class="student-avatar">
                             <span class="material-symbols-outlined">person</span>
@@ -419,75 +437,7 @@
                     </div>
                 </div>
 
-                <!-- Why Algerian Students Need This -->
-                {{!-- <div class="algeria-specific">
-                    <h3 class="algeria-heading">
-                        <span class="algeria-flag">🇩🇿</span>
-                        لماذا هذه الدورة فرصة ذهبية لك؟
-                    </h3>
-                    <div class="algeria-reasons">
-                        <div class="reason-item">
-                            <span class="reason-icon">🌐</span>
-                            <div class="reason-content">
-                                <h4>مطلوبة عالمياً ومحلياً</h4>
-                                <p>كل الشركات تحتاج لمواقع وتطبيقات ويب - الفرص لا تنتهي</p>
-                            </div>
-                        </div>
-                        <div class="reason-item">
-                            <span class="reason-icon">🗣️</span>
-                            <div class="reason-content">
-                                <h4>شرح بالدارجة الجزائرية</h4>
-                                <p>نفهمك وتفهمني - شرح سلس وواضح بدون حواجز لغوية</p>
-                            </div>
-                        </div>
-                        <div class="reason-item">
-                            <span class="reason-icon">💼</span>
-                            <div class="reason-content">
-                                <h4>بوابة للعمل الحر</h4>
-                                <p>تقدر تخدم Freelance وتدخل العملة الصعبة وأنت في داركم</p>
-                            </div>
-                        </div>
-                        <div class="reason-item">
-                            <span class="reason-icon">💰</span>
-                            <div class="reason-content">
-                                <h4>رواتب محترمة</h4>
-                                <p>مطور الواجهات (Frontend) يتقاضى أرقى الرواتب في مجال البرمجة</p>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
 
-                <!-- Career Benefits -->
-                {{!-- <div class="career-benefits">
-                    <h3 class="benefits-heading">
-                        <span class="material-symbols-outlined">trending_up</span>
-                        خارطة طريقك نحو الاحتراف
-                    </h3>
-                    <div class="benefits-timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-number">1</div>
-                            <div class="timeline-content">
-                                <h4>الأساسيات المتينة</h4>
-                                <p>إتقان HTML5, CSS3 و الحديثة</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-number">3</div>
-                            <div class="timeline-content">
-                                <h4>مشاريع حقيقية</h4>
-                                <p>بناء واجهات ويب وموقع شخصي</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-number">4</div>
-                            <div class="timeline-content">
-                                <h4>جاهز لسوق العمل</h4>
-                                <p>سيرة ذاتية قوية وخبرة عملية تؤهلك للتوظيف</p>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
 
                 <!-- Success Stats -->
                 <div class="success-stats">
@@ -511,9 +461,206 @@
             </h2>
 
             <div id="chaptersContainer" class="chapters-list">
-                <div class="loading-state">
-                    <span class="material-symbols-outlined rotating">progress_activity</span>
-                    <p>جاري تحميل المحتوى...</p>
+                <!-- Chapter 1 -->
+                <div class="chapter-item-expandable free-chapter">
+                    <div class="chapter-header-expandable" onclick="toggleChapterLanding(0)">
+                        <div class="chapter-left">
+                            <span class="chapter-number-landing">1</span>
+                            <span class="chapter-title-landing">Course Introduction & Setup</span>
+                            <span class="free-badge-chapter">🎁 مجاني</span>
+                        </div>
+                        <div class="chapter-right">
+                            <span class="chapter-lessons-count">2 دروس</span>
+                            <span class="material-symbols-outlined expand-icon" id="expand-icon-0">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="lessons-list-landing" id="lessons-0" style="display: none;">
+                        <div class="lesson-item-landing free-lesson">
+                            <div class="lesson-number-landing">1</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Course Overview and Web Fundamentals</span>
+                                <span class="free-badge-small">🎁 مجاني</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing free-lesson">
+                            <div class="lesson-number-landing">2</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">
+                                    Tools and Development Environment Setup</span>
+                                <span class="free-badge-small">🎁 مجاني</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing free-lesson">
+                            <div class="lesson-number-landing">3</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">تثبيت أدوات العمل</span>
+                                <span class="free-badge-small">🎁 مجاني</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chapter 2 -->
+                <div class="chapter-item-expandable">
+                    <div class="chapter-header-expandable" onclick="toggleChapterLanding(1)">
+                        <div class="chapter-left">
+                            <span class="chapter-number-landing">2</span>
+                            <span class="chapter-title-landing">لغة الهيكلة (HTML5)</span>
+                        </div>
+                        <div class="chapter-right">
+                            <span class="chapter-lessons-count">6 درس</span>
+                            <span class="material-symbols-outlined expand-icon" id="expand-icon-1">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="lessons-list-landing" id="lessons-1" style="display: none;">
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">1</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">HTML Structure and Basic Tags</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">2</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Lists and Content Organization</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">3</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Tables in HTML</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">4</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Forms and User Inputs</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">5</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Semantic HTML and Navigation</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">6</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">HTML Mini Project Portfolio Website </span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Chapter 3 -->
+                <div class="chapter-item-expandable">
+                    <div class="chapter-header-expandable" onclick="toggleChapterLanding(2)">
+                        <div class="chapter-left">
+                            <span class="chapter-number-landing">3</span>
+                            <span class="chapter-title-landing">لغة التنسيق (CSS3)</span>
+                        </div>
+                        <div class="chapter-right">
+                            <span class="chapter-lessons-count">6 درس</span>
+                            <span class="material-symbols-outlined expand-icon" id="expand-icon-2">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="lessons-list-landing" id="lessons-2" style="display: none;">
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">1</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">CSS Fundamentals and Integration Methods</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">2</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Styling the Navigation Bar</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">3</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Styling the Main Section and Cards</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">4</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Styling Forms and Inputs</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">5</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">CSS Animations and Keyframes</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">6</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Responsive Design with Media Queries</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chapter 4 -->
+                <div class="chapter-item-expandable">
+                    <div class="chapter-header-expandable" onclick="toggleChapterLanding(3)">
+                        <div class="chapter-left">
+                            <span class="chapter-number-landing">4</span>
+                            <span class="chapter-title-landing">AI-Assisted (Vibe) Coding</span>
+                        </div>
+                        <div class="chapter-right">
+                            <span class="chapter-lessons-count">1 درس</span>
+                            <span class="material-symbols-outlined expand-icon" id="expand-icon-3">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="lessons-list-landing" id="lessons-3" style="display: none;">
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">1</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Using AI to Code Smarter</span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chapter 5 -->
+                <div class="chapter-item-expandable">
+                    <div class="chapter-header-expandable" onclick="toggleChapterLanding(4)">
+                        <div class="chapter-left">
+                            <span class="chapter-number-landing">5</span>
+                            <span class="chapter-title-landing">Website Deployment</span>
+                        </div>
+                        <div class="chapter-right">
+                            <span class="chapter-lessons-count">1 درس</span>
+                            <span class="material-symbols-outlined expand-icon" id="expand-icon-4">expand_more</span>
+                        </div>
+                    </div>
+                    <div class="lessons-list-landing" id="lessons-4" style="display: none;">
+                        <div class="lesson-item-landing">
+                            <div class="lesson-number-landing">1</div>
+                            <div class="lesson-info-landing">
+                                <span class="lesson-title-landing">Hosting Your Website with GitHub and Vercel </span>
+                                <span class="lock-badge-small">🔒</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -553,6 +700,7 @@
                 <p class="cta-note">💰 استثمار في مستقبلك بسعر رمزي</p>
             </div>
         </section>
+
 
         <!-- Instructor Section -->
         <section class="instructor-section">
@@ -602,7 +750,7 @@
 
                 <div class="price-display">
                     <div class="price-amount">
-                        <span class="price-value" id="coursePrice">0</span>
+                        <span class="price-value" id="coursePrice">4600</span>
                         <span class="price-currency">دج</span>
                     </div>
                     <p class="price-note">دفعة واحدة • وصول مدى الحياة</p>
@@ -750,8 +898,8 @@
         <p>&copy; 2024 DevAcademy. جميع الحقوق محفوظة</p>
     </footer>
 
-    <script src="/js/cart-utils.js"></script>
-    <script src="/landing-ar.js"></script>
+    <script src="/js/cart-utils.js" defer></script>
+    <script src="/landing-ar.js" defer></script>
 </body>
 
 </html>
