@@ -59,6 +59,19 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET
 });
 
+// CRITICAL: Set CSP headers BEFORE routes
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; " +
+    "connect-src 'self' https://*.facebook.com https://*.facebook.net https://www.facebook.com; " +
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://connect.facebook.net; " +
+    "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: https://*.facebook.com;"
+  );
+  next();
+});
 
 //routers
 app.use('/', require('./routes/index'));
@@ -107,19 +120,6 @@ app.get('/logout/ar', (req, res) => {
     });
     res.redirect('/login/ar');
   });
-});
-
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; " +
-    "connect-src 'self' https://*.facebook.com https://*.facebook.net https://www.facebook.com; " +
-    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://connect.facebook.net; " +
-    "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; " +
-    "font-src 'self' https://fonts.gstatic.com; " +
-    "img-src 'self' data: https://*.facebook.com;"
-  );
-  next();
 });
 
 app.listen(PORT, () => {
