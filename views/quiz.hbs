@@ -618,45 +618,96 @@
 </head>
 
 <body>
-  <header>
-    <nav>
-      <img src="/images/logo2-removebg-preview.png" alt="Logo" height="55em">
-      <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/course">Courses</a></li>
-        {{#if user}}
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><button type="button" class="btn btn-danger"><a href="/logout">Logout</a></button></li>
-        {{else}}
-        <li><a href="/login">Login</a></li>
-        <li><button type="button" class="btn signup"><a href="/signup">Sign up</a></button></li>
-        {{/if}}
-      </ul>
-      <div class="menu">
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
-          <span class="material-symbols-outlined">menu</span>
+  <header class="main-header">
+    <div class="header-container">
+      <nav class="navbar">
+        <!-- Logo -->
+        <a href="/" class="brand-logo" aria-label="DevAcademy Home">
+          <img src="/images/logo2-removebg-preview.png" alt="DevAcademy Logo">
+          {{!-- <span class="brand-text">DevAcademy</span> --}}
+        </a>
+
+        <!-- Desktop Navigation -->
+        <ul class="nav-links-desktop">
+          <li><a href="/" class="nav-link">Home</a></li>
+          <li><a href="/course" class="nav-link">Courses</a></li>
+          <li><a href="/#interactive" class="nav-link">Code</a></li>
+          <li><a href="/quiz" class="nav-link active">Quiz</a></li>
+        </ul>
+
+        <!-- Auth Buttons & Cart -->
+        <div class="header-actions">
+          <!-- Cart Link -->
+          <a href="/payment/checkout" class="cart-link" title="Checkout">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            <span class="cart-badge" id="cartBadgeNav" style="display: none;">0</span>
+          </a>
+
+          {{#if user}}
+          <a href="/dashboard" class="action-btn dashboard-btn">
+            <span class="material-symbols-outlined">dashboard</span>
+            Dashboard
+          </a>
+          <a href="/logout" class="action-btn logout-btn">
+            <span class="material-symbols-outlined">logout</span>
+          </a>
+          {{else}}
+          <a href="/login" class="action-btn login-btn">Login</a>
+          <a href="/signup" class="action-btn signup-btn">Get Started</a>
+          {{/if}}
+
+          <!-- Mobile Menu Trigger -->
+          <button class="mobile-menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight" aria-label="Open menu">
+            <svg class="hamburger-icon" viewBox="0 0 24 24" width="32" height="32">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Mobile Menu Offcanvas -->
+    <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="offcanvasRight"
+      aria-labelledby="offcanvasRightLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasRightLabel">Menu</h5>
+        <button type="button" class="btn-close-custom" data-bs-dismiss="offcanvas" aria-label="Close">
+          <span class="material-symbols-outlined">close</span>
         </button>
       </div>
-    </nav>
-  </header>
+      <div class="offcanvas-body">
+        <div class="mobile-nav-links">
+          <a href="/" class="mobile-link">
+            <span class="material-symbols-outlined">home</span> Home
+          </a>
+          <a href="/course" class="mobile-link">
+            <span class="material-symbols-outlined">school</span> Courses
+          </a>
+          <a href="/#interactive" class="mobile-link">
+            <span class="material-symbols-outlined">code</span> Code Editor
+          </a>
+          <a href="/quiz" class="mobile-link active" style="color: #3f10fa; background: #f8fafc;">
+            <span class="material-symbols-outlined">quiz</span> Quiz
+          </a>
+          <a href="/payment/checkout" class="mobile-link">
+            <span class="material-symbols-outlined">shopping_cart</span> Cart
+            <span class="badge bg-danger ms-2" id="cartBadgeMobile" style="font-size: 0.8em; display: none;">0</span>
+          </a>
+        </div>
 
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title">Menu</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        <div class="mobile-auth-actions">
+          {{#if user}}
+          <a href="/dashboard" class="mobile-btn dashboard">Dashboard</a>
+          <a href="/logout" class="mobile-btn logout">Logout</a>
+          {{else}}
+          <a href="/login" class="mobile-btn login">Login</a>
+          <a href="/signup" class="mobile-btn signup">Sign Up Free</a>
+          {{/if}}
+        </div>
+      </div>
     </div>
-    <div class="offcanvas-body">
-      <a href="/" class="d-block mb-3 text-dark text-decoration-none">Home</a>
-      <a href="/course" class="d-block mb-3 text-dark text-decoration-none">Courses</a>
-      {{#if user}}
-      <a href="/dashboard" class="d-block mb-3 text-dark text-decoration-none">Dashboard</a>
-      <a href="/logout" class="btn btn-danger w-100">Logout</a>
-      {{else}}
-      <a href="/login" class="d-block mb-3 text-dark text-decoration-none">Login</a>
-      <a href="/signup" class="btn btn-primary w-100">Sign up</a>
-      {{/if}}
-    </div>
-  </div>
+  </header>
 
   <div class="quiz-wrapper">
     <!-- Welcome / Language Selection Screen -->
@@ -798,6 +849,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script src="/js/cart-utils.js"></script>
   <script src="/quiz.js"></script>
 </body>
 

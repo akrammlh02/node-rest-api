@@ -30,16 +30,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">
 
-  <style>
-    * {
-      font-family: 'Outfit', sans-serif;
-    }
-
-    /* Smooth scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
 </head>
 
 <body>
@@ -295,117 +285,123 @@
       <div class="courses">
         {{#if courses}}
         {{#each courses}}
-        <article class="featured-course-card">
-          <a href="/course/course-view?id={{course_id}}" class="course-card-link">
-            <div class="card-image-wrapper">
-              <img src="{{thumbnail_url}}" alt="{{title}}" loading="lazy" onerror="this.src='/images/front-end-1.jpg'">
-              <div class="price-badge">{{price}} DA</div>
-              <div class="overlay-hover"></div>
-            </div>
+        <article class="course-card" data-course-id="{{course_id}}"
+          data-category="{{#if category}}{{category}}{{else}}web{{/if}}">
+          <div class="card-image-wrapper">
+            <button class="add-cart-btn" onclick="addToCart(event, '{{course_id}}')" title="Add to Cart">
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+            </button>
+            <img src="{{thumbnail_url}}" alt="{{title}}" loading="lazy" onerror="this.src='/images/front-end-1.jpg'">
+            <div class="price-badge">{{price}} DA</div>
+            <div class="overlay-hover"></div>
+          </div>
 
-            <div class="card-content">
-              <div class="card-header">
-                <span class="level-tag">{{#if level}}{{level}}{{else}}Beginner{{/if}}</span>
-                <div class="rating">
-                  <span class="material-symbols-outlined filled">star</span>
-                  <span>5.0</span>
-                </div>
-              </div>
-
-              <div class="card-title">
-                <h3>{{title}}</h3>
-              </div>
-
-              {{#if skills}}
-              <div class="skills-preview">
-                {{#each (split skills ",")}}
-                <span class="skill-tag">{{trim this}}</span>
-                {{/each}}
-              </div>
-              {{else}}
-              <p class="card-description">{{description}}</p>
-              {{/if}}
-
-              <div class="card-separator"></div>
-
-              <div class="card-meta">
-                <div class="meta-item">
-                  <span class="material-symbols-outlined">schedule</span>
-                  {{duration_hours}}h
-                </div>
-                <div class="meta-item">
-                  <span class="material-symbols-outlined">play_circle</span>
-                  {{lessons_count}} Lessons
-                </div>
-              </div>
-
-              <div class="card-footer">
-                <div class="instructor-profile">
-                  <!-- <div class="avatar-placeholder">AM</div> -->
-                  <span class="material-symbols-outlined" style="font-size: 20px; color: #666;">person</span>
-                  <span>Akram Melihi</span>
-                </div>
-                <button class="view-course-btn"
-                  onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/course/course-view?id={{course_id}}'">
-                  View Course
-                  <span class="material-symbols-outlined">arrow_forward</span>
-                </button>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="level-tag">{{#if level}}{{level}}{{else}}Beginner{{/if}}</span>
+              <div class="rating">
+                <span class="material-symbols-outlined filled">star</span>
+                <span>5.0</span>
               </div>
             </div>
-          </a>
+
+            <a href="/course/course-view?id={{course_id}}" class="card-title">
+              <h3>{{title}}</h3>
+            </a>
+
+            {{#if skills}}
+            <div class="skills-preview">
+              {{#each (split skills ",")}}
+              <div class="skill-pill">
+                <span class="material-symbols-outlined">check_small</span>
+                {{trim this}}
+              </div>
+              {{/each}}
+            </div>
+            {{else}}
+            <p class="card-description">{{description}}</p>
+            {{/if}}
+
+            <div class="card-separator"></div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <span class="material-symbols-outlined">schedule</span>
+                {{duration_hours}}h
+              </div>
+              <div class="meta-item">
+                <span class="material-symbols-outlined">play_circle</span>
+                {{lessons_count}} Lessons
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="instructor-profile">
+                <!-- <div class="avatar-placeholder">AM</div> -->
+                <span class="material-symbols-outlined" style="font-size: 20px; color: #666;">person</span>
+                <span>Akram Melihi</span>
+              </div>
+              <button class="view-course-btn"
+                onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/course/course-view?id={{course_id}}'">
+                View Course
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
         </article>
         {{/each}}
         {{else}}
-        <article class="featured-course-card">
-          <a href="/course" class="course-card-link">
-            <div class="card-image-wrapper">
-              <img src="/images/front-end-1.jpg" alt="Frontend Development" loading="lazy">
-              <div class="price-badge">5200 DA</div>
-              <div class="overlay-hover"></div>
-            </div>
+        <article class="course-card">
+          <div class="card-image-wrapper">
+            <button class="add-cart-btn" onclick="addToCart(event, 'static_frontend_course')" title="Add to Cart">
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+            </button>
+            <img src="/images/front-end-1.jpg" alt="Frontend Development" loading="lazy">
+            <div class="price-badge">5200 DA</div>
+            <div class="overlay-hover"></div>
+          </div>
 
-            <div class="card-content">
-              <div class="card-header">
-                <span class="level-tag">Advanced</span>
-                <div class="rating">
-                  <span class="material-symbols-outlined filled">star</span>
-                  <span>4.9</span>
-                </div>
-              </div>
-
-              <div class="card-title">
-                <h3>Frontend Development Course</h3>
-              </div>
-
-              <p class="card-description">Master modern web development with HTML, CSS, JavaScript, and React. Build
-                responsive, interactive websites from scratch!</p>
-
-              <div class="card-separator"></div>
-
-              <div class="card-meta">
-                <div class="meta-item">
-                  <span class="material-symbols-outlined">schedule</span>
-                  8h 19m
-                </div>
-                <div class="meta-item">
-                  <span class="material-symbols-outlined">play_circle</span>
-                  38 Lessons
-                </div>
-              </div>
-
-              <div class="card-footer">
-                <div class="instructor-profile">
-                  <span class="material-symbols-outlined" style="font-size: 20px; color: #666;">person</span>
-                  <span>Akram Melihi</span>
-                </div>
-                <button class="view-course-btn"
-                  onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/course'">
-                  View Course
-                  <span class="material-symbols-outlined">arrow_forward</span>
-                </button>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="level-tag">Advanced</span>
+              <div class="rating">
+                <span class="material-symbols-outlined filled">star</span>
+                <span>4.9</span>
               </div>
             </div>
-          </a>
+
+            <a href="/course" class="card-title">
+              <h3>Frontend Development Course</h3>
+            </a>
+
+            <p class="card-description">Master modern web development with HTML, CSS, JavaScript, and React. Build
+              responsive, interactive websites from scratch!</p>
+
+            <div class="card-separator"></div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <span class="material-symbols-outlined">schedule</span>
+                8h 19m
+              </div>
+              <div class="meta-item">
+                <span class="material-symbols-outlined">play_circle</span>
+                38 Lessons
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="instructor-profile">
+                <span class="material-symbols-outlined" style="font-size: 20px; color: #666;">person</span>
+                <span>Akram Melihi</span>
+              </div>
+              <button class="view-course-btn"
+                onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/course'">
+                View Course
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
         </article>
         {{/if}}
       </div>
@@ -986,6 +982,65 @@
         faqSection.classList.add('scroll-animate-stagger');
       }
     });
+
+    // Premium Smooth Scroll Implementation (10000 dollar quality)
+    // Enhanced easing function for ultra-smooth scrolling
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function smoothScrollTo(targetPosition, duration = 1200) {
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      let startTime = null;
+
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const ease = easeInOutCubic(progress);
+
+        window.scrollTo(0, startPosition + distance * ease);
+
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        }
+      }
+
+      requestAnimationFrame(animation);
+    }
+
+    // Apply smooth scroll to all anchor links
+    document.addEventListener('DOMContentLoaded', () => {
+      const anchorLinks = document.querySelectorAll('a[href^="#"]');
+
+      anchorLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+
+          // Skip if it's just "#" or for Bootstrap collapse/modal
+          if (href === '#' || this.hasAttribute('data-bs-toggle')) {
+            return;
+          }
+
+          const targetElement = document.querySelector(href);
+
+          if (targetElement) {
+            e.preventDefault();
+            const headerOffset = 80; // Account for fixed header
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            smoothScrollTo(offsetPosition, 1200);
+
+            // Update URL without jumping
+            if (history.pushState) {
+              history.pushState(null, null, href);
+            }
+          }
+        });
+      });
+    });
   </script>
 
   <style>
@@ -1052,6 +1107,8 @@
     }
   </style>
 
+  <script src="/js/cart-utils.js"></script>
+  <script src="/course.js"></script>
 </body>
 
 </html>

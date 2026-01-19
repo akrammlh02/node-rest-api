@@ -16,6 +16,78 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// Countdown Timer - Creates urgency
+function initCountdownTimer() {
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+
+    if (!hoursEl || !minutesEl || !secondsEl) return;
+
+    function updateTimer() {
+        // Get end of day
+        const now = new Date();
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const diff = endOfDay - now;
+
+        if (diff <= 0) {
+            // Reset to 24 hours
+            hoursEl.textContent = '23';
+            minutesEl.textContent = '59';
+            secondsEl.textContent = '59';
+            return;
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        hoursEl.textContent = hours.toString().padStart(2, '0');
+        minutesEl.textContent = minutes.toString().padStart(2, '0');
+        secondsEl.textContent = seconds.toString().padStart(2, '0');
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+}
+
+// Limited Spots Counter - Creates scarcity
+function initLimitedSpots() {
+    const spotsEl = document.getElementById('spotsLeft');
+    if (!spotsEl) return;
+
+    // Get or initialize spots count
+    let spots = localStorage.getItem('spotsLeft');
+
+    if (!spots) {
+        // Random between 5-12 spots
+        spots = Math.floor(Math.random() * 8) + 5;
+        localStorage.setItem('spotsLeft', spots);
+    }
+
+    spotsEl.textContent = spots;
+
+    // Decrease spots randomly (simulate real bookings)
+    setInterval(() => {
+        let currentSpots = parseInt(localStorage.getItem('spotsLeft') || spots);
+
+        // 10% chance to decrease spots every 30 seconds
+        if (Math.random() < 0.1 && currentSpots > 2) {
+            currentSpots--;
+            localStorage.setItem('spotsLeft', currentSpots);
+            spotsEl.textContent = currentSpots;
+
+            // Add flash animation
+            spotsEl.parentElement.style.animation = 'none';
+            setTimeout(() => {
+                spotsEl.parentElement.style.animation = 'spotsBounce 2s ease-in-out infinite';
+            }, 10);
+        }
+    }, 30000); // Check every 30 seconds
+}
+
 // Scroll to enrollment section
 function scrollToEnroll() {
     const enrollSection = document.getElementById('enrollSection');
@@ -370,6 +442,10 @@ const observer = new IntersectionObserver((entries) => {
 document.addEventListener('DOMContentLoaded', () => {
     // Load course data
     loadCourse();
+
+    // Initialize psychological triggers
+    initCountdownTimer();
+    initLimitedSpots();
 
     // Animate elements on scroll
     const animatedElements = document.querySelectorAll('.testimonial-card, .chapter-item, .faq-item, .benefit-card');

@@ -3,14 +3,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* Crucial for preventing padding from adding to width */
 }
 
 html,
 body {
   max-width: 100%;
   overflow-x: hidden;
-  /* Force hide horizontal scrollbar */
   width: 100%;
 }
 
@@ -21,19 +19,16 @@ body {
   bottom: 30px;
   right: 30px;
   z-index: 10000;
-  /* Ensure on top */
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
   gap: 15px;
 }
 
-/* Hidden Checkbox for Toggle Logic */
 .fab-toggle {
   display: none;
 }
 
-/* Main Toggle Button */
 .fab-main-btn {
   width: 60px;
   height: 60px;
@@ -2263,16 +2258,27 @@ hr {
 /* Cart Badge & Link Styles */
 .cart-link {
   position: relative;
-  display: inline-flex !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  color: #1e1b4b;
+  text-decoration: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.cart-link:hover {
+  color: #3f10fa;
+  background: rgba(63, 16, 250, 0.05);
+  transform: translateY(-2px);
 }
 
 .cart-badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: -2px;
+  right: -2px;
   background-color: #ef4444;
   /* danger color */
   color: white;
@@ -2517,7 +2523,8 @@ hr {
 }
 
 /* Card Design */
-.featured-course-card {
+/* Card Container */
+.course-card {
   background: white;
   border-radius: 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
@@ -2525,22 +2532,21 @@ hr {
   border: 1px solid rgba(0, 0, 0, 0.05);
   overflow: hidden;
   position: relative;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  text-align: left;
-  /* Ensure text alignment is left inside card */
+  height: 100%;
 }
 
-.featured-course-card:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 25px 50px rgba(123, 9, 205, 0.15);
-  border-color: rgba(123, 9, 205, 0.2);
+.course-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 60px rgba(123, 9, 205, 0.15);
+  border-color: rgba(123, 9, 205, 0.25);
 }
 
+/* Image Wrapper */
 .card-image-wrapper {
   position: relative;
-  height: 240px;
+  height: 220px;
   overflow: hidden;
   border-radius: 24px 24px 0 0;
 }
@@ -2549,13 +2555,31 @@ hr {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s ease;
+  transition: transform 0.6s ease;
 }
 
-.featured-course-card:hover .card-image-wrapper img {
+.course-card:hover .card-image-wrapper img {
   transform: scale(1.1);
 }
 
+/* Overlay Hover Effect */
+.overlay-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(123, 9, 205, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.course-card:hover .overlay-hover {
+  opacity: 1;
+}
+
+/* Price Badge */
 .price-badge {
   position: absolute;
   top: 15px;
@@ -2565,15 +2589,57 @@ hr {
   font-weight: 800;
   padding: 8px 16px;
   border-radius: 50px;
+  font-size: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
-  z-index: 2;
-  font-size: 1.1rem;
+  z-index: 5;
+  border: 1px solid rgba(123, 9, 205, 0.1);
+}
+
+/* Add to Cart Button (Redesigned) */
+.add-cart-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 48px;
+  /* Larger size */
+  height: 48px;
+  background: linear-gradient(135deg, #7b09cd 0%, #3f10fa 100%);
+  /* High visibility gradient */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  /* Border to pop against image */
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Bouncy transition */
+}
+
+.add-cart-btn:hover {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 8px 25px rgba(123, 9, 205, 0.4);
+  background: linear-gradient(135deg, #9d1dfa 0%, #5b30ff 100%);
+  border-color: white;
+}
+
+.add-cart-btn:active {
+  transform: scale(0.95);
+}
+
+.add-cart-btn .material-symbols-outlined {
+  font-size: 24px;
+  font-weight: 600;
+  /* Bolder icon */
 }
 
 /* Card Content */
 .card-content {
-  padding: 28px;
+  padding: 24px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -2583,14 +2649,14 @@ hr {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .level-tag {
-  background-color: rgba(123, 9, 205, 0.08);
+  background-color: #f3e8ff;
   color: #7b09cd;
-  padding: 6px 14px;
-  border-radius: 30px;
+  padding: 4px 12px;
+  border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -2600,7 +2666,7 @@ hr {
 .rating {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   color: #f59e0b;
   font-weight: 700;
   font-size: 0.9rem;
@@ -2619,7 +2685,7 @@ hr {
 }
 
 .card-title h3 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #1a1c4b;
   margin: 0;
@@ -2627,13 +2693,14 @@ hr {
   transition: color 0.3s ease;
 }
 
-.featured-course-card:hover .card-title h3 {
+.course-card:hover .card-title h3 {
   color: #7b09cd;
 }
 
+/* Skills Pills */
 .skills-preview {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
   margin-bottom: 20px;
 }
@@ -2642,7 +2709,7 @@ hr {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #64748b;
   background: #f8fafc;
   padding: 6px 12px;
@@ -2658,7 +2725,7 @@ hr {
 
 .card-description {
   color: #64748b;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.6;
   margin-bottom: 20px;
   display: -webkit-box;
@@ -2679,33 +2746,34 @@ hr {
   justify-content: space-between;
   margin-bottom: 24px;
   color: #64748b;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .meta-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .meta-item .material-symbols-outlined {
-  font-size: 20px;
+  font-size: 18px;
   color: #94a3b8;
 }
 
+/* Footer Section */
 .card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
+  gap: 10px;
 }
 
 .instructor-profile {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #334155;
 }
@@ -2717,7 +2785,7 @@ hr {
   border-radius: 50px;
   padding: 10px 20px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -2732,7 +2800,7 @@ hr {
 }
 
 .view-course-btn .material-symbols-outlined {
-  font-size: 18px;
+  font-size: 16px;
   transition: transform 0.3s ease;
 }
 
@@ -2777,7 +2845,7 @@ hr {
   }
 
   /* Cards in Carousel */
-  .featured-course-card {
+  .course-card {
     min-width: 85%;
     /* Use percentage of container instead of vw */
     max-width: 85%;
@@ -2788,7 +2856,7 @@ hr {
   }
 
   /* Active card effect (optional JS needed for perfect active state, but this helps visual rhythm) */
-  .featured-course-card:active {
+  .course-card:active {
     transform: scale(0.96);
   }
 
@@ -3054,6 +3122,11 @@ hr {
 
 /* Mobile Responsive */
 @media (max-width: 992px) {
+  .first-text {
+    margin-top: 80px;
+    height: 40px;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 40px;
@@ -3571,14 +3644,8 @@ hr {
 
 /* ============ PREMIUM HEADER ============ */
 .main-header {
-  position: relative;
-  /* top: 0; */
-  /* left: 0; */
   width: 100%;
-  /* z-index: 1000; */
   background: rgba(255, 255, 255, 0.85);
-  /* backdrop-filter: blur(15px); */
-  /* -webkit-backdrop-filter: blur(15px); */
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
@@ -3824,6 +3891,15 @@ hr {
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
+
+  .main-header {
+    /* position: relative; */
+    /* margin-bottom: 20px; */
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
 
   .nav-links-desktop,
   .action-btn {

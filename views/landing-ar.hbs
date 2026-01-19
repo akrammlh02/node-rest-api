@@ -59,10 +59,6 @@
                 سجل الآن
             </button>
             <div class="header-info">
-                <a href="/payment/checkout" class="cart-link" title="S'inscrire" style="margin-left: 15px;">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    <span class="cart-badge" id="cartBadgeNav" style="display: none;">0</span>
-                </a>
                 <div class="price-badge" id="headerPrice">0 دج</div>
                 <span class="course-title-header" id="headerCourseTitle">جاري التحميل...</span>
             </div>
@@ -73,6 +69,8 @@
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-container">
+
+
                 <div class="hero-badge">
                     <span class="material-symbols-outlined">verified</span>
                     <span>دورة معتمدة مع شهادة</span>
@@ -99,14 +97,17 @@
                 </p>
 
                 <!-- Stats -->
+
+
+                <!-- Social Proof Stats -->
                 <div class="hero-stats">
                     <div class="stat-item">
                         <div class="stat-number" id="studentCount">500+</div>
-                        <div class="stat-label">طالب مسجل</div>
+                        <div class="stat-label">طالب نجح معنا</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number">4.9/5</div>
-                        <div class="stat-label">تقييم الدورة</div>
+                        <div class="stat-label">⭐ تقييم ممتاز</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="certificateCount">300+</div>
@@ -114,46 +115,56 @@
                     </div>
                 </div>
 
-                <!-- Main CTA -->
-                <button class="btn-primary-cta" onclick="enrollCourse()">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    سجل الآن عبر واتساب
+                <!-- PRIMARY CTA - Main Action -->
+                <button class="btn-primary-cta pulse-cta" onclick="enrollCourse()">
+                    <span class="cta-icon">💎</span>
+                    <span class="cta-text">
+                        <strong>احجز مقعدك الآن</strong>
+                        <small>سجل عبر واتساب</small>
+                    </span>
                 </button>
 
-                <div class="trust-badge-hero">
-                    <span class="material-symbols-outlined">verified_user</span>
-                    <span>ضمان استرجاع المال لمدة 30 يوم</span>
+                <!-- Trust Badges Row -->
+                <div class="trust-badges-row">
+                    <div class="trust-item">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        <span>ضمان 30 يوم</span>
+                    </div>
+                    <div class="trust-item">
+                        <span class="material-symbols-outlined">all_inclusive</span>
+                        <span>وصول مدى الحياة</span>
+                    </div>
+                    <div class="trust-item">
+                        <span class="material-symbols-outlined">workspace_premium</span>
+                        <span>شهادة معتمدة</span>
+                    </div>
+                </div>
+
+                <!-- Urgency & Scarcity - Create FOMO -->
+                <div class="urgency-scarcity-wrapper">
+                    <!-- Limited Spots Badge -->
+                    <div class="limited-spots-badge">
+                        <span class="pulse-dot"></span>
+                        <span>🔥 تبقى <strong id="spotsLeft">7</strong> مقاعد فقط!</span>
+                    </div>
+
+                    <!-- Countdown Timer -->
+                    <div class="urgency-timer">
+                        <div class="timer-icon">⏰</div>
+                        <div class="timer-text">
+                            <div class="timer-label">العرض ينتهي خلال:</div>
+                            <div class="timer-countdown" id="countdownTimer">
+                                <span class="time-unit"><span id="hours">23</span><small>س</small></span>
+                                <span class="time-sep">:</span>
+                                <span class="time-unit"><span id="minutes">59</span><small>د</small></span>
+                                <span class="time-sep">:</span>
+                                <span class="time-unit"><span id="seconds">45</span><small>ث</small></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
-
-        <!-- Tech Stack Section -->
-        {{!-- <section class="tech-stack-section" id="techStackSection" style="display: none;">
-            <div class="container">
-                <p class="section-subtitle">مدعوم بتقنيات حديثة</p>
-                <h2 class="section-title">
-                    <span class="material-symbols-outlined">layers</span>
-                    التقنيات التي ستتقنها
-                </h2>
-                <div class="tech-grid" id="courseSkills">
-                    <!-- Skills will be loaded here -->
-                </div>
-            </div>
-        </section> --}}
-
-        <!-- Project Showcase Section (Dynamic) -->
-        {{!-- <section class="projects-section" id="projectsSection" style="display: none;">
-            <div class="container">
-                <p class="section-subtitle">خبرة عملية</p>
-                <h2 class="section-title">
-                    <span class="material-symbols-outlined">laptop_chromebook</span>
-                    ماذا ستبني في هذه الدورة؟
-                </h2>
-                <div class="projects-grid" id="courseProjects">
-                    <!-- Projects will be loaded here -->
-                </div>
-            </div>
-        </section> --}}
 
         <!-- Social Proof Section -->
         <section class="testimonials-section">
@@ -214,6 +225,62 @@
                         </div>
                         <div>
                             <h4>طالبة مشتركة</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-09.jpg" class="testimonial-screenshot"
+                        alt="رأي طالب">
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <div>
+                            <h4>طالب مشترك</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-12.jpg" class="testimonial-screenshot"
+                        alt="رأي طالب">
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <div>
+                            <h4>طالب مشترك</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-13.jpg" class="testimonial-screenshot"
+                        alt="رأي طالب">
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <div>
+                            <h4>طالب مشترك</h4>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <img src="/images/ness%20wach%20galo/photo_2026-01-19_15-54-14.jpg" class="testimonial-screenshot"
+                        alt="رأي طالب">
+                    <div class="student-info">
+                        <div class="student-avatar">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <div>
+                            <h4>طالب مشترك</h4>
                             <div class="rating">⭐⭐⭐⭐⭐</div>
                         </div>
                     </div>
@@ -289,7 +356,7 @@
                 </div>
 
                 <!-- Why Algerian Students Need This -->
-                <div class="algeria-specific">
+                {{!-- <div class="algeria-specific">
                     <h3 class="algeria-heading">
                         <span class="algeria-flag">🇩🇿</span>
                         لماذا هذه الدورة فرصة ذهبية لك؟
@@ -324,10 +391,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Career Benefits -->
-                <div class="career-benefits">
+                {{!-- <div class="career-benefits">
                     <h3 class="benefits-heading">
                         <span class="material-symbols-outlined">trending_up</span>
                         خارطة طريقك نحو الاحتراف
@@ -356,7 +423,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Success Stats -->
                 <div class="success-stats">
