@@ -406,9 +406,6 @@ function enrollCourse() {
             console.log('Facebook Pixel: Lead event tracked -', courseTitle, priceValue, 'DZD');
         }
 
-        // Open WhatsApp
-        window.open(whatsappUrl, '_blank');
-
         // Track conversion
         console.log('تم بدء عملية التسجيل للدورة:', courseId);
 
@@ -420,6 +417,12 @@ function enrollCourse() {
                 'value': coursePrice
             });
         }
+
+        // CRITICAL FIX: Delay redirect to allow pixel event to be sent
+        // This prevents mobile browsers from interrupting the pixel tracking
+        setTimeout(function () {
+            window.location.href = whatsappUrl;
+        }, 600); // 600ms delay ensures pixel event is sent before redirect
     }
 }
 
