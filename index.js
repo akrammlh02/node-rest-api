@@ -112,7 +112,12 @@ app.get('/logout/ar', (req, res) => {
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;"
+    "default-src 'self'; " +
+    "connect-src 'self' https://*.facebook.com https://*.facebook.net https://www.facebook.com; " +
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://connect.facebook.net; " +
+    "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "img-src 'self' data: https://*.facebook.com;"
   );
   next();
 });
