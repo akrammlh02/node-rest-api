@@ -23,38 +23,19 @@
 
     <!-- Meta Pixel Code -->
     <script>
-        // Meta Pixel Implementation - Mobile Compatible
         !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return;
-            n = f.fbq = function () {
+            if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
-            if (!f._fbq) f._fbq = n;
-            n.push = n;
-            n.loaded = !0;
-            n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e);
-            t.async = !0;
-            t.src = v;
-            t.onerror = function () {
-                console.error('Meta Pixel: Failed to load fbevents.js');
-            };
-            t.onload = function () {
-                console.log('Meta Pixel: fbevents.js loaded successfully');
-            };
-            s = b.getElementsByTagName(e)[0];
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t, s)
-        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-
-        // Initialize Meta Pixel
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '1567430537783358');
-        console.log('Meta Pixel: Initialized with ID 1567430537783358');
-
-        // Track PageView immediately
         fbq('track', 'PageView');
-        console.log('Meta Pixel: PageView event tracked');
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=1567430537783358&ev=PageView&noscript=1" /></noscript>

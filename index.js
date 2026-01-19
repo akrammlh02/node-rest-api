@@ -60,18 +60,22 @@ cloudinary.config({
 });
 
 // CRITICAL: Set CSP headers BEFORE routes
+// TEMPORARILY DISABLED FOR TESTING - Remove comments after confirming Meta Pixel works
+/*
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
     "default-src 'self'; " +
-    "connect-src 'self' https://*.facebook.com https://*.facebook.net https://www.facebook.com; " +
-    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://connect.facebook.net; " +
+    "connect-src 'self' https://*.facebook.com https://*.facebook.net https://www.facebook.com https://*.doubleclick.net; " +
+    "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://connect.facebook.net https://*.facebook.com; " +
     "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; " +
     "font-src 'self' https://fonts.gstatic.com; " +
-    "img-src 'self' data: https://*.facebook.com;"
+    "img-src 'self' data: https://*.facebook.com https://www.facebook.com; " +
+    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.facebook.com;"
   );
   next();
 });
+*/
 
 //routers
 app.use('/', require('./routes/index'));
