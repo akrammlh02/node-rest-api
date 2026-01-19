@@ -23,6 +23,10 @@
 
     <!-- Meta Pixel Code -->
     <script>
+        console.log('[META PIXEL] Starting initialization...');
+        console.log('[META PIXEL] User Agent:', navigator.userAgent);
+        console.log('[META PIXEL] Platform:', navigator.platform);
+
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
@@ -31,11 +35,42 @@
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
             t.src = v; s = b.getElementsByTagName(e)[0];
+
+            // Add error and load handlers
+            t.onerror = function () {
+                console.error('[META PIXEL] FAILED to load fbevents.js from:', v);
+                console.error('[META PIXEL] This might be due to ad blocker or network issue');
+            };
+            t.onload = function () {
+                console.log('[META PIXEL] Successfully loaded fbevents.js');
+            };
+
             s.parentNode.insertBefore(t, s)
         }(window, document, 'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '1567430537783358');
-        fbq('track', 'PageView');
+
+        console.log('[META PIXEL] Script tag created and inserted');
+
+        // Wait a bit for script to load, then initialize
+        setTimeout(function () {
+            if (typeof fbq !== 'undefined') {
+                console.log('[META PIXEL] fbq function is available');
+                fbq('init', '1567430537783358');
+                console.log('[META PIXEL] Initialized with ID 1567430537783358');
+                fbq('track', 'PageView');
+                console.log('[META PIXEL] PageView event tracked');
+            } else {
+                console.error('[META PIXEL] fbq function NOT available - script failed to load');
+                // Fallback: Use noscript pixel
+                var img = document.createElement('img');
+                img.height = 1;
+                img.width = 1;
+                img.style.display = 'none';
+                img.src = 'https://www.facebook.com/tr?id=1567430537783358&ev=PageView';
+                document.body.appendChild(img);
+                console.log('[META PIXEL] Fallback: Using noscript pixel');
+            }
+        }, 1000);
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=1567430537783358&ev=PageView&noscript=1" /></noscript>

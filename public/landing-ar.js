@@ -393,8 +393,13 @@ function enrollCourse() {
 
         const whatsappUrl = `https://wa.me/213540921726?text=${message}`;
 
+        console.log('[ENROLL] Starting enrollment process...');
+        console.log('[ENROLL] Course:', courseTitle);
+        console.log('[ENROLL] Price:', coursePrice);
+
         // Track Facebook Pixel - Lead event
         if (typeof fbq !== 'undefined') {
+            console.log('[ENROLL] fbq is available - tracking Lead event');
             const priceValue = parseFloat(coursePrice.replace(/[^0-9]/g, '')) || 0;
             fbq('track', 'Lead', {
                 content_name: courseTitle,
@@ -403,11 +408,23 @@ function enrollCourse() {
                 value: priceValue,
                 currency: 'DZD'
             });
-            console.log('Facebook Pixel: Lead event tracked -', courseTitle, priceValue, 'DZD');
+            console.log('[ENROLL] Lead event tracked:', courseTitle, priceValue, 'DZD');
+        } else {
+            console.error('[ENROLL] fbq is NOT available - using fallback pixel');
+            // Fallback: Use image pixel for Lead event
+            var img = document.createElement('img');
+            img.height = 1;
+            img.width = 1;
+            img.style.display = 'none';
+            img.src = 'https://www.facebook.com/tr?id=1567430537783358&ev=Lead&cd[content_name]=' +
+                encodeURIComponent(courseTitle) + '&cd[value]=' + coursePrice.replace(/[^0-9]/g, '') +
+                '&cd[currency]=DZD';
+            document.body.appendChild(img);
+            console.log('[ENROLL] Fallback Lead pixel sent');
         }
 
         // Track conversion
-        console.log('تم بدء عملية التسجيل للدورة:', courseId);
+        console.log('[ENROLL] Conversion logged for course:', courseId);
 
         // Optional: Send Google Analytics event
         if (typeof gtag !== 'undefined') {
@@ -416,11 +433,14 @@ function enrollCourse() {
                 'course_name': courseTitle,
                 'value': coursePrice
             });
+            console.log('[ENROLL] Google Analytics event sent');
         }
 
         // CRITICAL FIX: Delay redirect to allow pixel event to be sent
         // This prevents mobile browsers from interrupting the pixel tracking
+        console.log('[ENROLL] Waiting 600ms before redirect...');
         setTimeout(function () {
+            console.log('[ENROLL] Redirecting to WhatsApp...');
             window.location.href = whatsappUrl;
         }, 600); // 600ms delay ensures pixel event is sent before redirect
     }
