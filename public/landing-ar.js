@@ -399,7 +399,7 @@ function enrollCourse() {
 
         // Track Facebook Pixel - Lead event
         if (typeof fbq !== 'undefined') {
-            console.log('[ENROLL] fbq is available - tracking Lead event');
+            console.log('[ENROLL] fbq is available - tracking Lead event (client-side)');
             const priceValue = parseFloat(coursePrice.replace(/[^0-9]/g, '')) || 0;
             fbq('track', 'Lead', {
                 content_name: courseTitle,
@@ -408,19 +408,17 @@ function enrollCourse() {
                 value: priceValue,
                 currency: 'DZD'
             });
-            console.log('[ENROLL] Lead event tracked:', courseTitle, priceValue, 'DZD');
+            console.log('[ENROLL] Lead event tracked (client-side):', courseTitle, priceValue, 'DZD');
+        } else if (typeof window.trackServerSide !== 'undefined') {
+            console.log('[ENROLL] fbq NOT available - using server-side tracking');
+            // Use server-side tracking
+            window.trackServerSide('Lead', {
+                courseName: courseTitle,
+                coursePrice: coursePrice.replace(/[^0-9]/g, ''),
+                courseId: courseId
+            });
         } else {
-            console.error('[ENROLL] fbq is NOT available - using fallback pixel');
-            // Fallback: Use image pixel for Lead event
-            var img = document.createElement('img');
-            img.height = 1;
-            img.width = 1;
-            img.style.display = 'none';
-            img.src = 'https://www.facebook.com/tr?id=1567430537783358&ev=Lead&cd[content_name]=' +
-                encodeURIComponent(courseTitle) + '&cd[value]=' + coursePrice.replace(/[^0-9]/g, '') +
-                '&cd[currency]=DZD';
-            document.body.appendChild(img);
-            console.log('[ENROLL] Fallback Lead pixel sent');
+            console.error('[ENROLL] No tracking available - neither client nor server-side');
         }
 
         // Track conversion

@@ -88,6 +88,7 @@ app.use('/quiz', require('./routes/quiz'));
 app.use('/interactive', require('./routes/interactive'));
 app.use('/payment', require('./routes/payment'));
 app.use('/cart', require('./routes/cart'));
+app.use('/meta-tracking', require('./routes/meta-tracking'));
 
 
 // API endpoint to check if session is vali

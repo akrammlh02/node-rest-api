@@ -21,11 +21,42 @@
         rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/images/logo.png">
 
-    <!-- Meta Pixel Code -->
+    <!-- Meta Pixel Code with Server-Side Fallback -->
     <script>
         console.log('[META PIXEL] Starting initialization...');
         console.log('[META PIXEL] User Agent:', navigator.userAgent);
         console.log('[META PIXEL] Platform:', navigator.platform);
+
+        // Helper function to get Facebook cookies
+        function getFacebookCookies() {
+            const cookies = document.cookie.split(';');
+            let fbc = null, fbp = null;
+            cookies.forEach(cookie => {
+                const [name, value] = cookie.trim().split('=');
+                if (name === '_fbc') fbc = value;
+                if (name === '_fbp') fbp = value;
+            });
+            return { fbc, fbp };
+        }
+
+        // Server-side tracking fallback
+        function trackServerSide(eventName, eventData) {
+            const { fbc, fbp } = getFacebookCookies();
+            const endpoint = eventName === 'PageView' ? '/meta-tracking/track/pageview' : '/meta-tracking/track/lead';
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    url: window.location.href,
+                    fbc: fbc,
+                    fbp: fbp,
+                    ...eventData
+                })
+            }).then(res => res.json())
+                .then(data => console.log('[META CAPI] Server-side tracking:', data))
+                .catch(err => console.error('[META CAPI] Server-side tracking failed:', err));
+        }
 
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
@@ -38,8 +69,9 @@
 
             // Add error and load handlers
             t.onerror = function () {
-                console.error('[META PIXEL] FAILED to load fbevents.js from:', v);
-                console.error('[META PIXEL] This might be due to ad blocker or network issue');
+                console.error('[META PIXEL] FAILED to load fbevents.js - Using server-side tracking');
+                // Fallback to server-side tracking
+                trackServerSide('PageView', {});
             };
             t.onload = function () {
                 console.log('[META PIXEL] Successfully loaded fbevents.js');
@@ -51,26 +83,23 @@
 
         console.log('[META PIXEL] Script tag created and inserted');
 
-        // Wait a bit for script to load, then initialize
+        // Wait for script to load, then initialize
         setTimeout(function () {
             if (typeof fbq !== 'undefined') {
                 console.log('[META PIXEL] fbq function is available');
                 fbq('init', '1567430537783358');
                 console.log('[META PIXEL] Initialized with ID 1567430537783358');
                 fbq('track', 'PageView');
-                console.log('[META PIXEL] PageView event tracked');
+                console.log('[META PIXEL] PageView event tracked (client-side)');
             } else {
-                console.error('[META PIXEL] fbq function NOT available - script failed to load');
-                // Fallback: Use noscript pixel
-                var img = document.createElement('img');
-                img.height = 1;
-                img.width = 1;
-                img.style.display = 'none';
-                img.src = 'https://www.facebook.com/tr?id=1567430537783358&ev=PageView';
-                document.body.appendChild(img);
-                console.log('[META PIXEL] Fallback: Using noscript pixel');
+                console.error('[META PIXEL] fbq NOT available - Using server-side tracking');
+                // Fallback to server-side tracking
+                trackServerSide('PageView', {});
             }
         }, 1000);
+
+        // Make trackServerSide available globally for button clicks
+        window.trackServerSide = trackServerSide;
     </script>
     <noscript><img height="1" width="1" style="display:none"
             src="https://www.facebook.com/tr?id=1567430537783358&ev=PageView&noscript=1" /></noscript>
